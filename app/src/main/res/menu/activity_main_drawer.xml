@@ -2,22 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_camera"
-            android:title="Import" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
-            android:title="Tools" />
+        <item android:id="@+id/nav_camara"
+            android:icon="@drawable/ic_autorenew_white_48dp"
+            android:title="Realtime Information" />
+        <item android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_perm_scan_wifi_white_48dp"
+            android:title="Fare Calculator" />
+        <item android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_schedule_white_48dp"
+            android:title="Remind Me" />
+        <item android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_visibility_white_48dp"
+            android:title="Around Me" />
+
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Leap Card">
         <menu>
-            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
-                android:title="Share" />
-            <item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_send"
-                android:title="Send" />
+            <item android:id="@+id/nav_share"
+                android:icon="@drawable/ic_payment_white_48dp"
+                android:title="Check balance" />
+            <item android:id="@+id/nav_send"
+                android:icon="@drawable/ic_flash_on_white_48dp"
+                android:title="Top up" />
         </menu>
     </item>
 
