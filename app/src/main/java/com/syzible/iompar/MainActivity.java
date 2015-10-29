@@ -2,9 +2,9 @@ package com.syzible.iompar;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,10 +12,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    Realtime realtime = new Realtime();
+    Fares fares = new Fares();
+    Remind remind = new Remind();
+    Around around = new Around();
+    Balance balance = new Balance();
+    TopUp topUp = new TopUp();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +35,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Snackbar text action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -41,6 +48,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        setFragment();
     }
 
     @Override
@@ -75,28 +84,43 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
-            Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_gallery) {
-            Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_slideshow) {
-            Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_manage) {
-            Toast.makeText(this, "4", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_share) {
-            Toast.makeText(this, "5", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_send) {
-            Toast.makeText(this, "6", Toast.LENGTH_SHORT).show();
+        if (id == R.id.nav_realtime) {
+            changeFragment(this.realtime);
+        } else if (id == R.id.nav_fare_calculator) {
+            changeFragment(this.fares);
+        } else if (id == R.id.nav_remind_me) {
+            changeFragment(this.remind);
+        } else if (id == R.id.nav_around_me) {
+            changeFragment(this.around);
+        } else if (id == R.id.nav_check_balance) {
+            changeFragment(this.balance);
+        } else if (id == R.id.nav_topup) {
+            changeFragment(this.topUp);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void setFragment(){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, this.realtime)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void changeFragment(Fragment fragment){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

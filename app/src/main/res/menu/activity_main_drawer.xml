@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camara"
+        <item android:id="@+id/nav_realtime"
             android:icon="@drawable/ic_autorenew_white_48dp"
             android:title="Realtime Information" />
-        <item android:id="@+id/nav_manage"
+        <item android:id="@+id/nav_fare_calculator"
             android:icon="@drawable/ic_perm_scan_wifi_white_48dp"
             android:title="Fare Calculator" />
-        <item android:id="@+id/nav_gallery"
+        <item android:id="@+id/nav_remind_me"
             android:icon="@drawable/ic_schedule_white_48dp"
             android:title="Remind Me" />
-        <item android:id="@+id/nav_slideshow"
+        <item android:id="@+id/nav_around_me"
             android:icon="@drawable/ic_visibility_white_48dp"
             android:title="Around Me" />
 
@@ -19,10 +19,10 @@
 
     <item android:title="Leap Card">
         <menu>
-            <item android:id="@+id/nav_share"
+            <item android:id="@+id/nav_check_balance"
                 android:icon="@drawable/ic_payment_white_48dp"
                 android:title="Check balance" />
-            <item android:id="@+id/nav_send"
+            <item android:id="@+id/nav_topup"
                 android:icon="@drawable/ic_flash_on_white_48dp"
                 android:title="Top up" />
         </menu>
