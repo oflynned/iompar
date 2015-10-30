@@ -13,6 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     Login login = new Login(this);
     Notifications notifications = new Notifications(this);
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
-    Sync sync = new Sync(this, this);
+    Sync sync = new Sync(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,15 +64,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setFragment();
-
-        try {
-            String result = sync.requestUpdate(Globals.Type.luas,
-                    Globals.LineDirection.stephens_green_to_brides_glen,
-                    "St. Stephen's Green");
-            System.out.println(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

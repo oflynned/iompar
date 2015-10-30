@@ -9,11 +9,51 @@
         android:layout_height="fill_parent"
         android:layout_marginTop="?attr/actionBarSize">
         <TextView
+            android:id="@+id/realtimeTitle"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:text="Real Time"/>
+
+        <Button
+            android:layout_below="@+id/realtimeTitle"
+            android:id="@+id/stephensGreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="St. Stephen's Green"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:layout_below="@+id/stephensGreen"
+            android:id="@+id/theGallops"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The Gallops"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <View
+            android:padding="5dp"
+            android:layout_margin="5dp"
+            android:id="@+id/separator"
+            android:layout_below="@+id/theGallops"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"/>
+
+        <TextView
+            android:padding="5dp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=""
+            android:id="@+id/reportedTimes"
+            android:layout_below="@+id/separator"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
 </RelativeLayout>

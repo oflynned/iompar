@@ -14,7 +14,34 @@ public class Globals {
 
     //http querying
     public String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
-    public static final String TABLE_NAME = "";
+
+    public String greenLineBeforeSandyford[] = {
+            "St. Stephen's Green",
+            "Harcourt St.",
+            "Charlemont",
+            "Ranelagh",
+            "Beechwood",
+            "Cowper",
+            "Milltown",
+            "Windy Arbour",
+            "Dundrum",
+            "Balally",
+            "Kilmacud",
+            "Stillorgan",
+            "Sandyford"
+    };
+
+    public String greenLineBeforeBridesGlen[] = {
+            "Central Park",
+            "Glencairn",
+            "The Gallops",
+            "Leopardstown Valley",
+            "Ballyogan Wood",
+            "Carrickmines",
+            "Laughanstown",
+            "Cherrywood",
+            "Bride's Glen"
+    };
 
     public enum Type {
         dublin_bus,
@@ -46,6 +73,10 @@ public class Globals {
         switch(string){
             case "St. Stephen's Green":
                 RTPI = "LUAS24";
+                break;
+            case "The Gallops":
+                RTPI = "LUAS39";
+                break;
         }
         return RTPI;
     }
