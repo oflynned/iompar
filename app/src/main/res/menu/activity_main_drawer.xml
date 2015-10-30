@@ -19,6 +19,9 @@
 
     <item android:title="Leap Card">
         <menu>
+            <item android:id="@+id/nav_add_leap_card"
+                android:icon="@drawable/ic_payment_white_48dp"
+                android:title="Add Leap Card" />
             <item android:id="@+id/nav_check_balance"
                 android:icon="@drawable/ic_payment_white_48dp"
                 android:title="Check balance" />

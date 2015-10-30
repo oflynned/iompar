@@ -17,12 +17,21 @@ import android.view.View;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    //fragment classes
     Realtime realtime = new Realtime();
     Fares fares = new Fares();
     Remind remind = new Remind();
     Around around = new Around();
+    AddLeapCard addLeapCard = new AddLeapCard();
     Balance balance = new Balance();
     TopUp topUp = new TopUp();
+
+    //helper classes
+    Globals globals = new Globals();
+    Login login = new Login(this);
+    Notifications notifications = new Notifications(this);
+    DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    Sync sync = new Sync(this, this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +44,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Snackbar text action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Snackbar text here", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null)
+                        .show();
             }
         });
 
@@ -50,6 +60,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setFragment();
+
+        try {
+            String result = sync.requestUpdate(Globals.Type.luas,
+                    Globals.LineDirection.stephens_green_to_brides_glen,
+                    "St. Stephen's Green");
+            System.out.println(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -97,6 +116,8 @@ public class MainActivity extends AppCompatActivity
             changeFragment(this.remind);
         } else if (id == R.id.nav_around_me) {
             changeFragment(this.around);
+        } else if (id == R.id.nav_add_leap_card) {
+            changeFragment(this.addLeapCard);
         } else if (id == R.id.nav_check_balance) {
             changeFragment(this.balance);
         } else if (id == R.id.nav_topup) {
@@ -108,7 +129,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void setFragment(){
+    public void setFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, this.realtime)
@@ -116,7 +137,7 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
-    public void changeFragment(Fragment fragment){
+    public void changeFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment)

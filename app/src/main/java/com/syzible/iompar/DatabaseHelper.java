@@ -45,12 +45,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sqLiteDatabase.insert(Database.Favourites.TABLE_NAME, null, contentValues);
     }
 
-    public void removeFavourite(){
+    public void removeFavourite(int stopId){
         SQLiteDatabase sqLiteDatabaseReadable = this.getReadableDatabase();
         SQLiteDatabase sqLiteDatabaseWritable = this.getWritableDatabase();
 
         String deleteFavouriteFromTable = "DELETE FROM " + Database.Favourites.TABLE_NAME +
-                                            " WHERE " + Database.Favourites.STOP_ID + "=";
+                                            " WHERE " + Database.Favourites.STOP_ID +
+                                            "=" + stopId;
 
         sqLiteDatabaseWritable.execSQL(deleteFavouriteFromTable);
     }

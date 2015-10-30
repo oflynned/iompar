@@ -9,6 +9,8 @@
         android:layout_height="fill_parent"
         android:layout_marginTop="?attr/actionBarSize">
         <TextView
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Real Time"/>
