@@ -49,7 +49,7 @@ public class Realtime extends Fragment {
             public void onClick(View v) {
                 try {
                     String result = sync.requestUpdate(Globals.Type.luas,
-                            Globals.LineDirection.stephens_green_to_brides_glen,
+                            Globals.LineDirection.brides_glen_to_stephens_green,
                             "The Gallops");
                     reportedTimes.setText(result);
                 } catch (Exception e) {

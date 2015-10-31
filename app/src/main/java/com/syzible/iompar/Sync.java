@@ -17,9 +17,11 @@ import java.util.ArrayList;
  */
 public class Sync {
     Context context;
-    Activity activity;
 
     String title, endStation;
+
+    ArrayList<String> endDestinationList = new ArrayList<>();
+    ArrayList<String> waitingTimeList = new ArrayList<>();
 
     Globals globals = new Globals();
 
@@ -62,39 +64,69 @@ public class Sync {
 
                     System.out.println("got URL");
 
-                    if(stationBeforeSandyford(station, globals.greenLineBeforeSandyford)){
+                    if(direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
+                            direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
+                        if (stationBeforeSandyford(station, globals.greenLineBeforeSandyford)) {
 
-                        System.out.println("before sandyford");
+                            System.out.println("towards Sandyford/Bride's Glen");
 
-                        Elements elements = doc.select("table");
+                            Elements elements = doc.select("table");
 
-                        ArrayList<String> endDestinationList = new ArrayList<>();
-                        ArrayList<String> waitingTimeList = new ArrayList<>();
+                            endDestinationList.clear();
+                            waitingTimeList.clear();
 
-                        //print out elements within rows
-                        Elements tableRowElements = elements.select("tr");
-                        for (int i = 0; i < tableRowElements.size(); i++) {
-                            Element row = tableRowElements.get(i);
-                            Elements rowItems = row.select("td");
-                            for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
+                            //print out elements within rows
+                            Elements tableRowElements = elements.select("tr");
+                            for (int i = 0; i < tableRowElements.size(); i++) {
+                                Element row = tableRowElements.get(i);
+                                Elements rowItems = row.select("td");
+                                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
                                     endDestinationList.add(rowItems.get(j).text());
                                     waitingTimeList.add(rowItems.get(j + 1).text());
                                     System.out.println(rowItems.get(j).text());
                                     System.out.println(rowItems.get(j + 1).text());
+                                }
                             }
-                        }
-                        nextDue = "The next Luas terminating in " +
-                                String.valueOf(endDestinationList.get(0)) +
-                                " departing from " + station +
-                                " is " + String.valueOf(waitingTimeList.get(0)) +
-                                " mins away!";
-                    } else {
-                        System.out.println("before Bride's Glen");
+                            nextDue = "The next Luas terminating in " +
+                                    String.valueOf(endDestinationList.get(0)) +
+                                    " departing from " + station +
+                                    " is " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
+                        } else {
+                            System.out.println("towards Bride's Glen");
 
+                            Elements elements = doc.select("table");
+
+                            endDestinationList.clear();
+                            waitingTimeList.clear();
+
+                            //print out elements within rows
+                            Elements tableRowElements = elements.select("tr");
+                            for (int i = 0; i < tableRowElements.size(); i++) {
+                                Element row = tableRowElements.get(i);
+                                Elements rowItems = row.select("td");
+                                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
+                                    if (rowItems.get(j).text().equals("Bride's Glen")) {
+                                        endDestinationList.add(rowItems.get(j).text());
+                                        waitingTimeList.add(rowItems.get(j + 1).text());
+                                        System.out.println(rowItems.get(j).text());
+                                        System.out.println(rowItems.get(j + 1).text());
+                                    }
+                                }
+                            }
+
+                            nextDue = "The next Luas terminating in " +
+                                    String.valueOf(endDestinationList.get(0)) +
+                                    " departing from " + station +
+                                    " is " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
+                        }
+                    } else if(direction.equals(Globals.LineDirection.sandyford_to_stephens_green) ||
+                            direction.equals(Globals.LineDirection.brides_glen_to_stephens_green)){
                         Elements elements = doc.select("table");
 
-                        ArrayList<String> endDestinationList = new ArrayList<>();
-                        ArrayList<String> waitingTimeList = new ArrayList<>();
+                        endDestinationList.clear();
+                        waitingTimeList.clear();
+
+                        System.out.println("towards stephen's green");
 
                         //print out elements within rows
                         Elements tableRowElements = elements.select("tr");
@@ -102,7 +134,7 @@ public class Sync {
                             Element row = tableRowElements.get(i);
                             Elements rowItems = row.select("td");
                             for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                                if(rowItems.get(j).text().equals("Bride's Glen")) {
+                                if (rowItems.get(j).text().equals("St. Stephen's Green")) {
                                     endDestinationList.add(rowItems.get(j).text());
                                     waitingTimeList.add(rowItems.get(j + 1).text());
                                     System.out.println(rowItems.get(j).text());
@@ -114,8 +146,7 @@ public class Sync {
                         nextDue = "The next Luas terminating in " +
                                 String.valueOf(endDestinationList.get(0)) +
                                 " departing from " + station +
-                                " is " + String.valueOf(waitingTimeList.get(0)) +
-                                " away!";
+                                " is " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                     }
 
                     System.out.println(nextDue);
@@ -127,6 +158,16 @@ public class Sync {
             }
         };
         downloadThread.start();
+    }
+
+    public String getTimeFormat(String time){
+        if(time.equals("Due")){
+            return "arriving soon.";
+        } else if(time.equals("1 mins")) {
+            return "1 min away";
+        } else {
+            return time.replaceAll("[^0-9]","") + " mins away.";
+        }
     }
 
     public static boolean stationBeforeSandyford(String inputString, String[] items)
