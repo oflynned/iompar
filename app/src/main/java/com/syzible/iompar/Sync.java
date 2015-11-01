@@ -1,8 +1,8 @@
 package com.syzible.iompar;
 
-import android.app.Activity;
 import android.content.Context;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,7 +35,9 @@ public class Sync {
     }
 
     //bus
-    public String requestUpdate(Globals.Type type, int stopNumber) {
+    public String requestUpdate(Globals.Type type,
+                                Globals.LineDirection lineDirection,
+                                int stopNumber) throws Exception {
         return "";
     }
 
@@ -46,8 +48,6 @@ public class Sync {
         switch (type) {
             case luas:
                 threadConnect(direction, station);
-                break;
-            default:
                 break;
         }
         return getDepartures();
@@ -160,22 +160,60 @@ public class Sync {
         downloadThread.start();
     }
 
+    public void leapConnect(){
+        Thread leapThread = new Thread() {
+            public void run() {
+                try {
+                    Connection.Response response = Jsoup.connect(globals.LEAP_LOGIN)
+                            .method(Connection.Method.GET)
+                            .execute();
+
+                    Document loginPage = response.parse();
+
+                    Element eventTarget = loginPage.select("input[name = EVENTTARGET]").first();
+                    Element eventValidation = loginPage.select("input[name=__EVENTVALIDATION]").first();
+                    Element viewState = loginPage.select("input[name=__VIEWSTATE]").first();
+
+
+                    response = Jsoup.connect(globals.LEAP_LOGIN)
+                            .data("__EVENTTARGET", eventTarget.attr("value"))
+                            .data("__VIEWSTATE", viewState.attr("value"))
+                            .data("__EVENTVALIDATION", eventValidation.attr("value"))
+                            .data("ContentPlaceHolder1_UserName", "oflynned")
+                            .data("ContentPlaceHolder1_Password", "thuga8Da!")
+                            //.data("ContentPlaceHolder1_btnlogin", "login")
+                            .method(Connection.Method.POST)
+                            .followRedirects(true)
+                            .execute();
+
+                    Document document = response.parse();
+                    Element wallet = document.select("ContentPlaceHolder1_TabContainer2_MyCardsTabPanel_ContentPlaceHolder1_ctrlCardOverViewBODetails_lblTravelCreditBalance").first();
+
+                    System.out.println("Current balance: " + wallet.html());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        leapThread.run();
+    }
+
     public String getTimeFormat(String time){
-        if(time.equals("Due")){
-            return "arriving soon.";
-        } else if(time.equals("1 mins")) {
-            return "1 min away";
-        } else {
-            return time.replaceAll("[^0-9]","") + " mins away.";
+        switch (time) {
+            case "Due":
+                return "arriving soon.";
+            case "1 mins":
+                return "1 min away";
+            default:
+                return time.replaceAll("[^0-9]", "") + " mins away.";
         }
     }
 
     public static boolean stationBeforeSandyford(String inputString, String[] items)
     {
-        for(int i =0; i < items.length; i++)
-        {
-            if(inputString.contains(items[i]))
-            {
+        for (String item : items) {
+            if (inputString.contains(item)) {
                 return true;
             }
         }

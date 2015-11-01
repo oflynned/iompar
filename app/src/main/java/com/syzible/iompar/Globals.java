@@ -14,6 +14,7 @@ public class Globals {
 
     //http querying
     public String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
+    public String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
 
     public String greenLineBeforeSandyford[] = {
             "St. Stephen's Green",
