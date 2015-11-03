@@ -1,6 +1,7 @@
 package com.syzible.iompar;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,9 @@ public class AddLeapCard extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.fragment_fare, null);
+
+        sync.leapConnect();
+
         return view;
     }
 }

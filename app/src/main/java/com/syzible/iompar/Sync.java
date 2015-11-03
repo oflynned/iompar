@@ -1,6 +1,7 @@
 package com.syzible.iompar;
 
 import android.content.Context;
+import android.os.StrictMode;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -11,6 +12,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by ed on 28/10/15.
@@ -164,32 +166,41 @@ public class Sync {
         Thread leapThread = new Thread() {
             public void run() {
                 try {
+                    System.out.println(globals.LEAP_LOGIN);
+                    System.out.println("Retrieving response");
                     Connection.Response response = Jsoup.connect(globals.LEAP_LOGIN)
                             .method(Connection.Method.GET)
+                            .timeout(10 * 1000)
                             .execute();
+                    System.out.println("Retrieved response: " + response);
 
+                    Map<String, String> cookies = response.cookies();
                     Document loginPage = response.parse();
 
-                    Element eventTarget = loginPage.select("input[name = EVENTTARGET]").first();
+                    for (Map.Entry<String, String> cookie : cookies.entrySet()) {
+                        response.cookie(cookie.getKey(), cookie.getValue());
+                    }
+
                     Element eventValidation = loginPage.select("input[name=__EVENTVALIDATION]").first();
                     Element viewState = loginPage.select("input[name=__VIEWSTATE]").first();
 
-
                     response = Jsoup.connect(globals.LEAP_LOGIN)
-                            .data("__EVENTTARGET", eventTarget.attr("value"))
                             .data("__VIEWSTATE", viewState.attr("value"))
                             .data("__EVENTVALIDATION", eventValidation.attr("value"))
-                            .data("ContentPlaceHolder1_UserName", "oflynned")
-                            .data("ContentPlaceHolder1_Password", "thuga8Da!")
-                            //.data("ContentPlaceHolder1_btnlogin", "login")
+                            .data("ContentPlaceHolder1_UserName", Globals.USER_NAME)
+                            .data("ContentPlaceHolder1_Password", Globals.USER_PASS)
+                            .userAgent("Mozilla")
                             .method(Connection.Method.POST)
                             .followRedirects(true)
+                            .cookies(cookies)
                             .execute();
 
-                    Document document = response.parse();
-                    Element wallet = document.select("ContentPlaceHolder1_TabContainer2_MyCardsTabPanel_ContentPlaceHolder1_ctrlCardOverViewBODetails_lblTravelCreditBalance").first();
+                    System.out.println("Posted response");
 
-                    System.out.println("Current balance: " + wallet.html());
+                    Document document = response.parse();
+                    String wallet = document.text();
+
+                    System.out.println("Current balance: " + wallet);
 
                 } catch (IOException e) {
                     e.printStackTrace();

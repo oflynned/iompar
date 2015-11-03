@@ -1,6 +1,7 @@
 package com.syzible.iompar;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         setFragment();
     }
 
@@ -127,7 +130,7 @@ public class MainActivity extends AppCompatActivity
     public void setFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, this.realtime)
+                .replace(R.id.content_frame, this.addLeapCard)
                 .addToBackStack(null)
                 .commit();
     }
