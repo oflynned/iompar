@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity
     public void setFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, this.addLeapCard)
+                .replace(R.id.content_frame, this.realtime)
                 .addToBackStack(null)
                 .commit();
     }

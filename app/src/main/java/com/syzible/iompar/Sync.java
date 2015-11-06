@@ -46,29 +46,30 @@ public class Sync {
     //luas
     public String requestUpdate(Globals.Type type,
                                 Globals.LineDirection direction,
-                                String station) throws Exception {
+                                String depart,
+                                String arrive) throws Exception {
         switch (type) {
             case luas:
-                threadConnect(direction, station);
+                threadConnect(direction, depart, arrive);
                 break;
         }
         return getDepartures();
     }
 
-    public void threadConnect(final Globals.LineDirection direction, final String station) {
+    public void threadConnect(final Globals.LineDirection direction, final String depart, final String arrive) {
         Thread downloadThread = new Thread() {
             public void run() {
                 Document doc;
                 String nextDue = "";
                 try {
-                    URL url = new URL(globals.RTPI + globals.getLuasStation(station));
+                    URL url = new URL(globals.RTPI + globals.getLuasStation(depart));
                     doc = Jsoup.connect(url.toString()).get();
 
                     System.out.println("got URL");
 
                     if(direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                             direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
-                        if (stationBeforeSandyford(station, globals.greenLineBeforeSandyford)) {
+                        if (stationBeforeSandyford(depart, arrive, globals.greenLineBeforeSandyford)) {
 
                             System.out.println("towards Sandyford/Bride's Glen");
 
@@ -89,10 +90,12 @@ public class Sync {
                                     System.out.println(rowItems.get(j + 1).text());
                                 }
                             }
-                            nextDue = "The next Luas terminating in " +
-                                    String.valueOf(endDestinationList.get(0)) +
-                                    " departing from " + station +
-                                    " is " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
+
+                            nextDue =
+                                    "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
+                                            "Departing from: " + depart + "\n" +
+                                            "Destination: " + arrive + "\n" +
+                                            "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                         } else {
                             System.out.println("towards Bride's Glen");
 
@@ -116,10 +119,11 @@ public class Sync {
                                 }
                             }
 
-                            nextDue = "The next Luas terminating in " +
-                                    String.valueOf(endDestinationList.get(0)) +
-                                    " departing from " + station +
-                                    " is " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
+                            nextDue =
+                                    "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
+                                            "Departing from: " + depart + "\n" +
+                                            "Destination: " + arrive + "\n" +
+                                            "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                         }
                     } else if(direction.equals(Globals.LineDirection.sandyford_to_stephens_green) ||
                             direction.equals(Globals.LineDirection.brides_glen_to_stephens_green)){
@@ -145,10 +149,11 @@ public class Sync {
                             }
                         }
 
-                        nextDue = "The next Luas terminating in " +
-                                String.valueOf(endDestinationList.get(0)) +
-                                " departing from " + station +
-                                " is " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
+                        nextDue =
+                                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
+                                "Departing from: " + depart + "\n" +
+                                "Destination: " + arrive + "\n" +
+                                "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                     }
 
                     System.out.println(nextDue);
@@ -166,41 +171,32 @@ public class Sync {
         Thread leapThread = new Thread() {
             public void run() {
                 try {
-                    System.out.println(globals.LEAP_LOGIN);
-                    System.out.println("Retrieving response");
-                    Connection.Response response = Jsoup.connect(globals.LEAP_LOGIN)
+                    Connection.Response response = Jsoup.connect(Globals.LEAP_LOGIN)
                             .method(Connection.Method.GET)
                             .timeout(10 * 1000)
                             .execute();
-                    System.out.println("Retrieved response: " + response);
 
-                    Map<String, String> cookies = response.cookies();
-                    Document loginPage = response.parse();
+                    Document responseDocument = response.parse();
+                    Map<String, String> loginCookies = response.cookies();
 
-                    for (Map.Entry<String, String> cookie : cookies.entrySet()) {
-                        response.cookie(cookie.getKey(), cookie.getValue());
-                    }
+                    Element viewState = responseDocument.select("input[name=__VIEWSTATE]").first();
+                    String viewStateKey = viewState.attr("value");
 
-                    Element eventValidation = loginPage.select("input[name=__EVENTVALIDATION]").first();
-                    Element viewState = loginPage.select("input[name=__VIEWSTATE]").first();
-
-                    response = Jsoup.connect(globals.LEAP_LOGIN)
-                            .data("__VIEWSTATE", viewState.attr("value"))
-                            .data("__EVENTVALIDATION", eventValidation.attr("value"))
-                            .data("ContentPlaceHolder1_UserName", Globals.USER_NAME)
-                            .data("ContentPlaceHolder1_Password", Globals.USER_PASS)
-                            .userAgent("Mozilla")
+                    response = Jsoup.connect(Globals.LEAP_LOGIN)
+                            .cookies(loginCookies)
+                            .data("__EVENTTARGET", "")
+                            .data("__EVENTARGUMENT", "")
+                            .data("__VIEWSTATE", viewStateKey)
+                            .data("ctl00$ContentPlaceHolder1$UserName", Globals.USER_NAME)
+                            .data("ctl00$ContentPlaceHolder1$Password", Globals.USER_PASS)
+                            .data("ctl00$ContentPlaceHolder1$btnlogin", "Login")
                             .method(Connection.Method.POST)
                             .followRedirects(true)
-                            .cookies(cookies)
                             .execute();
-
-                    System.out.println("Posted response");
 
                     Document document = response.parse();
                     String wallet = document.text();
-
-                    System.out.println("Current balance: " + wallet);
+                    System.out.println(wallet);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -213,18 +209,18 @@ public class Sync {
     public String getTimeFormat(String time){
         switch (time) {
             case "Due":
-                return "arriving soon.";
+                return "Arriving soon.";
             case "1 mins":
-                return "1 min away";
+                return "1 min away.";
             default:
                 return time.replaceAll("[^0-9]", "") + " mins away.";
         }
     }
 
-    public static boolean stationBeforeSandyford(String inputString, String[] items)
+    public static boolean stationBeforeSandyford(String depart, String arrive, String[] items)
     {
         for (String item : items) {
-            if (inputString.contains(item)) {
+            if (arrive.contains(item)) {
                 return true;
             }
         }

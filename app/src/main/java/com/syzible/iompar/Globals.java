@@ -14,7 +14,7 @@ public class Globals {
 
     //http querying
     public String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
-    public String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
+    public static String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
 
     public static final String USER_NAME = "oflynned";
     public static final String USER_PASS = "thuga8Da!";

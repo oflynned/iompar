@@ -36,7 +36,8 @@ public class Realtime extends Fragment {
                 try {
                     String result = sync.requestUpdate(Globals.Type.luas,
                             Globals.LineDirection.stephens_green_to_brides_glen,
-                            "St. Stephen's Green");
+                            "St. Stephen's Green",
+                            "Charlemont");
                     reportedTimes.setText(result);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -50,7 +51,8 @@ public class Realtime extends Fragment {
                 try {
                     String result = sync.requestUpdate(Globals.Type.luas,
                             Globals.LineDirection.brides_glen_to_stephens_green,
-                            "The Gallops");
+                            "The Gallops",
+                            "St. Stephen's Green");
                     reportedTimes.setText(result);
                 } catch (Exception e) {
                     e.printStackTrace();
