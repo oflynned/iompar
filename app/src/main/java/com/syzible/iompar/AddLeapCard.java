@@ -1,7 +1,6 @@
 package com.syzible.iompar;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 public class AddLeapCard extends Fragment {
 
     Sync sync = new Sync(getContext());
-
     View view;
 
     @Override

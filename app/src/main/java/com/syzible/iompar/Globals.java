@@ -47,6 +47,28 @@ public class Globals {
             "Bride's Glen"
     };
 
+    public String redLineBeforeBelgard[] = {
+
+    };
+
+    public String redLineBeforeTallaght[] = {
+
+    };
+
+    public String redLineBeforeSaggart[] = {
+
+    };
+
+    public String redLineTallaghtToPoint[] = {
+
+    };
+
+    public String redLineSaggardToPoint[] = {
+
+    };
+
+
+
     public enum Type {
         dublin_bus,
         bus_eireann,

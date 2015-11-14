@@ -1,7 +1,6 @@
 package com.syzible.iompar;
 
 import android.content.Context;
-import android.os.StrictMode;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -56,6 +55,12 @@ public class Sync {
         return getDepartures();
     }
 
+    /**
+     Connects to Leap Card login service via ASPX and returns the balance within the page source recursively
+     @param direction   direction in which the user is travelling
+     @param depart      departure station in string format where the user is leaving from
+     @param arrive      name of station at which the user is arriving
+     */
     public void threadConnect(final Globals.LineDirection direction, final String depart, final String arrive) {
         Thread downloadThread = new Thread() {
             public void run() {
