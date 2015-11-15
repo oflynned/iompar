@@ -1,11 +1,13 @@
 package com.syzible.iompar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,6 +23,8 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public final static String ON_BACK_PRESSED_EVENT = "on_back_pressed_event";
 
     //fragment classes
     Realtime realtime = new Realtime();
@@ -75,7 +79,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Intent broadcastIntent = new Intent(ON_BACK_PRESSED_EVENT);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
         }
     }
 

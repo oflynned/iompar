@@ -1,59 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_height="fill_parent">
+
         <TextView
+            android:padding="5dp"
             android:id="@+id/realtimeTitle"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Real Time"/>
+            android:text="Real Time"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <Button
+        <GridView
             android:layout_below="@+id/realtimeTitle"
-            android:id="@+id/stephensGreen"
-            android:layout_width="wrap_content"
+            android:id="@+id/gridview"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="St. Stephen's Green"
+            android:columnWidth="90dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
             android:gravity="center"
-            android:layout_centerHorizontal="true"/>
-
-        <Button
-            android:layout_below="@+id/stephensGreen"
-            android:id="@+id/theGallops"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="The Gallops"
-            android:gravity="center"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-
-        <View
-            android:padding="5dp"
-            android:layout_margin="5dp"
-            android:id="@+id/separator"
-            android:layout_below="@+id/theGallops"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimary"/>
-
-        <TextView
-            android:padding="5dp"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=""
-            android:id="@+id/reportedTimes"
-            android:layout_below="@+id/separator"
-            android:layout_centerHorizontal="true" />
+            android:padding="10sp"
+            />
     </RelativeLayout>
-
 </RelativeLayout>

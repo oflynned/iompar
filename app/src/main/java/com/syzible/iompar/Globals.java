@@ -47,6 +47,31 @@ public class Globals {
             "Bride's Glen"
     };
 
+    public String greenLineStations[] = {
+            "St. Stephen's Green",
+            "Harcourt St.",
+            "Charlemont",
+            "Ranelagh",
+            "Beechwood",
+            "Cowper",
+            "Milltown",
+            "Windy Arbour",
+            "Dundrum",
+            "Balally",
+            "Kilmacud",
+            "Stillorgan",
+            "Sandyford",
+            "Central Park",
+            "Glencairn",
+            "The Gallops",
+            "Leopardstown Valley",
+            "Ballyogan Wood",
+            "Carrickmines",
+            "Laughanstown",
+            "Cherrywood",
+            "Bride's Glen"
+    };
+
     public String redLineBeforeBelgard[] = {
 
     };
@@ -66,7 +91,6 @@ public class Globals {
     public String redLineSaggardToPoint[] = {
 
     };
-
 
 
     public enum Type {
@@ -96,7 +120,7 @@ public class Globals {
 
     public String getLuasStation(String string) {
         String RTPI = "";
-        switch(string){
+        switch (string) {
             case "St. Stephen's Green":
                 RTPI = "LUAS24";
                 break;
@@ -107,9 +131,9 @@ public class Globals {
         return RTPI;
     }
 
-    public String getLuasLine(Line line){
+    public String getLuasLine(Line line) {
         String luasLine = "";
-        switch(line){
+        switch (line) {
             case green:
                 luasLine = "Green";
                 break;
@@ -124,7 +148,7 @@ public class Globals {
 
     public String getLuasDirection(LineDirection lineDirection) {
         String direction = "";
-        switch(lineDirection){
+        switch (lineDirection) {
             case stephens_green_to_sandyford:
                 direction = "Sandyford";
                 break;
@@ -143,27 +167,27 @@ public class Globals {
         return direction;
     }
 
-    public void setNavName(String navName){
+    public void setNavName(String navName) {
         this.navName = navName;
     }
 
-    public String getNavName(){
+    public String getNavName() {
         return navName;
     }
 
-    public void setNavLeapNumber(String navLeapNumber){
+    public void setNavLeapNumber(String navLeapNumber) {
         this.navLeapNumber = navLeapNumber;
     }
 
-    public String getNavLeapNumber(){
+    public String getNavLeapNumber() {
         return navLeapNumber;
     }
 
-    public void setLoggedIn(boolean loggedIn){
+    public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
     }
 
-    public boolean isLoggedIn(){
+    public boolean isLoggedIn() {
         return loggedIn;
     }
 }

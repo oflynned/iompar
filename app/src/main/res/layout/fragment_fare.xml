@@ -6,12 +6,10 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_height="fill_parent">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Fare"/>
     </RelativeLayout>
-
 </RelativeLayout>

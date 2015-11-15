@@ -187,19 +187,29 @@ public class Sync {
                     Element viewState = responseDocument.select("input[name=__VIEWSTATE]").first();
                     String viewStateKey = viewState.attr("value");
 
+                    System.out.println("2nd response");
+
                     response = Jsoup.connect(Globals.LEAP_LOGIN)
+                            .timeout(10 * 1000)
                             .cookies(loginCookies)
+                            .validateTLSCertificates(true)
+                            .userAgent("Mozilla/5.0")
+                            .data(loginCookies)
+                            .data("AjaxScriptManager_HiddenField", "")
+                            .data("_URLLocalization_Var001", "False")
                             .data("__EVENTTARGET", "")
                             .data("__EVENTARGUMENT", "")
                             .data("__VIEWSTATE", viewStateKey)
                             .data("ctl00$ContentPlaceHolder1$UserName", Globals.USER_NAME)
                             .data("ctl00$ContentPlaceHolder1$Password", Globals.USER_PASS)
-                            .data("ctl00$ContentPlaceHolder1$btnlogin", "Login")
                             .method(Connection.Method.POST)
                             .followRedirects(true)
                             .execute();
 
+                    System.out.println("Received response");
+
                     Document document = response.parse();
+                    System.out.println(document);
                     String wallet = document.text();
                     System.out.println(wallet);
 
