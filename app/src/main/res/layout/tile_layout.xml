@@ -7,11 +7,11 @@
     <TextView
         android:id="@+id/tileTitle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:textColor="#ffffff"
-        android:padding="10dp"
-        android:text="Windy\nArbour"/>
+        android:padding="5dp"
+        android:text="Leopardstown\nValley"/>
 </RelativeLayout>

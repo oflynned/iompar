@@ -30,28 +30,12 @@ public class Sync {
         this.context = context;
     }
 
-    //generic
-    public String requestUpdate(Globals.Type type) throws Exception {
-        return "";
-    }
-
-    //bus
-    public String requestUpdate(Globals.Type type,
-                                Globals.LineDirection lineDirection,
-                                int stopNumber) throws Exception {
-        return "";
-    }
-
     //luas
-    public String requestUpdate(Globals.Type type,
-                                Globals.LineDirection direction,
+    public String requestUpdate(Globals.LineDirection direction,
                                 String depart,
                                 String arrive) throws Exception {
-        switch (type) {
-            case luas:
-                threadConnect(direction, depart, arrive);
-                break;
-        }
+
+        threadConnect(direction, depart, arrive);
         return getDepartures();
     }
 
