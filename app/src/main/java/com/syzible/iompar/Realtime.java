@@ -266,11 +266,21 @@ public class Realtime extends Fragment {
         Context context;
         LayoutInflater layoutInflater;
 
+        /**
+         * Default constructor for the transportation adapter which passes the current context
+         * and instantiates an appropriate layout contextually
+         * @param context   the current application context
+         */
         public TransportationAdapter(Context context) {
             this.context = context;
             layoutInflater = LayoutInflater.from(context);
         }
 
+        /**
+         *  Counts the number of static elements within the enumeration's state array and adds it
+         *  to the count for the current state which the view returns
+         *  @return count   the count of items within the array to be displayed
+         */
         @Override
         public int getCount() {
             int count = 0;
@@ -320,6 +330,10 @@ public class Realtime extends Fragment {
             return 0;
         }
 
+        /**
+         * Returns the current stage advanced or returned as a set of arguments within enumeration states
+         * @return    view    returns the current contextual view
+         */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
