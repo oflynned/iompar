@@ -309,7 +309,7 @@ public class Realtime extends Fragment {
     private void ensureDataArrival(){
         while(!sync.isLoaded()){
             try {
-                Thread.sleep(Globals.TENTH_OF_SECOND);
+                Thread.sleep(1);
                 if (sync.isLoaded()) {
                     sync.setLoaded(true);
                     Toast.makeText(getContext(), sync.getNextDue(), Toast.LENGTH_SHORT).show();

@@ -43,9 +43,9 @@ public class Sync {
     public void threadConnect(final Globals.LineDirection direction, final String depart, final String arrive) {
         Thread downloadThread = new Thread() {
             public void run() {
+                setLoaded(false);
                 Document doc;
                 try {
-                    setLoaded(false);
                     URL url = new URL(globals.RTPI + globals.getLuasStation(depart));
                     doc = Jsoup.connect(url.toString()).get();
 
@@ -113,6 +113,7 @@ public class Sync {
             }
         };
         downloadThread.start();
+        setLoaded(false);
     }
 
     public void scrapeData(Document doc, String depart, String arrive){

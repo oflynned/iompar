@@ -130,7 +130,7 @@ public class Globals {
             "Mayor Square - NCI",
             "George's Dock",
             "Connolly",
-            "Busáras",
+            "Busaras",
             "Abbey Street",
             "Jervis",
             "Four Courts",
