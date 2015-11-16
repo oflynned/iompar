@@ -36,11 +36,6 @@ public class MainActivity extends AppCompatActivity
     TopUp topUp = new TopUp();
 
     //helper classes
-    Globals globals = new Globals();
-    Login login = new Login(this);
-    Notifications notifications = new Notifications(this);
-    DatabaseHelper databaseHelper = new DatabaseHelper(this);
-    Sync sync = new Sync(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

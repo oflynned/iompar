@@ -24,8 +24,6 @@ import android.widget.Toast;
  */
 public class Realtime extends Fragment {
 
-    Globals globals = new Globals();
-
     View view;
     int stage = 0;
 
@@ -33,14 +31,18 @@ public class Realtime extends Fragment {
     private GridView gridView;
 
     private enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
+
     private enum LuasLines {GREEN, RED}
+
     private enum LuasDirections {TALLAGHT, SAGGART, BRIDES_GLEN, SANDYFORD}
 
     private TransportationCategories currentCategory;
     private LuasLines currentLuasLine;
     private LuasDirections currentLuasDirection;
 
+    //current choice
     Categories[] categories;
+    //luas
     Categories[] luasCategories;
     Categories[] luasDirectionGreen;
     Categories[] luasDirectionRed;
@@ -48,6 +50,25 @@ public class Realtime extends Fragment {
     Categories[] greenLuasStationsSandyford;
     Categories[] redLuasStationsTallaght;
     Categories[] redLuasStationsSaggart;
+    //train
+    Categories[] trainCategories;
+    Categories[] trainDirection;
+    Categories[] trainStations;
+    //dart
+    Categories[] dartCategories;
+    Categories[] dartDirection;
+    Categories[] dartStations;
+    //dublin bus
+    Categories[] dbLine;
+    Categories[] dbDirection;
+    Categories[] dbStop;
+    //bus eireann
+    Categories[] beCategories;
+    Categories[] beDirection;
+    Categories[] beStations;
+
+    Sync sync = new Sync(getContext());
+    Globals globals = new Globals();
 
     /**
      * Overrides the onBackPress() and returns to previous stage without closing fragment
@@ -191,7 +212,7 @@ public class Realtime extends Fragment {
                       ie for luas: green line, red line...
                     */
                     if (currentCategory == TransportationCategories.LUAS) {
-                        switch (position){
+                        switch (position) {
                             case 0:
                                 currentLuasLine = LuasLines.GREEN;
                                 stage++;
@@ -209,7 +230,7 @@ public class Realtime extends Fragment {
                    /* Having chosen a type we we need to show line choosable, ie stations to tallaght, saggart... */
                     if (currentCategory == TransportationCategories.LUAS) {
                         if (currentLuasLine == LuasLines.GREEN) {
-                            switch(position){
+                            switch (position) {
                                 case 0:
                                     currentLuasDirection = LuasDirections.BRIDES_GLEN;
                                     stage++;
@@ -222,7 +243,7 @@ public class Realtime extends Fragment {
                                     break;
                             }
                         } else {
-                            switch(position){
+                            switch (position) {
                                 case 0:
                                     currentLuasDirection = LuasDirections.TALLAGHT;
                                     stage++;
@@ -242,7 +263,16 @@ public class Realtime extends Fragment {
                     if (currentCategory == TransportationCategories.LUAS) {
                         if (currentLuasLine == LuasLines.GREEN) {
                             if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
-                                gridView.setAdapter(baseAdapter);
+
+                                currentChoice = greenLuasStationsBridesGlen;
+                                String departure = currentChoice[position].getTitle();
+                                String RTPI = "";
+                                try {
+                                    RTPI = sync.requestUpdate(Globals.LineDirection.stephens_green_to_brides_glen, departure, "");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                Toast.makeText(getContext(), RTPI, Toast.LENGTH_SHORT).show();
                             } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
                                 gridView.setAdapter(baseAdapter);
                             }
@@ -269,7 +299,8 @@ public class Realtime extends Fragment {
         /**
          * Default constructor for the transportation adapter which passes the current context
          * and instantiates an appropriate layout contextually
-         * @param context   the current application context
+         *
+         * @param context the current application context
          */
         public TransportationAdapter(Context context) {
             this.context = context;
@@ -277,9 +308,10 @@ public class Realtime extends Fragment {
         }
 
         /**
-         *  Counts the number of static elements within the enumeration's state array and adds it
-         *  to the count for the current state which the view returns
-         *  @return count   the count of items within the array to be displayed
+         * Counts the number of static elements within the enumeration's state array and adds it
+         * to the count for the current state which the view returns
+         *
+         * @return count   the count of items within the array to be displayed
          */
         @Override
         public int getCount() {
@@ -332,7 +364,7 @@ public class Realtime extends Fragment {
 
         /**
          * Returns the current stage advanced or returned as a set of arguments within enumeration states
-         * @return    view    returns the current contextual view
+         * @return view    returns the current contextual view
          */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {

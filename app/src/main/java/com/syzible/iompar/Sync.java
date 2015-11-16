@@ -19,7 +19,7 @@ import java.util.Map;
 public class Sync {
     Context context;
 
-    String title, endStation;
+    String title, endStation, nextDue;
 
     ArrayList<String> endDestinationList = new ArrayList<>();
     ArrayList<String> waitingTimeList = new ArrayList<>();
@@ -40,7 +40,8 @@ public class Sync {
     }
 
     /**
-     Connects to Leap Card login service via ASPX and returns the balance within the page source recursively
+     Connects to the RTPI URL with the respective stations given and returns the appropriate
+     scraped values for the depart station to destination
      @param direction   direction in which the user is travelling
      @param depart      departure station in string format where the user is leaving from
      @param arrive      name of station at which the user is arriving
@@ -49,7 +50,6 @@ public class Sync {
         Thread downloadThread = new Thread() {
             public void run() {
                 Document doc;
-                String nextDue = "";
                 try {
                     URL url = new URL(globals.RTPI + globals.getLuasStation(depart));
                     doc = Jsoup.connect(url.toString()).get();
@@ -79,7 +79,6 @@ public class Sync {
                                     System.out.println(rowItems.get(j + 1).text());
                                 }
                             }
-
                             nextDue =
                                     "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
                                             "Departing from: " + depart + "\n" +
@@ -107,7 +106,6 @@ public class Sync {
                                     }
                                 }
                             }
-
                             nextDue =
                                     "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
                                             "Departing from: " + depart + "\n" +
@@ -137,25 +135,27 @@ public class Sync {
                                 }
                             }
                         }
-
                         nextDue =
                                 "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "Departing from: " + depart + "\n" +
                                 "Destination: " + arrive + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                     }
-
                     System.out.println(nextDue);
-                    setDepartures(nextDue);
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                setDepartures(nextDue);
             }
         };
         downloadThread.start();
     }
 
+    /**
+     Connects to Leap Card login service via ASPX and returns the balance within the page source
+     recursively through an independent asynchronous thread
+     @note THROWING EXCEPTION ON LOGIN
+     */
     public void leapConnect(){
         Thread leapThread = new Thread() {
             public void run() {

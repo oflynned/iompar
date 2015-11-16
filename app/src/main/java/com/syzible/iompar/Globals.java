@@ -150,26 +150,6 @@ public class Globals {
             "Tallaght"
     };
 
-    public String redLineBeforeBelgard[] = {
-
-    };
-
-    public String redLineBeforeTallaght[] = {
-
-    };
-
-    public String redLineBeforeSaggart[] = {
-
-    };
-
-    public String redLineTallaghtToPoint[] = {
-
-    };
-
-    public String redLineSaggardToPoint[] = {
-
-    };
-
     public enum Line {
         red,
         green
