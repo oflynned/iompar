@@ -51,205 +51,57 @@ public class Sync {
 
                     System.out.println("got URL");
 
-                    // green line - travelling to any station common to bride's glen/sandyford
-                    // from stephen's green
+
                     if(direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                             direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
                         if (stationBeforeSandyford(depart, arrive, globals.greenLineBeforeSandyford)) {
-
+                            // green line - travelling to any station common to bride's glen/sandyford
+                            // from stephen's green
                             System.out.println("towards Sandyford/Bride's Glen");
+                            scrapeData(doc, depart, arrive);
 
-                            Elements elements = doc.select("table");
-
-                            endDestinationList.clear();
-                            waitingTimeList.clear();
-
-                            //print out elements within rows
-                            Elements tableRowElements = elements.select("tr");
-                            for (int i = 0; i < tableRowElements.size(); i++) {
-                                Element row = tableRowElements.get(i);
-                                Elements rowItems = row.select("td");
-                                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                                    endDestinationList.add(rowItems.get(j).text());
-                                    waitingTimeList.add(rowItems.get(j + 1).text());
-                                    System.out.println(rowItems.get(j).text());
-                                    System.out.println(rowItems.get(j + 1).text());
-                                }
-                            }
-                            nextDue =
-                                    "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                            "Departing from: " + depart + "\n" +
-                                            "Destination: " + arrive + "\n" +
-                                            "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                         } else {
                             // else we're travelling to beyond sandyford and can only take
                             // bride's glen trams away from stephen's green
                             System.out.println("towards Bride's Glen");
+                            scrapeData(doc, "Bride's Glen", depart, arrive);
 
-                            Elements elements = doc.select("table");
-
-                            endDestinationList.clear();
-                            waitingTimeList.clear();
-
-                            //print out elements within rows
-                            Elements tableRowElements = elements.select("tr");
-                            for (int i = 0; i < tableRowElements.size(); i++) {
-                                Element row = tableRowElements.get(i);
-                                Elements rowItems = row.select("td");
-                                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                                    if (rowItems.get(j).text().equals("Bride's Glen")) {
-                                        endDestinationList.add(rowItems.get(j).text());
-                                        waitingTimeList.add(rowItems.get(j + 1).text());
-                                        System.out.println(rowItems.get(j).text());
-                                        System.out.println(rowItems.get(j + 1).text());
-                                    }
-                                }
-                            }
-
-                            nextDue =
-                                    "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                            "Departing from: " + depart + "\n" +
-                                            "Destination: " + arrive + "\n" +
-                                            "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                         }
                     } else if(direction.equals(Globals.LineDirection.sandyford_to_stephens_green) ||
                             direction.equals(Globals.LineDirection.brides_glen_to_stephens_green)){
                         // else if we're travelling inversely from sandyford/bride's glen towards
                         // stephen's green, we can take any tram as they all have the same terminus
-                        Elements elements = doc.select("table");
-
-                        endDestinationList.clear();
-                        waitingTimeList.clear();
-
                         System.out.println("towards stephen's green");
+                        scrapeData(doc, "St. Stephen's Green", depart, arrive);
 
-                        //print out elements within rows
-                        Elements tableRowElements = elements.select("tr");
-                        for (int i = 0; i < tableRowElements.size(); i++) {
-                            Element row = tableRowElements.get(i);
-                            Elements rowItems = row.select("td");
-                            for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                                if (rowItems.get(j).text().equals("St. Stephen's Green")) {
-                                    endDestinationList.add(rowItems.get(j).text());
-                                    waitingTimeList.add(rowItems.get(j + 1).text());
-                                    System.out.println(rowItems.get(j).text());
-                                    System.out.println(rowItems.get(j + 1).text());
-                                }
-                            }
-                        }
-                        nextDue =
-                                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                "Departing from: " + depart + "\n" +
-                                "Destination: " + arrive + "\n" +
-                                "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                     } else if (direction.equals(Globals.LineDirection.the_point_to_tallaght)){
-                        Elements elements = doc.select("table");
-
-                        endDestinationList.clear();
-                        waitingTimeList.clear();
-
+                        // else we're dealing with the red line of the luas and must check direction
+                        // and poll the appropriate sub-lines
+                        // getting scaldy in tallaght? red line from point to the square
                         System.out.println("towards tallaght");
+                        scrapeData(doc, "Tallaght", depart, arrive);
 
-                        //print out elements within rows
-                        Elements tableRowElements = elements.select("tr");
-                        for (int i = 0; i < tableRowElements.size(); i++) {
-                            Element row = tableRowElements.get(i);
-                            Elements rowItems = row.select("td");
-                            for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                                if (rowItems.get(j).text().equals("Tallaght")) {
-                                    endDestinationList.add(rowItems.get(j).text());
-                                    waitingTimeList.add(rowItems.get(j + 1).text());
-                                    System.out.println(rowItems.get(j).text());
-                                    System.out.println(rowItems.get(j + 1).text());
-                                }
-                            }
-                        }
-                        nextDue =
-                                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                        "Departing from: " + depart + "\n" +
-                                        "Destination: " + arrive + "\n" +
-                                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                     } else if(direction.equals(Globals.LineDirection.tallaght_to_the_point)){
-                        Elements elements = doc.select("table");
+                        // else we're moving from tallaght towards the point on a tram
+                        // and probably spitting at people on the way
+                        System.out.println("towards the point from tallaght");
+                        scrapeData(doc, "The Point", depart, arrive);
 
-                        endDestinationList.clear();
-                        waitingTimeList.clear();
-
-                        System.out.println("towards the point");
-
-                        //print out elements within rows
-                        Elements tableRowElements = elements.select("tr");
-                        for (int i = 0; i < tableRowElements.size(); i++) {
-                            Element row = tableRowElements.get(i);
-                            Elements rowItems = row.select("td");
-                            for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                                if (rowItems.get(j).text().equals("The Point")) {
-                                    endDestinationList.add(rowItems.get(j).text());
-                                    waitingTimeList.add(rowItems.get(j + 1).text());
-                                    System.out.println(rowItems.get(j).text());
-                                    System.out.println(rowItems.get(j + 1).text());
-                                }
-                            }
-                        }
-                        nextDue =
-                                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                        "Departing from: " + depart + "\n" +
-                                        "Destination: " + arrive + "\n" +
-                                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                     } else if(direction.equals(Globals.LineDirection.saggart_to_the_point)){
-                        Elements elements = doc.select("table");
+                        // else heading from Saggart towards town where I need to interchange at Belgard
+                        // ONLY TRUE FOR SAGGART-TOWN ROUTE OUTSIDE OF PEAK TIMES
+                        // weekdays: before 7am, after 6:30pm
+                        // saturday: before 8am, after 6pm
+                        // sunday: all day
+                        System.out.println("towards the point from saggart WITH CERTAIN RULES");
+                        scrapeData(doc, "Belgard", "The Point", depart, arrive);
 
-                        endDestinationList.clear();
-                        waitingTimeList.clear();
-
-                        System.out.println("towards the point");
-
-                        //print out elements within rows
-                        Elements tableRowElements = elements.select("tr");
-                        for (int i = 0; i < tableRowElements.size(); i++) {
-                            Element row = tableRowElements.get(i);
-                            Elements rowItems = row.select("td");
-                            for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                                if (rowItems.get(j).text().equals("Belgard")) {
-                                    endDestinationList.add(rowItems.get(j).text());
-                                    waitingTimeList.add(rowItems.get(j + 1).text());
-                                    System.out.println(rowItems.get(j).text());
-                                    System.out.println(rowItems.get(j + 1).text());
-                                }
-                            }
-                        }
-                        nextDue =
-                                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                        "Departing from: " + depart + "\n" +
-                                        "Destination: " + arrive + "\n" +
-                                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                     } else if(direction.equals(Globals.LineDirection.the_point_to_saggart)) {
-                        Elements elements = doc.select("table");
+                        // else we're going from town to saggart
+                        // this is mostly running, need to check if it polled as exceptions were thrown
+                        System.out.println("towards Saggart from town");
+                        scrapeData(doc, "Saggart", depart, arrive);
 
-                        endDestinationList.clear();
-                        waitingTimeList.clear();
-
-                        System.out.println("towards Saggart");
-
-                        //print out elements within rows
-                        Elements tableRowElements = elements.select("tr");
-                        for (int i = 0; i < tableRowElements.size(); i++) {
-                            Element row = tableRowElements.get(i);
-                            Elements rowItems = row.select("td");
-                            for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                                if (rowItems.get(j).text().equals("Saggart")) {
-                                    endDestinationList.add(rowItems.get(j).text());
-                                    waitingTimeList.add(rowItems.get(j + 1).text());
-                                    System.out.println(rowItems.get(j).text());
-                                    System.out.println(rowItems.get(j + 1).text());
-                                }
-                            }
-                        }
-                        nextDue =
-                                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                        "Departing from: " + depart + "\n" +
-                                        "Destination: " + arrive + "\n" +
-                                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
                     } else {
                         System.out.println("Jumped to else loop -- check luas directions");
                     }
@@ -257,14 +109,99 @@ public class Sync {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                System.out.println("4");
-                setNextDue(nextDue);
                 setLoaded(true);
             }
         };
         downloadThread.start();
-        System.out.println("1");
+    }
+
+    public void scrapeData(Document doc, String depart, String arrive){
+        Elements elements = doc.select("table");
+        endDestinationList.clear();
+        waitingTimeList.clear();
+        Elements tableRowElements = elements.select("tr");
+        for (int i = 0; i < tableRowElements.size(); i++) {
+            Element row = tableRowElements.get(i);
+            Elements rowItems = row.select("td");
+            for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
+                endDestinationList.add(rowItems.get(j).text());
+                waitingTimeList.add(rowItems.get(j + 1).text());
+                System.out.println(rowItems.get(j).text());
+                System.out.println(rowItems.get(j + 1).text());
+            }
+        }
+        nextDue =
+                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
+                        "Departing from: " + depart + "\n" +
+                        "Destination: " + arrive + "\n" +
+                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
+    }
+
+    public void scrapeData(Document doc, String endStation, String depart, String arrive){
+        Elements elements = doc.select("table");
+        endDestinationList.clear();
+        waitingTimeList.clear();
+        Elements tableRowElements = elements.select("tr");
+        if(tableRowElements != null) {
+            for (int i = 0; i < tableRowElements.size(); i++) {
+                Element row = tableRowElements.get(i);
+                Elements rowItems = row.select("td");
+                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
+                    if (rowItems.get(j).text().equals(endStation)) {
+                        endDestinationList.add(rowItems.get(j).text());
+                        waitingTimeList.add(rowItems.get(j + 1).text());
+                        System.out.println(rowItems.get(j).text());
+                        System.out.println(rowItems.get(j + 1).text());
+                    }
+                }
+            }
+        } else {
+            endDestinationList.add("No destination");
+            waitingTimeList.add("No time");
+            System.out.println("No destination");
+            System.out.println("No time");
+        }
+        setNextDue(
+                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
+                        "Departing from: " + depart + "\n" +
+                        "Destination: " + arrive + "\n" +
+                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))));
+    }
+
+    public void scrapeData(Document doc, String endStation, String endStationAlternate, String depart, String arrive){
+        Elements elements = doc.select("table");
+        endDestinationList.clear();
+        waitingTimeList.clear();
+        Elements tableRowElements = elements.select("tr");
+        if(tableRowElements != null) {
+            for (int i = 0; i < tableRowElements.size(); i++) {
+                Element row = tableRowElements.get(i);
+                Elements rowItems = row.select("td");
+                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
+                    if (rowItems.get(j).text().equals(endStation)) {
+                        endDestinationList.add(rowItems.get(j).text());
+                        waitingTimeList.add(rowItems.get(j + 1).text());
+                        System.out.println(rowItems.get(j).text());
+                        System.out.println(rowItems.get(j + 1).text());
+                    } else if (rowItems.get(j).text().equals(endStationAlternate)) {
+                        endDestinationList.add(rowItems.get(j).text());
+                        waitingTimeList.add(rowItems.get(j + 1).text());
+                        System.out.println(rowItems.get(j).text());
+                        System.out.println(rowItems.get(j + 1).text());
+                    }
+                }
+            }
+        } else {
+            endDestinationList.add("No destination");
+            waitingTimeList.add("No time");
+            System.out.println("No destination");
+            System.out.println("No time");
+        }
+        setNextDue(
+                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
+                        "Departing from: " + depart + "\n" +
+                        "Destination: " + arrive + "\n" +
+                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))));
     }
 
     /**
@@ -278,7 +215,7 @@ public class Sync {
                 try {
                     Connection.Response response = Jsoup.connect(Globals.LEAP_LOGIN)
                             .method(Connection.Method.GET)
-                            .timeout(10 * 1000)
+                            .timeout(Globals.TEN_SECONDS)
                             .execute();
 
                     Document responseDocument = response.parse();
@@ -290,7 +227,7 @@ public class Sync {
                     System.out.println("2nd response");
 
                     response = Jsoup.connect(Globals.LEAP_LOGIN)
-                            .timeout(10 * 1000)
+                            .timeout(Globals.TEN_SECONDS)
                             .cookies(loginCookies)
                             .validateTLSCertificates(true)
                             .userAgent("Mozilla/5.0")

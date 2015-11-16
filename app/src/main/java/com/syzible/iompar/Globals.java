@@ -19,9 +19,9 @@ public class Globals {
     public static final String USER_NAME = "oflynned";
     public static final String USER_PASS = "thuga8Da!";
 
-    public static final long TENTH_OF_SECOND = 100;
-    public static final long ONE_SECOND = 1000;
-    public static final long TEN_SECONDS = 10 * 1000;
+    public static final int ONE_SECOND = 1000;
+    public static final int TENTH_OF_SECOND = ONE_SECOND / 10;
+    public static final int TEN_SECONDS = ONE_SECOND * 10;
 
     public String greenLineBeforeSandyford[] = {
             "St. Stephen's Green",
