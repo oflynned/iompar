@@ -11,7 +11,8 @@ import android.view.ViewGroup;
  */
 public class AddLeapCard extends Fragment {
 
-    Sync sync = new Sync(getContext());
+    Sync sync = new Sync();
+
     View view;
 
     @Override
