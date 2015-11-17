@@ -58,14 +58,13 @@ public class Sync {
                             // green line - travelling to any station common to bride's glen/sandyford
                             // from stephen's green
                             System.out.println("towards Sandyford/Bride's Glen");
-                            scrapeData(doc, depart, arrive);
+                            scrapeData(doc, "Sandyford", "Bride's Glen", depart, arrive);
 
                         } else {
                             // else we're travelling to beyond sandyford and can only take
                             // bride's glen trams away from stephen's green
                             System.out.println("towards Bride's Glen");
                             scrapeData(doc, "Bride's Glen", depart, arrive);
-
                         }
                     } else if(direction.equals(Globals.LineDirection.sandyford_to_stephens_green) ||
                             direction.equals(Globals.LineDirection.brides_glen_to_stephens_green)){
@@ -73,20 +72,17 @@ public class Sync {
                         // stephen's green, we can take any tram as they all have the same terminus
                         System.out.println("towards stephen's green");
                         scrapeData(doc, "St. Stephen's Green", depart, arrive);
-
                     } else if (direction.equals(Globals.LineDirection.the_point_to_tallaght)){
                         // else we're dealing with the red line of the luas and must check direction
                         // and poll the appropriate sub-lines
                         // getting scaldy in tallaght? red line from point to the square
                         System.out.println("towards tallaght");
                         scrapeData(doc, "Tallaght", depart, arrive);
-
                     } else if(direction.equals(Globals.LineDirection.tallaght_to_the_point)){
                         // else we're moving from tallaght towards the point on a tram
                         // and probably spitting at people on the way
                         System.out.println("towards the point from tallaght");
                         scrapeData(doc, "The Point", depart, arrive);
-
                     } else if(direction.equals(Globals.LineDirection.saggart_to_the_point)){
                         // else heading from Saggart towards town where I need to interchange at Belgard
                         // ONLY TRUE FOR SAGGART-TOWN ROUTE OUTSIDE OF PEAK TIMES
@@ -95,15 +91,21 @@ public class Sync {
                         // sunday: all day
                         System.out.println("towards the point from saggart WITH CERTAIN RULES");
                         scrapeData(doc, "Belgard", "The Point", depart, arrive);
-
                     } else if(direction.equals(Globals.LineDirection.the_point_to_saggart)) {
                         // else we're going from town to saggart
                         // this is mostly running, need to check if it polled as exceptions were thrown
                         System.out.println("towards Saggart from town");
                         scrapeData(doc, "Saggart", depart, arrive);
-
+                    } else if(direction.equals(Globals.LineDirection.heuston_to_connolly)) {
+                        System.out.println("towards Connolly");
+                        scrapeData(doc, "Connolly", depart, arrive);
+                    } else if(direction.equals(Globals.LineDirection.connolly_to_heuston)){
+                        System.out.println("towards Heuston from town");
+                        scrapeData(doc, "Heuston", depart, arrive);
                     } else {
-                        System.out.println("Jumped to else loop -- check luas directions");
+                        System.out.println("Jumped to else loop -- no conditions satisfied -- check luas directions");
+                        setLoaded(true);
+                        return;
                     }
                     System.out.println(nextDue);
                 } catch (IOException e) {
@@ -114,28 +116,6 @@ public class Sync {
         };
         downloadThread.start();
         setLoaded(false);
-    }
-
-    public void scrapeData(Document doc, String depart, String arrive){
-        Elements elements = doc.select("table");
-        endDestinationList.clear();
-        waitingTimeList.clear();
-        Elements tableRowElements = elements.select("tr");
-        for (int i = 0; i < tableRowElements.size(); i++) {
-            Element row = tableRowElements.get(i);
-            Elements rowItems = row.select("td");
-            for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                endDestinationList.add(rowItems.get(j).text());
-                waitingTimeList.add(rowItems.get(j + 1).text());
-                System.out.println(rowItems.get(j).text());
-                System.out.println(rowItems.get(j + 1).text());
-            }
-        }
-        nextDue =
-                "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
-                        "Departing from: " + depart + "\n" +
-                        "Destination: " + arrive + "\n" +
-                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0)));
     }
 
     public void scrapeData(Document doc, String endStation, String depart, String arrive){
@@ -153,14 +133,12 @@ public class Sync {
                         waitingTimeList.add(rowItems.get(j + 1).text());
                         System.out.println(rowItems.get(j).text());
                         System.out.println(rowItems.get(j + 1).text());
+                    } else if (rowItems.get(j).equals("No departures found")){
+                        endDestinationList.add("Unavailable");
+                        waitingTimeList.add("Unavailable");
                     }
                 }
             }
-        } else {
-            endDestinationList.add("No destination");
-            waitingTimeList.add("No time");
-            System.out.println("No destination");
-            System.out.println("No time");
         }
         setNextDue(
                 "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +
@@ -189,14 +167,12 @@ public class Sync {
                         waitingTimeList.add(rowItems.get(j + 1).text());
                         System.out.println(rowItems.get(j).text());
                         System.out.println(rowItems.get(j + 1).text());
+                    } else if (rowItems.get(j).equals("No departures found")){
+                        endDestinationList.add("Unavailable");
+                        waitingTimeList.add("Unavailable");
                     }
                 }
             }
-        } else {
-            endDestinationList.add("No destination");
-            waitingTimeList.add("No time");
-            System.out.println("No destination");
-            System.out.println("No time");
         }
         setNextDue(
                 "The next Luas terminates in " + String.valueOf(endDestinationList.get(0)) + "\n" +

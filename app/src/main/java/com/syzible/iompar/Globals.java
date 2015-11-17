@@ -97,7 +97,6 @@ public class Globals {
             "Spencer Dock",
             "Mayor Square - NCI",
             "George's Dock",
-            "Connolly",
             "Busaras",
             "Abbey Street",
             "Jervis",
@@ -124,12 +123,22 @@ public class Globals {
             "Saggart"
     };
 
+    public String redLineStationsHeustonConnolly[] = {
+            "Connolly",
+            "Busaras",
+            "Abbey Street",
+            "Jervis",
+            "Four Courts",
+            "Smithfield",
+            "Museum",
+            "Heuston"
+    };
+
     public String redLineStationsTallaghtPoint[] = {
             "The Point",
             "Spencer Dock",
             "Mayor Square - NCI",
             "George's Dock",
-            "Connolly",
             "Busaras",
             "Abbey Street",
             "Jervis",
@@ -167,7 +176,9 @@ public class Globals {
         stephens_green_to_brides_glen,
         stephens_green_to_sandyford,
         sandyford_to_stephens_green,
-        brides_glen_to_stephens_green
+        brides_glen_to_stephens_green,
+        heuston_to_connolly,
+        connolly_to_heuston
     }
 
     public String getLuasStation(String string) {

@@ -32,13 +32,14 @@ public class Realtime extends Fragment {
 
     private enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
 
-    private enum LuasLines {GREEN, RED}
-    private enum LuasDirections {TALLAGHT, SAGGART, BRIDES_GLEN, SANDYFORD}
+    private enum LuasLines { GREEN, RED }
+    private enum LuasDirections {   TALLAGHT, SAGGART, POINT,
+                                    BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
+                                    CONNOLLY, HEUSTON   }
 
     private TransportationCategories currentCategory;
     private LuasLines currentLuasLine;
     private LuasDirections currentLuasDirection;
-    private Globals.LineDirection lineDirection;
 
     //current choice
     Categories[] categories;
@@ -51,6 +52,7 @@ public class Realtime extends Fragment {
     Categories[] greenLuasStationsSandyford;
     Categories[] redLuasStationsTallaght;
     Categories[] redLuasStationsSaggart;
+    Categories[] redLuasStationsConnolly;
     //train
     Categories[] trainCategories;
     Categories[] trainDirection;
@@ -134,15 +136,18 @@ public class Realtime extends Fragment {
         //sublines within luas lines
         luasDirectionGreen = new Categories[2];
         luasDirectionGreen[0] =
-                new Categories("Bride's Glen Line");
+                new Categories("Bride's Glen-St. Stephen's Green Line");
         luasDirectionGreen[1] =
-                new Categories("Sandyford Line");
+                new Categories("Sandyford-St. Stephen's Green Line");
 
-        luasDirectionRed = new Categories[2];
+        luasDirectionRed = new Categories[3];
         luasDirectionRed[0] =
-                new Categories("Tallaght Line");
+                new Categories("Tallaght-The Point Line");
         luasDirectionRed[1] =
-                new Categories("Saggart Line");
+                new Categories("Saggart-The Point Line");
+        //fuck my life and Veolia's ridiculous planning to have 2 stations 50m apart on a sub route
+        luasDirectionRed[2] =
+                new Categories("Heuston-Connolly Line");
 
         //luas stations
         greenLuasStationsBridesGlen = new Categories[globals.greenLineStationsBridesGlenStephensGreen.length];
@@ -163,6 +168,11 @@ public class Realtime extends Fragment {
         redLuasStationsSaggart = new Categories[globals.redLineStationsSaggartPoint.length];
         for (int i = 0; i < globals.redLineStationsSaggartPoint.length; i++) {
             redLuasStationsSaggart[i] = new Categories(globals.redLineStationsSaggartPoint[i]);
+        }
+
+        redLuasStationsConnolly = new Categories[globals.redLineStationsHeustonConnolly.length];
+        for (int i = 0; i < globals.redLineStationsHeustonConnolly.length; i++){
+            redLuasStationsConnolly[i] = new Categories(globals.redLineStationsHeustonConnolly[i]);
         }
     }
 
@@ -251,6 +261,10 @@ public class Realtime extends Fragment {
                                     stage++;
                                     gridView.setAdapter(baseAdapter);
                                     break;
+                                case 3:
+                                    currentLuasDirection = LuasDirections.CONNOLLY;
+                                    stage++;
+                                    gridView.setAdapter(baseAdapter);
                             }
                         }
                     }
@@ -273,6 +287,9 @@ public class Realtime extends Fragment {
                             } else if (currentLuasDirection == LuasDirections.SAGGART) {
                                 currentChoice = redLuasStationsSaggart;
                                 fetchRTPI(currentChoice, position, Globals.LineDirection.the_point_to_saggart);
+                            } else if (currentLuasDirection == LuasDirections.CONNOLLY){
+                                currentChoice = redLuasStationsConnolly;
+                                fetchRTPI(currentChoice, position, Globals.LineDirection.heuston_to_connolly);
                             }
                         }
                     }
@@ -293,8 +310,9 @@ public class Realtime extends Fragment {
         //RTPI Luas station parsing & syncing
         this.currentChoice = currentChoice;
         String departure = currentChoice[position].getTitle();
+        String arrive = currentChoice[position+2].getTitle();
         try {
-            sync.requestUpdate(lineDirection, departure, "");
+            sync.requestUpdate(lineDirection, departure, arrive);
             ensureDataArrival();
         } catch (Exception e) {
             e.printStackTrace();
@@ -328,7 +346,6 @@ public class Realtime extends Fragment {
         /**
          * Default constructor for the transportation adapter which passes the current context
          * and instantiates an appropriate layout contextually
-         *
          * @param context the current application context
          */
         public TransportationAdapter(Context context) {
@@ -339,8 +356,7 @@ public class Realtime extends Fragment {
         /**
          * Counts the number of static elements within the enumeration's state array and adds it
          * to the count for the current state which the view returns
-         *
-         * @return count   the count of items within the array to be displayed
+         * @return the count of items within the array to be displayed
          */
         @Override
         public int getCount() {
@@ -373,11 +389,12 @@ public class Realtime extends Fragment {
                             count = redLuasStationsTallaght.length;
                         } else if (currentLuasDirection == LuasDirections.SAGGART) {
                             count = redLuasStationsSaggart.length;
+                        } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                            count = redLuasStationsConnolly.length;
                         }
                     }
                 }
             }
-
             return count;
         }
 
@@ -436,6 +453,8 @@ public class Realtime extends Fragment {
                                     title = redLuasStationsTallaght[position].getTitle();
                                 } else if (currentLuasDirection == LuasDirections.SAGGART) {
                                     title = redLuasStationsSaggart[position].getTitle();
+                                } else if (currentLuasDirection == LuasDirections.CONNOLLY){
+                                    title = redLuasStationsConnolly[position].getTitle();
                                 }
                             }
                         }
@@ -476,6 +495,8 @@ public class Realtime extends Fragment {
                                     textView.setText(redLuasStationsTallaght[position].getTitle());
                                 } else if (currentLuasDirection == LuasDirections.SAGGART) {
                                     textView.setText(redLuasStationsSaggart[position].getTitle());
+                                } else if (currentLuasDirection == LuasDirections.CONNOLLY){
+                                    textView.setText(redLuasStationsConnolly[position].getTitle());
                                 }
                             }
                         }
