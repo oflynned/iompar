@@ -23,6 +23,94 @@ public class Globals {
     public static final int TENTH_OF_SECOND = ONE_SECOND / 10;
     public static final int TEN_SECONDS = ONE_SECOND * 10;
 
+    public String docklands[] = {
+            "The Point",
+            "Spencer Dock",
+            "Mayor Square - NCI",
+            "George's Dock",
+            "Connolly"
+    };
+
+    public String central_1[] = {
+            "St. Stephen's Green",
+            "Harcourt Street",
+            "Charlemont",
+            "Connolly",
+            "George's Dock",
+            "Busaras",
+            "Abbey Street",
+            "Jervis",
+            "Four Courts",
+            "Smithfield",
+            "Museum",
+            "Heuston"
+    };
+
+    public String red_2[] = {
+            "Heuston",
+            "James's",
+            "Fatima",
+            "Rialto",
+            "Suir Road"
+    };
+
+    public String red_3[] = {
+            "Suir Road",
+            "Goldenbridge",
+            "Drimnagh",
+            "Blackhorse",
+            "Bluebell",
+            "Kylemore",
+            "Red Cow"
+    };
+
+    public String red_4[] = {
+            "Red Cow",
+            "Belgard",
+            "Cookstown",
+            "Hospital",
+            "Tallaght",
+            "Fettecairn",
+            "Cheeverstown",
+            "Citywest Campus",
+            "Fortunestown",
+            "Saggart"
+    };
+
+    public String green_2[] = {
+            "Charlemont",
+            "Ranelagh",
+            "Beechwood",
+            "Cowper",
+            "Milltown",
+            "Windy Arbour",
+            "Dundrum"
+    };
+
+    public String green_3[] = {
+            "Dundrum",
+            "Balally",
+            "Kilmacud",
+            "Stillorgan",
+            "Sandyford"
+    };
+
+    public String green_4[] = {
+            "Sandyford",
+            "Central Park",
+            "Glencairn",
+            "The Gallops",
+            "Leopardstown Valley",
+            "Ballyogan Wood"
+    };
+
+    public String green_5[] = {
+            "Carrickmines",
+            "Laughanstown",
+            "Cherrywood",
+            "Bride's Glen"
+    };
+
     public String greenLineBeforeSandyford[] = {
             "St. Stephen's Green",
             "Harcourt St.",

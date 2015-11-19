@@ -30,7 +30,7 @@ public class Realtime extends Fragment {
     private BaseAdapter baseAdapter;
     private GridView gridView;
 
-    private enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
+    private enum TransportationCategories { LUAS, TRAIN, DART, BUS, BUS_EIREANN }
 
     private enum LuasLines { GREEN, RED }
     private enum LuasDirections {   TALLAGHT, SAGGART, POINT,
@@ -194,23 +194,23 @@ public class Realtime extends Fragment {
                     switch (position) {
                         case 0:
                             //luas
-                            currentCategory = TransportationCategories.LUAS;
+                            setCurrentCategory(TransportationCategories.LUAS);
                             break;
                         case 1:
                             //train
-                            currentCategory = TransportationCategories.TRAIN;
+                            setCurrentCategory(TransportationCategories.TRAIN);
                             break;
                         case 2:
                             //DART
-                            currentCategory = TransportationCategories.DART;
+                            setCurrentCategory(TransportationCategories.DART);
                             break;
                         case 3:
                             //dublin bus
-                            currentCategory = TransportationCategories.BUS;
+                            setCurrentCategory(TransportationCategories.BUS);
                             break;
                         case 4:
                             //bus eireann
-                            currentCategory = TransportationCategories.BUS_EIREANN;
+                            setCurrentCategory(TransportationCategories.BUS_EIREANN);
                             break;
                     }
                     gridView.setAdapter(baseAdapter);
@@ -219,7 +219,7 @@ public class Realtime extends Fragment {
                       Having chosen a transportation type, we need to show options within type
                       ie for luas: green line, red line...
                     */
-                    if (currentCategory == TransportationCategories.LUAS) {
+                    if (getCurrentCategory() == TransportationCategories.LUAS) {
                         switch (position) {
                             case 0:
                                 currentLuasLine = LuasLines.GREEN;
@@ -235,7 +235,7 @@ public class Realtime extends Fragment {
                     }
                 } else if (stage == 2) {
                    /* Having chosen a type we we need to show line choosable, ie stations to tallaght, saggart... */
-                    if (currentCategory == TransportationCategories.LUAS) {
+                    if (getCurrentCategory() == TransportationCategories.LUAS) {
                         if (currentLuasLine == LuasLines.GREEN) {
                             switch (position) {
                                 case 0:
@@ -319,10 +319,18 @@ public class Realtime extends Fragment {
         }
     }
 
+    public void setCurrentCategory(TransportationCategories currentCategory){
+        this.currentCategory = currentCategory;
+    }
+
+    public TransportationCategories getCurrentCategory(){
+        return currentCategory;
+    }
+
     /**
      * Causes the current thread to sleep for duration n if and only if the data has not been
      * fully loaded into the string
-     * @fixes   issues associated with null toasts
+     * @fixes issues associated with null toasts
      */
     private void ensureDataArrival(){
         while(!sync.isLoaded()){

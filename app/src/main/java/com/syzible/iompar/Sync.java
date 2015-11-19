@@ -103,12 +103,14 @@ public class Sync {
                         System.out.println("towards Heuston from town");
                         scrapeData(doc, "Heuston", depart, arrive);
                     } else {
+                        setNextDue("Jumped to else loop -- no conditions satisfied -- check luas directions");
                         System.out.println("Jumped to else loop -- no conditions satisfied -- check luas directions");
                         setLoaded(true);
                         return;
                     }
                     System.out.println(nextDue);
                 } catch (IOException e) {
+                    setNextDue("Could not connect to realtime services - check internet connection");
                     e.printStackTrace();
                 }
                 setLoaded(true);
