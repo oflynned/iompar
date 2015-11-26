@@ -2,33 +2,82 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="?attr/actionBarSize">
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
         <TextView
-            android:padding="5dp"
             android:id="@+id/realtimeTitle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
             android:gravity="center_horizontal"
+            android:padding="5dp"
             android:text="Real Time"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <GridView
+        <RelativeLayout
             android:layout_below="@+id/realtimeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/infopanel">
+
+            <LinearLayout
+                android:padding="5dp"
+                android:id="@+id/firstLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/secondView"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/leftpanel"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="left panel"/>
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/secondView"
+                android:layout_width="1dp"
+                android:layout_height="90dp"
+                android:background="@color/colorPrimary"
+                android:layout_centerHorizontal="true" />
+
+            <LinearLayout
+                android:padding="5dp"
+                android:id="@+id/thirdLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/secondView"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/rightpanel"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="right panel"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <GridView
             android:id="@+id/gridview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/infopanel"
             android:columnWidth="90dp"
-            android:numColumns="auto_fit"
-            android:verticalSpacing="10dp"
-            android:horizontalSpacing="10dp"
-            android:stretchMode="columnWidth"
             android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="auto_fit"
             android:padding="10sp"
-            />
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />
     </RelativeLayout>
 </RelativeLayout>

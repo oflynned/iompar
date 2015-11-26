@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -19,10 +20,18 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
 /**
  * Created by ed on 29/10/15.
  */
 public class Realtime extends Fragment {
+
+    TextView leftPanel, rightPanel;
+
+    private boolean start, end = false;
+    String startPosition, endPosition = "";
+    int startPositionComp, endPositionComp;
 
     View view;
     int stage = 0;
@@ -30,12 +39,17 @@ public class Realtime extends Fragment {
     private BaseAdapter baseAdapter;
     private GridView gridView;
 
-    private enum TransportationCategories { LUAS, TRAIN, DART, BUS, BUS_EIREANN }
+    private enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
 
-    private enum LuasLines { GREEN, RED }
-    private enum LuasDirections {   TALLAGHT, SAGGART, POINT,
-                                    BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
-                                    CONNOLLY, HEUSTON   }
+    private enum LuasLines {GREEN, RED}
+
+    private enum LuasDirections {
+        TALLAGHT, SAGGART, POINT,
+        BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
+        CONNOLLY, HEUSTON
+    }
+
+    Globals.LineDirection lineDirection;
 
     private TransportationCategories currentCategory;
     private LuasLines currentLuasLine;
@@ -171,7 +185,7 @@ public class Realtime extends Fragment {
         }
 
         redLuasStationsConnolly = new Categories[globals.redLineStationsHeustonConnolly.length];
-        for (int i = 0; i < globals.redLineStationsHeustonConnolly.length; i++){
+        for (int i = 0; i < globals.redLineStationsHeustonConnolly.length; i++) {
             redLuasStationsConnolly[i] = new Categories(globals.redLineStationsHeustonConnolly[i]);
         }
     }
@@ -183,6 +197,11 @@ public class Realtime extends Fragment {
         gridView = (GridView) view.findViewById(R.id.gridview);
         baseAdapter = new TransportationAdapter(this.getContext());
         gridView.setAdapter(baseAdapter);
+
+        leftPanel = (TextView) view.findViewById(R.id.leftpanel);
+        rightPanel = (TextView) view.findViewById(R.id.rightpanel);
+
+        gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -275,21 +294,64 @@ public class Realtime extends Fragment {
                             if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
                                 //RTPI Luas station parsing & syncing
                                 currentChoice = greenLuasStationsBridesGlen;
-                                fetchRTPI(currentChoice, position, Globals.LineDirection.stephens_green_to_brides_glen);
+
+                                if (!isStart() && !isEnd()) {
+                                    if (!gridView.isItemChecked(position)) {
+                                        setStart(true);
+                                        setStartPosition(String.valueOf(currentChoice[position].getTitle()));
+                                        setStartPositionComp(position);
+                                        Toast.makeText(getContext(), "nothing checked?", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else if (isStart() && !isEnd()) {
+                                    if (!gridView.isItemChecked(position)) {
+                                        setEnd(true);
+                                        setEndPosition(String.valueOf(currentChoice[position].getTitle()));
+                                        setEndPositionComp(position);
+                                        Toast.makeText(getContext(), "no end checked?", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        setEnd(false);
+                                        setEndPosition("");
+                                        Toast.makeText(getContext(), "end unchecked?", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else if (!isStart() && isEnd()) {
+                                    if (!gridView.isItemChecked(position)) {
+                                        setStart(true);
+                                        setStartPosition(String.valueOf(currentChoice[position].getTitle()));
+                                        Toast.makeText(getContext(), "no start checked?", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        setStart(false);
+                                        setStartPosition("");
+                                        Toast.makeText(getContext(), "start unchecked?", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else if (isStart() && isEnd()) {
+                                    Toast.makeText(getContext(), "start & end checked!", Toast.LENGTH_SHORT).show();
+                                    fetchRTPI(
+                                            getStartPosition(),
+                                            getEndPosition(),
+                                            getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp())
+                                    );
+                                }
+
+                                Toast.makeText(
+                                        getContext(),
+                                        "start: " + getStartPosition() + "\n" + "end: " + getEndPosition() + "\n" +
+                                                "start #: " + getStartPositionComp() + "\n" + "end # " + getEndPositionComp(),
+                                        Toast.LENGTH_SHORT).show();
+
                             } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
                                 currentChoice = greenLuasStationsSandyford;
-                                fetchRTPI(currentChoice, position, Globals.LineDirection.stephens_green_to_sandyford);
+                                //fetchRTPI(currentChoice, position, Globals.LineDirection.stephens_green_to_sandyford);
                             }
                         } else {
                             if (currentLuasDirection == LuasDirections.TALLAGHT) {
                                 currentChoice = redLuasStationsTallaght;
-                                fetchRTPI(currentChoice, position, Globals.LineDirection.the_point_to_tallaght);
+                                //fetchRTPI(currentChoice, position, Globals.LineDirection.the_point_to_tallaght);
                             } else if (currentLuasDirection == LuasDirections.SAGGART) {
                                 currentChoice = redLuasStationsSaggart;
-                                fetchRTPI(currentChoice, position, Globals.LineDirection.the_point_to_saggart);
-                            } else if (currentLuasDirection == LuasDirections.CONNOLLY){
+                                //fetchRTPI(currentChoice, position, Globals.LineDirection.the_point_to_saggart);
+                            } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
                                 currentChoice = redLuasStationsConnolly;
-                                fetchRTPI(currentChoice, position, Globals.LineDirection.heuston_to_connolly);
+                                //fetchRTPI(currentChoice, position, Globals.LineDirection.heuston_to_connolly);
                             }
                         }
                     }
@@ -300,45 +362,134 @@ public class Realtime extends Fragment {
         return view;
     }
 
+    public Globals.LineDirection getDirection(LuasLines currentLine, int startPosition, int endPosition) {
+        if (currentLine == LuasLines.GREEN) {
+            //stephen's green - sandyford
+            //sandyford - bride's glen
+            //stephen's green - bride's glen
+
+            //bride's glen - stephen's green
+            //sandyford - stephen's green
+            if (endPosition > startPosition) {
+                return lineDirection = Globals.LineDirection.stephens_green_to_brides_glen;
+            } else {
+                return lineDirection = Globals.LineDirection.brides_glen_to_stephens_green;
+            }
+        }
+        //point - tallaght
+        //tallaght - point
+        //point - saggart
+        //saggart - point
+        //saggart - belgard
+        //belgard - saggart
+        //heuston - connolly
+        //connolly - heuston
+        //red cow diversions?
+        else if(currentLine == LuasLines.RED){
+            if (endPosition > startPosition){
+                return lineDirection = Globals.LineDirection.the_point_to_tallaght;
+            } else {
+                return lineDirection = Globals.LineDirection.tallaght_to_the_point;
+            }
+        } else {
+            System.out.println("entered else loop -- check conditions");
+            return null;
+        }
+    }
+
+    public static boolean getZone(String station, String[] items) {
+        for (String item : items) {
+            if (station.contains(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setStartPosition(String startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public String getStartPosition() {
+        return startPosition;
+    }
+
+    public void setEndPosition(String endPosition) {
+        this.endPosition = endPosition;
+    }
+
+    public String getEndPosition() {
+        return endPosition;
+    }
+
+    public void setStartPositionComp(int startPositionComp) {
+        this.startPositionComp = startPositionComp;
+    }
+
+    public int getStartPositionComp() {
+        return startPositionComp;
+    }
+
+    public void setEndPositionComp(int endPositionComp) {
+        this.endPositionComp = endPositionComp;
+    }
+
+    public int getEndPositionComp() {
+        return endPositionComp;
+    }
+
     /**
      * Fetches the appropriate RTPI data given the parameters from RTPI.ie
-     * @param currentChoice the current line
-     * @param position      the chosen station
      * @param lineDirection the direction in which the user is travelling
      */
-    private void fetchRTPI(Categories[] currentChoice, int position, Globals.LineDirection lineDirection){
+    private void fetchRTPI(String depart, String arrive, Globals.LineDirection lineDirection) {
         //RTPI Luas station parsing & syncing
-        this.currentChoice = currentChoice;
-        String departure = currentChoice[position].getTitle();
-        String arrive = currentChoice[position+2].getTitle();
         try {
-            sync.requestUpdate(lineDirection, departure, arrive);
+            sync.requestUpdate(lineDirection, depart, arrive);
             ensureDataArrival();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setCurrentCategory(TransportationCategories currentCategory){
+    public void setCurrentCategory(TransportationCategories currentCategory) {
         this.currentCategory = currentCategory;
     }
 
-    public TransportationCategories getCurrentCategory(){
+    public TransportationCategories getCurrentCategory() {
         return currentCategory;
+    }
+
+    public void setStart(boolean start) {
+        this.start = start;
+    }
+
+    public boolean isStart() {
+        return start;
+    }
+
+    public void setEnd(boolean end) {
+        this.end = end;
+    }
+
+    public boolean isEnd() {
+        return end;
     }
 
     /**
      * Causes the current thread to sleep for duration n if and only if the data has not been
      * fully loaded into the string
+     *
      * @fixes issues associated with null toasts
      */
-    private void ensureDataArrival(){
-        while(!sync.isLoaded()){
+    private void ensureDataArrival() {
+        while (!sync.isLoaded()) {
             try {
                 Thread.sleep(1);
                 if (sync.isLoaded()) {
                     sync.setLoaded(true);
-                    Toast.makeText(getContext(), sync.getNextDue(), Toast.LENGTH_SHORT).show();
+                    leftPanel.setText(sync.getNextDue());
+                    rightPanel.setText(sync.getArrivalInfo());
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -354,6 +505,7 @@ public class Realtime extends Fragment {
         /**
          * Default constructor for the transportation adapter which passes the current context
          * and instantiates an appropriate layout contextually
+         *
          * @param context the current application context
          */
         public TransportationAdapter(Context context) {
@@ -364,6 +516,7 @@ public class Realtime extends Fragment {
         /**
          * Counts the number of static elements within the enumeration's state array and adds it
          * to the count for the current state which the view returns
+         *
          * @return the count of items within the array to be displayed
          */
         @Override
@@ -418,6 +571,7 @@ public class Realtime extends Fragment {
 
         /**
          * Returns the current stage advanced or returned as a set of arguments within enumeration states
+         *
          * @return view    returns the current contextual view
          */
         @Override
@@ -461,7 +615,7 @@ public class Realtime extends Fragment {
                                     title = redLuasStationsTallaght[position].getTitle();
                                 } else if (currentLuasDirection == LuasDirections.SAGGART) {
                                     title = redLuasStationsSaggart[position].getTitle();
-                                } else if (currentLuasDirection == LuasDirections.CONNOLLY){
+                                } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
                                     title = redLuasStationsConnolly[position].getTitle();
                                 }
                             }
@@ -503,7 +657,7 @@ public class Realtime extends Fragment {
                                     textView.setText(redLuasStationsTallaght[position].getTitle());
                                 } else if (currentLuasDirection == LuasDirections.SAGGART) {
                                     textView.setText(redLuasStationsSaggart[position].getTitle());
-                                } else if (currentLuasDirection == LuasDirections.CONNOLLY){
+                                } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
                                     textView.setText(redLuasStationsConnolly[position].getTitle());
                                 }
                             }

@@ -5,6 +5,7 @@
     android:background="@drawable/tile_background">
 
     <TextView
+        android:listSelector="@color/colorAccent"
         android:id="@+id/tileTitle"
         android:layout_width="wrap_content"
         android:layout_height="100dp"

@@ -133,13 +133,14 @@ public class Fares extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fare, null);
-
         TextView textView = (TextView) view.findViewById(R.id.fares_title);
+
         setFareType(FareType.ADULT);
         setFareCaps(FareCaps.ON_PEAK);
         setFareJourney(FareJourney.SINGLE);
         setFarePayment(FarePayment.CASH);
         setLuasFareCost(LuasFareCost.THREE_ZONES);
+
         calculateFare();
 
         String fare = "€" + getFare();
@@ -578,6 +579,10 @@ public class Fares extends Fragment {
 
     public String formatDecimals(double fare){
         return String.format("%.2f", fare );
+    }
+
+    public void getNumberOfZones(){
+        
     }
 
     public void setFare(String fare) {
