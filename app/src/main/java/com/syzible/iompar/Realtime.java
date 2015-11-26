@@ -362,6 +362,14 @@ public class Realtime extends Fragment {
         return view;
     }
 
+    /**
+     * returns the appropriate direction the user must traverse via sync in order to
+     * make an appropriate journey and scrape the appropriate end station
+     * @param currentLine current luas line the user is travelling on
+     * @param startPosition the station which the user is departing from
+     * @param endPosition station where the user is travelling to
+     * @return the line direction from globals which is passed as a param to sync
+     */
     public Globals.LineDirection getDirection(LuasLines currentLine, int startPosition, int endPosition) {
         if (currentLine == LuasLines.GREEN) {
             //stephen's green - sandyford
