@@ -300,42 +300,54 @@ public class Realtime extends Fragment {
                                         setStart(true);
                                         setStartPosition(String.valueOf(currentChoice[position].getTitle()));
                                         setStartPositionComp(position);
-                                        Toast.makeText(getContext(), "nothing checked?", Toast.LENGTH_SHORT).show();
+                                        System.out.println("1");
                                     }
                                 } else if (isStart() && !isEnd()) {
                                     if (!gridView.isItemChecked(position)) {
                                         setEnd(true);
                                         setEndPosition(String.valueOf(currentChoice[position].getTitle()));
                                         setEndPositionComp(position);
-                                        Toast.makeText(getContext(), "no end checked?", Toast.LENGTH_SHORT).show();
-                                    } else {
+                                        System.out.println("2");
+                                    } else if (gridView.isItemChecked(getEndPositionComp())){
                                         setEnd(false);
                                         setEndPosition("");
-                                        Toast.makeText(getContext(), "end unchecked?", Toast.LENGTH_SHORT).show();
+                                        System.out.println("3");
+                                    } else if (gridView.isItemChecked(getStartPositionComp())){
+                                        Toast.makeText(getContext(), "duplicate check on start?", Toast.LENGTH_SHORT).show();
                                     }
                                 } else if (!isStart() && isEnd()) {
-                                    if (!gridView.isItemChecked(position)) {
+                                    if (!gridView.isItemChecked(getEndPositionComp())) {
                                         setStart(true);
                                         setStartPosition(String.valueOf(currentChoice[position].getTitle()));
-                                        Toast.makeText(getContext(), "no start checked?", Toast.LENGTH_SHORT).show();
-                                    } else {
+                                        System.out.println("4");
+                                    } else if (gridView.isItemChecked(getStartPositionComp())){
                                         setStart(false);
                                         setStartPosition("");
-                                        Toast.makeText(getContext(), "start unchecked?", Toast.LENGTH_SHORT).show();
+                                        System.out.println("5");
                                     }
-                                } else if (isStart() && isEnd()) {
-                                    Toast.makeText(getContext(), "start & end checked!", Toast.LENGTH_SHORT).show();
+                                } else {
                                     fetchRTPI(
                                             getStartPosition(),
                                             getEndPosition(),
                                             getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp())
                                     );
+                                    if (gridView.isItemChecked(getStartPositionComp())) {
+                                        setStart(false);
+                                        setStartPosition("");
+                                        System.out.println("6");
+                                    } else if (gridView.isItemChecked(getEndPositionComp())){
+                                        setEnd(false);
+                                        setEndPosition("");
+                                        System.out.println("7");
+                                    }
                                 }
 
                                 Toast.makeText(
                                         getContext(),
-                                        "start: " + getStartPosition() + "\n" + "end: " + getEndPosition() + "\n" +
-                                                "start #: " + getStartPositionComp() + "\n" + "end # " + getEndPositionComp(),
+                                        "start: " + getStartPosition() + "\n" +
+                                                "end: " + getEndPosition() + "\n" +
+                                                "start #: " + getStartPositionComp() + "\n" +
+                                                "end # " + getEndPositionComp(),
                                         Toast.LENGTH_SHORT).show();
 
                             } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
@@ -380,8 +392,10 @@ public class Realtime extends Fragment {
             //sandyford - stephen's green
             if (endPosition > startPosition) {
                 return lineDirection = Globals.LineDirection.stephens_green_to_brides_glen;
-            } else {
+            } else if (endPosition < startPosition) {
                 return lineDirection = Globals.LineDirection.brides_glen_to_stephens_green;
+            } else {
+                return null;
             }
         }
         //point - tallaght

@@ -436,7 +436,6 @@ public class Globals {
             case "Saggart":
                 RTPI = "LUAS53";
                 break;
-
         }
         return RTPI;
     }

@@ -51,6 +51,9 @@ public class Sync {
 
                     System.out.println("got URL");
 
+                    /**
+                     * @note crash on same station selection for start and end stops
+                     */
                     if (direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                             direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
                         if (stationBeforeSandyford(depart, arrive, globals.greenLineBeforeSandyford)) {
@@ -142,6 +145,14 @@ public class Sync {
                 }
             }
         }
+        //must poll time & payment method or show both
+        fares.setFareType(Fares.FareType.ADULT);
+        fares.setFareCaps(Fares.FareCaps.ON_PEAK);
+        fares.setFarePayment(Fares.FarePayment.LEAP);
+        fares.setFareJourney(Fares.FareJourney.SINGLE);
+        fares.setLuasFareCost(Fares.LuasFareCost.THREE_ZONES);
+        fares.calculateFare();
+
         setNextDue(
                 "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                         "Departing from:" + "\n" + depart + "\n" +
@@ -179,6 +190,14 @@ public class Sync {
                 }
             }
         }
+        //must poll time & payment method or show both
+        fares.setFareType(Fares.FareType.ADULT);
+        fares.setFareCaps(Fares.FareCaps.ON_PEAK);
+        fares.setFarePayment(Fares.FarePayment.LEAP);
+        fares.setFareJourney(Fares.FareJourney.SINGLE);
+        fares.setLuasFareCost(Fares.LuasFareCost.THREE_ZONES);
+        fares.calculateFare();
+
         setNextDue(
                 "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                 "Departing from:" + "\n" + depart + "\n" +
@@ -192,7 +211,6 @@ public class Sync {
     /**
      * Connects to Leap Card login service via ASPX and returns the balance within the page source
      * recursively through an independent asynchronous thread
-     *
      * @note THROWING EXCEPTION ON LOGIN
      */
     public void leapConnect() {

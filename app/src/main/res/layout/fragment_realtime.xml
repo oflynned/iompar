@@ -20,50 +20,50 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RelativeLayout
-            android:layout_below="@+id/realtimeTitle"
+            android:id="@+id/infopanel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/infopanel">
+            android:layout_below="@+id/realtimeTitle">
 
             <LinearLayout
-                android:padding="5dp"
                 android:id="@+id/firstLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/secondView"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
+
                 <TextView
                     android:id="@+id/leftpanel"
-                    android:gravity="center"
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="left panel"/>
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center" />
             </LinearLayout>
 
             <View
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:id="@+id/secondView"
                 android:layout_width="1dp"
                 android:layout_height="90dp"
-                android:background="@color/colorPrimary"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorPrimary" />
 
             <LinearLayout
-                android:padding="5dp"
                 android:id="@+id/thirdLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/secondView"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
+
                 <TextView
                     android:id="@+id/rightpanel"
-                    android:gravity="center"
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="right panel"/>
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center" />
             </LinearLayout>
         </RelativeLayout>
 

@@ -2,10 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/tile_background">
+    android:background="@drawable/grid_selector">
 
     <TextView
-        android:listSelector="@color/colorAccent"
         android:id="@+id/tileTitle"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
