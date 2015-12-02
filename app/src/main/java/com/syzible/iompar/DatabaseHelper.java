@@ -61,7 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " +
                     Database.LeapBalance.TABLE_NAME + "(" +
                     Database.LeapBalance.ID + " INTEGER PRIMARY KEY" +
-                    Database.LeapBalance.NUMBER + " INTEGER" +
+                    Database.LeapBalance.CARD_NUMBER + " INTEGER" +
                     Database.LeapBalance.BALANCE + " REAL);";
 
     public static final String CREATE_TABLE_LEAP_LOGIN =
