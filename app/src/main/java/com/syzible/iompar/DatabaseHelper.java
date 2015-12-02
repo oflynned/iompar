@@ -14,8 +14,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     private Context context;
 
+    //COL NAMES
+    public static final int COL_DUBLIN_BUS_ID = 0;
+    public static final int COL_DUBLIN_BUS_STOP_NUMBER = 1;
+    public static final int COL_DUBLIN_BUS_ROUTE = 2;
+    public static final int COL_DUBLIN_BUS_FREQUENCY = 3;
+
+    public static final int COL_BUS_EIREANN_ID = 0;
+    public static final int COL_BUS_EIREANN_STOP_NUMBER = 1;
+    public static final int COL_BUS_EIREANN_ROUTE = 2;
+    public static final int COL_BUS_EIREANN_DESTINATION = 3;
+    public static final int COL_BUS_EIREANN_FREQUENCY = 4;
+
+    public static final int COL_LUAS_ID = 0;
+    public static final int COL_LUAS_STATION = 1;
+    public static final int COL_LUAS_LINE = 2;
+    public static final int COL_LUAS_DIRECTION = 3;
+    public static final int COL_LUAS_FREQUENCY = 4;
+
+    public static final int COL_DART_ID = 0;
+    public static final int COL_DART_STATION = 1;
+    public static final int COL_DART_LINE = 2;
+    public static final int COL_DART_DIRECTION = 3;
+    public static final int COL_DART_FREQUENCY = 4;
+
+    public static final int COL_TRAIN_ID = 0;
+    public static final int COL_TRAIN_STATION = 1;
+    public static final int COL_TRAIN_LINE = 2;
+    public static final int COL_TRAIN_DIRECTION = 3;
+    public static final int COL_TRAIN_FREQUENCY = 4;
+
     //QUERIES
-    //favourites
     public static final String CREATE_TABLE_DUBLIN_BUS_FAVOURITES =
             "CREATE TABLE " +
                     Database.DublinBusFavourites.TABLE_NAME + "(" +
@@ -37,6 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " +
                     Database.LuasFavourites.TABLE_NAME + "(" +
                     Database.LuasFavourites.ID + " INTEGER PRIMARY KEY," +
+                    Database.LuasFavourites.LINE + " TEXT," +
                     Database.LuasFavourites.STATION + " TEXT," +
                     Database.LuasFavourites.DIRECTION + " TEXT," +
                     Database.LuasFavourites.FREQUENCY + " INTEGER);";
@@ -45,6 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " +
                     Database.DartFavourites.TABLE_NAME + "(" +
                     Database.DartFavourites.ID + " INTEGER PRIMARY KEY," +
+                    Database.DartFavourites.LINE + " TEXT," +
                     Database.DartFavourites.STATION + " TEXT," +
                     Database.DartFavourites.DIRECTION + " TEXT," +
                     Database.DartFavourites.FREQUENCY + " INTEGER);";
@@ -53,6 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " +
                     Database.TrainFavourites.TABLE_NAME + "(" +
                     Database.TrainFavourites.ID + " INTEGER PRIMARY KEY," +
+                    Database.TrainFavourites.LINE + " TEXT," +
                     Database.TrainFavourites.STATION + " TEXT," +
                     Database.TrainFavourites.DIRECTION + " TEXT," +
                     Database.TrainFavourites.FREQUENCY + " INTEGER);";
@@ -144,7 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertRecord(String tableName,
-                             String stopNumber, String station,
+                             String stopNumber, String station, String line,
                              String route, String direction,
                              String destination, int frequency,
                              String cardNumber, String balance,
@@ -160,6 +192,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put(Database.BusEireannFavourites.FREQUENCY, frequency);
                 break;
             case Database.DartFavourites.TABLE_NAME:
+                contentValues.put(Database.DartFavourites.LINE, line);
                 contentValues.put(Database.DartFavourites.STATION, station);
                 contentValues.put(Database.DartFavourites.DIRECTION, direction);
                 contentValues.put(Database.DartFavourites.FREQUENCY, frequency);
@@ -170,11 +203,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put(Database.DublinBusFavourites.FREQUENCY, frequency);
                 break;
             case Database.LuasFavourites.TABLE_NAME:
+                contentValues.put(Database.LuasFavourites.LINE, line);
                 contentValues.put(Database.LuasFavourites.STATION, station);
                 contentValues.put(Database.LuasFavourites.DIRECTION, direction);
                 contentValues.put(Database.LuasFavourites.FREQUENCY, frequency);
                 break;
             case Database.TrainFavourites.TABLE_NAME:
+                contentValues.put(Database.LuasFavourites.LINE, line);
                 contentValues.put(Database.LuasFavourites.STATION, station);
                 contentValues.put(Database.LuasFavourites.DIRECTION, direction);
                 contentValues.put(Database.LuasFavourites.FREQUENCY, frequency);
@@ -204,7 +239,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void modifyRecord(String tableName, int tableClassName, int id,
-                             String stopNumber, String station,
+                             String stopNumber, String station, String line,
                              String route, String direction,
                              String destination, int frequency,
                              String cardNumber, String balance,
@@ -221,6 +256,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put(Database.BusEireannFavourites.FREQUENCY, frequency);
                 break;
             case Database.DartFavourites.TABLE_NAME:
+                contentValues.put(Database.DartFavourites.LINE, line);
                 contentValues.put(Database.DartFavourites.STATION, station);
                 contentValues.put(Database.DartFavourites.DIRECTION, direction);
                 contentValues.put(Database.DartFavourites.FREQUENCY, frequency);
@@ -231,14 +267,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put(Database.DublinBusFavourites.FREQUENCY, frequency);
                 break;
             case Database.LuasFavourites.TABLE_NAME:
+                contentValues.put(Database.LuasFavourites.LINE, line);
                 contentValues.put(Database.LuasFavourites.STATION, station);
                 contentValues.put(Database.LuasFavourites.DIRECTION, direction);
                 contentValues.put(Database.LuasFavourites.FREQUENCY, frequency);
                 break;
             case Database.TrainFavourites.TABLE_NAME:
-                contentValues.put(Database.LuasFavourites.STATION, station);
-                contentValues.put(Database.LuasFavourites.DIRECTION, direction);
-                contentValues.put(Database.LuasFavourites.FREQUENCY, frequency);
+                contentValues.put(Database.TrainFavourites.LINE, line);
+                contentValues.put(Database.TrainFavourites.STATION, station);
+                contentValues.put(Database.TrainFavourites.DIRECTION, direction);
+                contentValues.put(Database.TrainFavourites.FREQUENCY, frequency);
                 break;
             case Database.LeapBalance.TABLE_NAME:
                 contentValues.put(Database.LeapBalance.CARD_NUMBER, cardNumber);

@@ -31,6 +31,7 @@ public class Database {
     public static abstract class LuasFavourites implements BaseColumns {
         public static final String TABLE_NAME = "luas_favourites";
         public static final String ID = "id";
+        public static final String LINE = "line";
         public static final String STATION = "station";
         public static final String DIRECTION = "direction";
         public static final String FREQUENCY = "frequency";
@@ -39,6 +40,7 @@ public class Database {
     public static abstract class DartFavourites implements BaseColumns {
         public static final String TABLE_NAME = "dart_favourites";
         public static final String ID = "id";
+        public static final String LINE = "line";
         public static final String STATION = "station";
         public static final String DIRECTION = "direction";
         public static final String FREQUENCY = "frequency";
@@ -47,6 +49,7 @@ public class Database {
     public static abstract class TrainFavourites implements BaseColumns {
         public static final String TABLE_NAME = "train_favourites";
         public static final String ID = "id";
+        public static final String LINE = "line";
         public static final String STATION = "station";
         public static final String DIRECTION = "direction";
         public static final String FREQUENCY = "frequency";
