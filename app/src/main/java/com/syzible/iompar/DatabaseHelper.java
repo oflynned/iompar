@@ -92,9 +92,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String CREATE_TABLE_LEAP_BALANCE =
             "CREATE TABLE " +
                     Database.LeapBalance.TABLE_NAME + "(" +
-                    Database.LeapBalance.ID + " INTEGER PRIMARY KEY" +
-                    Database.LeapBalance.CARD_NUMBER + " INTEGER" +
-                    Database.LeapBalance.BALANCE + " REAL);";
+                    Database.LeapBalance.ID + " INTEGER PRIMARY KEY," +
+                    Database.LeapBalance.CARD_NUMBER + " INTEGER," +
+                    Database.LeapBalance.TIME_ADDED + " INTEGER," +
+                    Database.LeapBalance.DATE + " TEXT," +
+                    Database.LeapBalance.TOP_UPS + " REAL," +
+                    Database.LeapBalance.EXPENDITURE + "REAL," +
+                    Database.LeapBalance.BALANCE_CHANGE + " REAL," +
+                    Database.LeapBalance.BALANCE + " REAL," +
+                    Database.LeapBalance.IS_NEGATIVE + " BOOLEAN);";
 
     public static final String CREATE_TABLE_LEAP_LOGIN =
             "CREATE TABLE " +
@@ -147,6 +153,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SELECT_ALL_LEAP_LOGIN =
             "SELECT * FROM " + Database.LeapLogin.TABLE_NAME + ";";
 
+    public static final String SUM_EXPENDITURES_COLUMN =
+            "SELECT SUM " + Database.LeapBalance.EXPENDITURE + " FROM " + Database.LeapBalance.TABLE_NAME + ";";
+
+    public static final String SUM_TOP_UPS_COLUMN =
+            "SELECT SUM " + Database.LeapBalance.TOP_UPS + " FROM " + Database.LeapBalance.TABLE_NAME + ";";
+
     public DatabaseHelper(Context context){
         super(context, Database.DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
@@ -180,6 +192,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                              String route, String direction,
                              String destination, int frequency,
                              String cardNumber, String balance,
+                             String date, double topUp, double expenditure,
+                             double balanceChange, boolean negative,
                              String userEmail, String userPassword){
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -216,7 +230,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 break;
             case Database.LeapBalance.TABLE_NAME:
                 contentValues.put(Database.LeapBalance.CARD_NUMBER, cardNumber);
+                contentValues.put(Database.LeapBalance.TIME_ADDED, System.currentTimeMillis());
+                contentValues.put(Database.LeapBalance.DATE, date);
+                contentValues.put(Database.LeapBalance.TOP_UPS, topUp);
+                contentValues.put(Database.LeapBalance.EXPENDITURE, expenditure);
+                contentValues.put(Database.LeapBalance.BALANCE_CHANGE, balanceChange);
                 contentValues.put(Database.LeapBalance.BALANCE, balance);
+                contentValues.put(Database.LeapBalance.IS_NEGATIVE, negative);
                 break;
             case Database.LeapLogin.TABLE_NAME:
                 contentValues.put(Database.LeapLogin.CARD_NUMBER, cardNumber);
@@ -238,11 +258,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void modifyRecord(String tableName, int tableClassName, int id,
+    public void modifyRecord(String tableName, String tableClassName, int id,
                              String stopNumber, String station, String line,
                              String route, String direction,
-                             String destination, int frequency,
+                             String destination,
                              String cardNumber, String balance,
+                             String date, double topUp, double expenditure,
+                             double balanceChange, boolean negative,
                              String userEmail, String userPassword){
 
         SQLiteDatabase writeDb = this.getWritableDatabase();
@@ -253,34 +275,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put(Database.BusEireannFavourites.STOP_NUMBER, stopNumber);
                 contentValues.put(Database.BusEireannFavourites.ROUTE, route);
                 contentValues.put(Database.BusEireannFavourites.DESTINATION, destination);
-                contentValues.put(Database.BusEireannFavourites.FREQUENCY, frequency);
                 break;
             case Database.DartFavourites.TABLE_NAME:
                 contentValues.put(Database.DartFavourites.LINE, line);
                 contentValues.put(Database.DartFavourites.STATION, station);
                 contentValues.put(Database.DartFavourites.DIRECTION, direction);
-                contentValues.put(Database.DartFavourites.FREQUENCY, frequency);
                 break;
             case Database.DublinBusFavourites.TABLE_NAME:
                 contentValues.put(Database.DublinBusFavourites.STOP_NUMBER, stopNumber);
                 contentValues.put(Database.DublinBusFavourites.ROUTE, route);
-                contentValues.put(Database.DublinBusFavourites.FREQUENCY, frequency);
                 break;
             case Database.LuasFavourites.TABLE_NAME:
                 contentValues.put(Database.LuasFavourites.LINE, line);
                 contentValues.put(Database.LuasFavourites.STATION, station);
                 contentValues.put(Database.LuasFavourites.DIRECTION, direction);
-                contentValues.put(Database.LuasFavourites.FREQUENCY, frequency);
                 break;
             case Database.TrainFavourites.TABLE_NAME:
                 contentValues.put(Database.TrainFavourites.LINE, line);
                 contentValues.put(Database.TrainFavourites.STATION, station);
                 contentValues.put(Database.TrainFavourites.DIRECTION, direction);
-                contentValues.put(Database.TrainFavourites.FREQUENCY, frequency);
                 break;
             case Database.LeapBalance.TABLE_NAME:
                 contentValues.put(Database.LeapBalance.CARD_NUMBER, cardNumber);
+                contentValues.put(Database.LeapBalance.TIME_ADDED, System.currentTimeMillis());
+                contentValues.put(Database.LeapBalance.DATE, date);
+                contentValues.put(Database.LeapBalance.TOP_UPS, topUp);
+                contentValues.put(Database.LeapBalance.EXPENDITURE, expenditure);
+                contentValues.put(Database.LeapBalance.BALANCE_CHANGE, balanceChange);
                 contentValues.put(Database.LeapBalance.BALANCE, balance);
+                contentValues.put(Database.LeapBalance.IS_NEGATIVE, negative);
                 break;
             case Database.LeapLogin.TABLE_NAME:
                 contentValues.put(Database.LeapLogin.CARD_NUMBER, cardNumber);
