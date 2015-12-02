@@ -203,21 +203,69 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void modifyRecord(String tableName,
+    public void modifyRecord(String tableName, int tableClassName, int id,
                              String stopNumber, String station,
                              String route, String direction,
-                             String destination){
+                             String destination, int frequency,
+                             String cardNumber, String balance,
+                             String userEmail, String userPassword){
+
+        SQLiteDatabase writeDb = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        switch (tableName){
+            case Database.BusEireannFavourites.TABLE_NAME:
+                contentValues.put(Database.BusEireannFavourites.STOP_NUMBER, stopNumber);
+                contentValues.put(Database.BusEireannFavourites.ROUTE, route);
+                contentValues.put(Database.BusEireannFavourites.DESTINATION, destination);
+                contentValues.put(Database.BusEireannFavourites.FREQUENCY, frequency);
+                break;
+            case Database.DartFavourites.TABLE_NAME:
+                contentValues.put(Database.DartFavourites.STATION, station);
+                contentValues.put(Database.DartFavourites.DIRECTION, direction);
+                contentValues.put(Database.DartFavourites.FREQUENCY, frequency);
+                break;
+            case Database.DublinBusFavourites.TABLE_NAME:
+                contentValues.put(Database.DublinBusFavourites.STOP_NUMBER, stopNumber);
+                contentValues.put(Database.DublinBusFavourites.ROUTE, route);
+                contentValues.put(Database.DublinBusFavourites.FREQUENCY, frequency);
+                break;
+            case Database.LuasFavourites.TABLE_NAME:
+                contentValues.put(Database.LuasFavourites.STATION, station);
+                contentValues.put(Database.LuasFavourites.DIRECTION, direction);
+                contentValues.put(Database.LuasFavourites.FREQUENCY, frequency);
+                break;
+            case Database.TrainFavourites.TABLE_NAME:
+                contentValues.put(Database.LuasFavourites.STATION, station);
+                contentValues.put(Database.LuasFavourites.DIRECTION, direction);
+                contentValues.put(Database.LuasFavourites.FREQUENCY, frequency);
+                break;
+            case Database.LeapBalance.TABLE_NAME:
+                contentValues.put(Database.LeapBalance.CARD_NUMBER, cardNumber);
+                contentValues.put(Database.LeapBalance.BALANCE, balance);
+                break;
+            case Database.LeapLogin.TABLE_NAME:
+                contentValues.put(Database.LeapLogin.CARD_NUMBER, cardNumber);
+                contentValues.put(Database.LeapLogin.USER_EMAIL, userEmail);
+                contentValues.put(Database.LeapLogin.USER_PASSWORD, userPassword);
+            default:
+                break;
+        }
+        String[] whereArgs = {String.valueOf(id)};
+        writeDb.update(tableName, contentValues,
+                tableClassName + ".ID" + "=" + "?", whereArgs);
+        writeDb.close();
 
     }
 
-    public void modifyFrequency(String tableClassName, int id, int frequency){
+    public void modifyFrequency(String tableName, String tableClassName, int id, int frequency){
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(tableClassName + ".ID", frequency);
 
         String[] whereArgs = {String.valueOf(id)};
-        writeDb.update(tableClassName, contentValues,
+        writeDb.update(tableName, contentValues,
                 tableClassName + ".ID" + "=" + "?", whereArgs);
         writeDb.close();
     }
