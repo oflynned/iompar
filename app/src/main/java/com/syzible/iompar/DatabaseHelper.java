@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.sql.Time;
-
 /**
  * Created by ed on 28/10/15.
  */
@@ -24,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.DublinBusFavourites.ID + " INTEGER PRIMARY KEY," +
                     Database.DublinBusFavourites.STOP_NUMBER + " INTEGER," +
                     Database.DublinBusFavourites.ROUTE + " TEXT," +
-                    Database.DublinBusFavourites.FREQUENCY + " INTEGER;";
+                    Database.DublinBusFavourites.FREQUENCY + " INTEGER);";
 
     public static final String CREATE_TABLE_BUS_EIREANN_FAVOURITES =
             "CREATE TABLE " +
@@ -33,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.BusEireannFavourites.STOP_NUMBER + " INTEGER," +
                     Database.BusEireannFavourites.ROUTE + " TEXT," +
                     Database.BusEireannFavourites.DESTINATION + " TEXT," +
-                    Database.BusEireannFavourites.FREQUENCY + " INTEGER;";
+                    Database.BusEireannFavourites.FREQUENCY + " INTEGER);";
 
     public static final String CREATE_TABLE_LUAS_FAVOURITES =
             "CREATE TABLE " +
@@ -41,7 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.LuasFavourites.ID + " INTEGER PRIMARY KEY," +
                     Database.LuasFavourites.STATION + " TEXT," +
                     Database.LuasFavourites.DIRECTION + " TEXT," +
-                    Database.LuasFavourites.FREQUENCY + " INTEGER;";
+                    Database.LuasFavourites.FREQUENCY + " INTEGER);";
 
     public static final String CREATE_TABLE_DART_FAVOURITES =
             "CREATE TABLE " +
@@ -49,7 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.DartFavourites.ID + " INTEGER PRIMARY KEY," +
                     Database.DartFavourites.STATION + " TEXT," +
                     Database.DartFavourites.DIRECTION + " TEXT," +
-                    Database.DartFavourites.FREQUENCY + " INTEGER;";
+                    Database.DartFavourites.FREQUENCY + " INTEGER);";
 
     public static final String CREATE_TABLE_TRAIN_FAVOURITES =
             "CREATE TABLE " +
@@ -57,7 +55,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.TrainFavourites.ID + " INTEGER PRIMARY KEY," +
                     Database.TrainFavourites.STATION + " TEXT," +
                     Database.TrainFavourites.DIRECTION + " TEXT," +
-                    Database.TrainFavourites.FREQUENCY + " INTEGER;";
+                    Database.TrainFavourites.FREQUENCY + " INTEGER);";
+
+    public static final String CREATE_TABLE_LEAP_BALANCE =
+            "CREATE TABLE " +
+                    Database.LeapBalance.TABLE_NAME + "(" +
+                    Database.LeapBalance.ID + " INTEGER PRIMARY KEY" +
+                    Database.LeapBalance.NUMBER + " INTEGER" +
+                    Database.LeapBalance.BALANCE + " REAL);";
+
+    public static final String CREATE_TABLE_LEAP_LOGIN =
+            "CREATE TABLE " +
+                    Database.LeapLogin.TABLE_NAME + "(" +
+                    Database.LeapLogin.ID + " INTEGER PRIMARY KEY," +
+                    Database.LeapLogin.CARD_NUMBER + "INTEGER" +
+                    Database.LeapLogin.USER_EMAIL + " VARCHAR(320)" +
+                    Database.LeapLogin.USER_PASSWORD + " VARCHAR(320));";
 
     public static final String DELETE_TABLE_DUBLIN_BUS =
             "DROP TABLE IF EXISTS " + Database.DublinBusFavourites.TABLE_NAME + ";";
@@ -74,6 +87,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DELETE_TABLE_TRAIN =
             "DROP TABLE IF EXISTS " + Database.TrainFavourites.TABLE_NAME + ";";
 
+    public static final String DELETE_TABLE_LEAP_BALANCE =
+            "DROP TABLE IF EXISTS " + Database.LeapBalance.TABLE_NAME + ";";
+
+    public static final String DELETE_TABLE_LEAP_LOGIN =
+            "DROP TABLE IF EXISTS " + Database.LeapLogin.TABLE_NAME + ";";
+
+
     public static final String SELECT_ALL_DUBLIN_BUS =
             "SELECT * FROM " + Database.DublinBusFavourites.TABLE_NAME + ";";
 
@@ -89,6 +109,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SELECT_ALL_TRAIN =
             "SELECT * FROM " + Database.TrainFavourites.TABLE_NAME + ";";
 
+    public static final String SELECT_ALL_LEAP_BALANCE =
+            "SELECT * FROM " + Database.LeapBalance.TABLE_NAME + ";";
+
+    public static final String SELECT_ALL_LEAP_LOGIN =
+            "SELECT * FROM " + Database.LeapLogin.TABLE_NAME + ";";
+
     public DatabaseHelper(Context context){
         super(context, Database.DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
@@ -101,6 +127,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_DUBLIN_BUS_FAVOURITES);
         db.execSQL(CREATE_TABLE_LUAS_FAVOURITES);
         db.execSQL(CREATE_TABLE_TRAIN_FAVOURITES);
+        db.execSQL(CREATE_TABLE_LEAP_BALANCE);
+        db.execSQL(CREATE_TABLE_LEAP_LOGIN);
     }
 
     @Override
@@ -110,13 +138,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(DELETE_TABLE_DUBLIN_BUS);
         db.execSQL(DELETE_TABLE_LUAS);
         db.execSQL(DELETE_TABLE_TRAIN);
+        db.execSQL(DELETE_TABLE_LEAP_BALANCE);
+        db.execSQL(DELETE_TABLE_LEAP_LOGIN);
         onCreate(db);
     }
 
     public void insertRecord(String tableName,
-                           String stopNumber, String station,
-                           String route, String direction,
-                           String destination, int frequency){
+                             String stopNumber, String station,
+                             String route, String direction,
+                             String destination, int frequency,
+                             String cardNumber, String balance,
+                             String userEmail, String userPassword){
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -147,17 +179,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put(Database.LuasFavourites.DIRECTION, direction);
                 contentValues.put(Database.LuasFavourites.FREQUENCY, frequency);
                 break;
+            case Database.LeapBalance.TABLE_NAME:
+                contentValues.put(Database.LeapBalance.CARD_NUMBER, cardNumber);
+                contentValues.put(Database.LeapBalance.BALANCE, balance);
+                break;
+            case Database.LeapLogin.TABLE_NAME:
+                contentValues.put(Database.LeapLogin.CARD_NUMBER, cardNumber);
+                contentValues.put(Database.LeapLogin.USER_EMAIL, userEmail);
+                contentValues.put(Database.LeapLogin.USER_PASSWORD, userPassword);
+            default:
+                break;
         }
-
         writeDb.close();
     }
 
-    public void removeRecord(String tableName, int id){
+    public void removeRecord(String tableClassName, int id){
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         String removeRowQuery =
-                "DELETE FROM " + tableName +
-                        " WHERE " + tableName + ".ID = " + id + ";";
+                "DELETE FROM " + tableClassName +
+                        " WHERE " + tableClassName + ".ID = " + id + ";";
         writeDb.execSQL(removeRowQuery);
         writeDb.close();
     }
@@ -169,15 +210,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void modifyFrequency(String tableName, int id, int frequency){
+    public void modifyFrequency(String tableClassName, int id, int frequency){
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(tableName + ".ID", frequency);
+        contentValues.put(tableClassName + ".ID", frequency);
 
         String[] whereArgs = {String.valueOf(id)};
-        writeDb.update(tableName, contentValues,
-                tableName + ".ID" + "=" + "?", whereArgs);
+        writeDb.update(tableClassName, contentValues,
+                tableClassName + ".ID" + "=" + "?", whereArgs);
         writeDb.close();
     }
 

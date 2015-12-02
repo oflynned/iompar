@@ -55,7 +55,7 @@ public class Database {
     public static abstract class LeapBalance implements BaseColumns {
         public static final String TABLE_NAME = "leap_balance";
         public static final String ID = "id";
-        public static final String NUMBER = "number";
+        public static final String CARD_NUMBER = "number";
         public static final String BALANCE = "balance";
     }
 
