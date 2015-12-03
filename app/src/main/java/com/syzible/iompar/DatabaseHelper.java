@@ -44,6 +44,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int COL_TRAIN_DIRECTION = 3;
     public static final int COL_TRAIN_FREQUENCY = 4;
 
+    final static String[] TABLES = {
+            Database.BusEireannFavourites.TABLE_NAME,
+            Database.DartFavourites.TABLE_NAME,
+            Database.DublinBusFavourites.TABLE_NAME,
+            Database.LuasFavourites.TABLE_NAME,
+            Database.LeapBalance.TABLE_NAME,
+            Database.LeapLogin.TABLE_NAME
+    };
+
     //QUERIES
     public static final String CREATE_TABLE_DUBLIN_BUS_FAVOURITES =
             "CREATE TABLE " +
@@ -106,8 +115,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " +
                     Database.LeapLogin.TABLE_NAME + "(" +
                     Database.LeapLogin.ID + " INTEGER PRIMARY KEY," +
-                    Database.LeapLogin.CARD_NUMBER + "INTEGER" +
-                    Database.LeapLogin.USER_EMAIL + " VARCHAR(320)" +
+                    Database.LeapLogin.CARD_NUMBER + " INTEGER," +
+                    Database.LeapLogin.USER_EMAIL + " VARCHAR(320)," +
                     Database.LeapLogin.USER_PASSWORD + " VARCHAR(320));";
 
     public static final String DELETE_TABLE_DUBLIN_BUS =
@@ -130,7 +139,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DELETE_TABLE_LEAP_LOGIN =
             "DROP TABLE IF EXISTS " + Database.LeapLogin.TABLE_NAME + ";";
-
 
     public static final String SELECT_ALL_DUBLIN_BUS =
             "SELECT * FROM " + Database.DublinBusFavourites.TABLE_NAME + ";";
@@ -177,24 +185,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(DELETE_TABLE_BUS_EIREANN);
-        db.execSQL(DELETE_TABLE_DART);
-        db.execSQL(DELETE_TABLE_DUBLIN_BUS);
-        db.execSQL(DELETE_TABLE_LUAS);
-        db.execSQL(DELETE_TABLE_TRAIN);
-        db.execSQL(DELETE_TABLE_LEAP_BALANCE);
-        db.execSQL(DELETE_TABLE_LEAP_LOGIN);
-        onCreate(db);
+        if(oldVersion < newVersion){
+            for(int i = 0; i <= TABLES.length; i++){
+                final String UPGRADE_TABLE =
+                        "ALTER TABLE " + TABLES[i] + ";";
+                db.execSQL(UPGRADE_TABLE);
+            }
+        }
     }
 
     public void insertRecord(String tableName,
                              String stopNumber, String station, String line,
                              String route, String direction,
-                             String destination, int frequency,
-                             String cardNumber, String balance,
+                             String destination, int frequency, String balance,
                              String date, double topUp, double expenditure,
                              double balanceChange, boolean negative,
-                             String userEmail, String userPassword){
+                             String cardNumber, String userEmail, String userPassword){
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -248,17 +254,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void removeRecord(String tableClassName, int id){
+    public void removeRecord(String tableName, String idCol, int id){
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         String removeRowQuery =
-                "DELETE FROM " + tableClassName +
-                        " WHERE " + tableClassName + ".ID = " + id + ";";
+                "DELETE FROM " + tableName +
+                        " WHERE " + idCol + "=" + id + ";";
         writeDb.execSQL(removeRowQuery);
         writeDb.close();
     }
 
-    public void modifyRecord(String tableName, String tableClassName, int id,
+    public void modifyRecord(String tableName, String colId, int id,
                              String stopNumber, String station, String line,
                              String route, String direction,
                              String destination,
@@ -314,12 +320,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         String[] whereArgs = {String.valueOf(id)};
         writeDb.update(tableName, contentValues,
-                tableClassName + ".ID" + "=" + "?", whereArgs);
+                colId + "=" + "?", whereArgs);
         writeDb.close();
 
     }
 
-    public void modifyFrequency(String tableName, String tableClassName, int id, int frequency){
+    public void modifyFrequency(String tableName, String tableClassName, String colId, int id, int frequency){
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -327,7 +333,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String[] whereArgs = {String.valueOf(id)};
         writeDb.update(tableName, contentValues,
-                tableClassName + ".ID" + "=" + "?", whereArgs);
+                colId + "=" + "?", whereArgs);
         writeDb.close();
     }
 

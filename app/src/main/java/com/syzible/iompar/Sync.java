@@ -1,5 +1,7 @@
 package com.syzible.iompar;
 
+import android.content.Context;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,7 +15,6 @@ import java.util.ArrayList;
  * Created by ed on 28/10/15.
  */
 public class Sync {
-
     boolean loaded;
     String title, endStation, nextDue, arrivalInfo;
 
@@ -22,6 +23,7 @@ public class Sync {
 
     Globals globals = new Globals();
     Fares fares = new Fares();
+
 
     //luas
     public String requestUpdate(Globals.LineDirection direction,

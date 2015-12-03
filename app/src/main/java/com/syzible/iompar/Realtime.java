@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Layout;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,9 @@ import java.util.Arrays;
  * Created by ed on 29/10/15.
  */
 public class Realtime extends Fragment {
+
+    RelativeLayout infoPanel;
+    RelativeLayout.LayoutParams infoPanelParams;
 
     TextView leftPanel, rightPanel;
 
@@ -198,6 +203,11 @@ public class Realtime extends Fragment {
         baseAdapter = new TransportationAdapter(this.getContext());
         gridView.setAdapter(baseAdapter);
 
+        infoPanel = (RelativeLayout) view.findViewById(R.id.infopanel);
+        infoPanelParams = (RelativeLayout.LayoutParams) infoPanel.getLayoutParams();
+
+        infoPanelParams.height = 0;
+
         leftPanel = (TextView) view.findViewById(R.id.leftpanel);
         rightPanel = (TextView) view.findViewById(R.id.rightpanel);
 
@@ -326,6 +336,8 @@ public class Realtime extends Fragment {
                                         System.out.println("5");
                                     }
                                 } else {
+                                    infoPanelParams.height = getDp(100);
+                                    infoPanel.invalidate();
                                     fetchRTPI(
                                             getStartPosition(),
                                             getEndPosition(),
@@ -458,6 +470,11 @@ public class Realtime extends Fragment {
 
     public int getEndPositionComp() {
         return endPositionComp;
+    }
+
+    public int getDp(float pixels){
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                pixels, getContext().getResources().getDisplayMetrics());
     }
 
     /**

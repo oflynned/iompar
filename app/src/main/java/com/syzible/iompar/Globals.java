@@ -6,6 +6,7 @@ import android.widget.ImageView;
  * Created by ed on 28/10/15.
  */
 public class Globals {
+
     //profile
     String navName = "";
     String navLeapNumber = "";
