@@ -117,7 +117,14 @@ public class Realtime extends Fragment {
                         else if (currentCategory == TransportationCategories.BUS_EIREANN)
                             gridView.setAdapter(new TransportationAdapter(context));
                 }
+                gridView.setItemChecked(getStartPositionComp(), false);
+                gridView.setItemChecked(getEndPositionComp(), false);
+                setStart(false);
+                setEnd(false);
+                setHasPair(false);
                 gridView.invalidate();
+                infoPanelParams.height = getDp(0);
+                infoPanel.invalidate();
             }
         }
     };
@@ -316,7 +323,7 @@ public class Realtime extends Fragment {
                                 currentChoice = redLuasStationsConnolly;
                             }
                         }
-                        if(!currentChoice.equals("")) {
+                        if(!Arrays.toString(currentChoice).equals("")) {
                             handleChoices(currentChoice, position);
                         }
                     }
@@ -408,7 +415,7 @@ public class Realtime extends Fragment {
 
                     fetchRTPI(getStartPosition(), getEndPosition(),
                             getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp()));
-                    infoPanelParams.height = getDp(100);
+                    infoPanelParams.height = getDp(90);
                     infoPanel.invalidate();
                 }
             } else {

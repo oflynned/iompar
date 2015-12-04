@@ -10,7 +10,12 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import static com.syzible.iompar.Fares.FareType.ADULT;
 
@@ -136,10 +141,18 @@ public class Fares extends Fragment {
         TextView textView = (TextView) view.findViewById(R.id.fares_title);
 
         setFareType(FareType.ADULT);
-        setFareCaps(FareCaps.ON_PEAK);
         setFareJourney(FareJourney.SINGLE);
-        setFarePayment(FarePayment.CASH);
-        setLuasFareCost(LuasFareCost.THREE_ZONES);
+        setFarePayment(FarePayment.LEAP);
+
+        setLuasFareCost(getNumberOfZones());
+
+        if(isPeak()){
+            setFareCaps(FareCaps.ON_PEAK);
+            System.out.println("It is currently peak hour");
+        } else {
+            setFareCaps(FareCaps.OFF_PEAK);
+            System.out.println("It is currently NOT peak hour");
+        }
 
         calculateFare();
 
@@ -530,7 +543,7 @@ public class Fares extends Fragment {
                                             case ONE_ZONE:
                                                 setFare(faresLeapOffPeakChild[0]);
                                                 break;
-                                            case TWO_ZONES:
+                                    case TWO_ZONES:
                                                 setFare(faresLeapOffPeakChild[1]);
                                                 break;
                                             case THREE_ZONES:
@@ -577,12 +590,51 @@ public class Fares extends Fragment {
         }
     }
 
+    public boolean isPeak(){
+        Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+        Date currentLocalTime = cal.getTime();
+
+        DateFormat date = new SimpleDateFormat("HH:mm");
+        date.setTimeZone(TimeZone.getDefault());
+
+        String localTime = date.format(currentLocalTime);
+        System.out.println(localTime);
+
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        //xx:00
+        String hour = localTime.substring(0, Math.min(localTime.length(), 2));
+        //00:xx
+        String minutes = localTime.substring(3, Math.min(localTime.length(), 5));
+        int currentHour = Integer.parseInt(hour);
+        System.out.println(currentHour);
+        int currentMinutes = Integer.parseInt(minutes);
+        System.out.println(currentMinutes);
+
+        //monday through friday
+        //7.45am to 9.30am peak
+        //else off-peak
+        if(day >= 2 && day <= 6){
+            if(currentHour == 7){
+                if (currentMinutes >= 45){
+                    return true;
+                }
+            } else if(currentHour == 8){
+                return true;
+            } else if(currentHour == 9){
+                if (currentMinutes <= 30){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public String formatDecimals(double fare){
         return String.format("%.2f", fare );
     }
 
-    public void getNumberOfZones(){
-        
+    public LuasFareCost getNumberOfZones(){
+        return LuasFareCost.THREE_ZONES;
     }
 
     public void setFare(String fare) {

@@ -156,13 +156,12 @@ public class Sync {
         fares.calculateFare();
 
         setNextDue(
-                "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
-                        "Departing from:" + "\n" + depart + "\n" +
-                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))));
+                "Departing from:" + "\n" + depart + "\n" +
+                        "Destination:" + "\n" + arrive);
         setArrivalInfo(
-                "Destination:" + "\n" + arrive + "\n" +
-                        "Cost: €" + fares.getFare()
-        );
+                "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
+                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                        "Cost: €" + fares.getFare());
     }
 
     public void scrapeData(Document doc, String endStation, String endStationAlternate, String depart, String arrive) {
@@ -201,13 +200,12 @@ public class Sync {
         fares.calculateFare();
 
         setNextDue(
-                "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                 "Departing from:" + "\n" + depart + "\n" +
-                "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))));
+                        "Destination:" + "\n" + arrive);
         setArrivalInfo(
-                "Destination:" + "\n" + arrive + "\n" +
-                "Cost: €" + fares.getFare()
-        );
+                "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
+                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                        "Cost: €" + fares.getFare());
     }
 
     /**
@@ -227,11 +225,11 @@ public class Sync {
     public String getTimeFormat(String time) {
         switch (time) {
             case "Due":
-                return "Arriving soon.";
+                return "Arriving soon";
             case "1 mins":
-                return "1 min away.";
+                return "1 min away";
             default:
-                return time.replaceAll("[^0-9]", "") + " mins away.";
+                return time.replaceAll("[^0-9]", "") + " mins away";
         }
     }
 

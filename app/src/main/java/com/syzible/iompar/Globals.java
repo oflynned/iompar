@@ -27,6 +27,16 @@ public class Globals {
     public static final int FIVE_SECONDS = ONE_SECOND * 5;
     public static final int TEN_SECONDS = ONE_SECOND * 10;
 
+    public static final int DOCKLANDS_ID = 1;
+    public static final int CENTRAL_1_ID = 2;
+    public static final int RED_2_ID = 3;
+    public static final int RED_3_ID = 4;
+    public static final int RED_4_ID = 5;
+    public static final int GREEN_2_ID = 6;
+    public static final int GREEN_3_ID = 7;
+    public static final int GREEN_4_ID = 8;
+    public static final int GREEN_5_ID = 9;
+
     public String docklands[] = {
             "The Point",
             "Spencer Dock",
@@ -74,7 +84,7 @@ public class Globals {
             "Cookstown",
             "Hospital",
             "Tallaght",
-            "Fettecairn",
+            "Fettercairn",
             "Cheeverstown",
             "Citywest Campus",
             "Fortunestown",
