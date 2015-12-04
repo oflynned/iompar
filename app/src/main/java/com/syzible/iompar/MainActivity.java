@@ -1,6 +1,8 @@
 package com.syzible.iompar;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
@@ -34,8 +36,9 @@ public class MainActivity extends AppCompatActivity
     AddLeapCard addLeapCard = new AddLeapCard();
     Balance balance = new Balance();
     TopUp topUp = new TopUp();
+    DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
-    //helper classes
+    TextView barName, barLeapCardNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +46,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Snackbar text here", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null)
-                        .show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -66,6 +59,22 @@ public class MainActivity extends AppCompatActivity
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         setFragment();
+
+        /* @bug barName and barLeapCardNumber are null and cannot have text instantiated?
+        barName = (TextView) findViewById(R.id.bar_name);
+        barLeapCardNumber = (TextView) findViewById(R.id.bar_leapcard_number);
+
+        System.out.println(barName.getText().toString());
+        System.out.println(barLeapCardNumber.getText().toString());
+
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LEAP_LOGIN, null);
+        cursor.moveToFirst();
+        System.out.println(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_EMAIL));
+        barName.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_EMAIL));
+        barLeapCardNumber.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER));
+        cursor.close();
+        sqLiteDatabase.close();*/
     }
 
     @Override

@@ -44,6 +44,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int COL_TRAIN_DIRECTION = 3;
     public static final int COL_TRAIN_FREQUENCY = 4;
 
+    public static final int COL_LEAP_BALANCE_ID = 0;
+    public static final int COL_LEAP_BALANCE_CARD_NUMBER = 1;
+    public static final int COL_LEAP_BALANCE_TIME_ADDED = 2;
+    public static final int COL_LEAP_BALANCE_DATE = 3;
+    public static final int COL_LEAP_BALANCE_TOP_UPS = 4;
+    public static final int COL_LEAP_BALANCE_EXPENDITURE = 5;
+    public static final int COL_LEAP_BALANCE_BALANCE_CHANGE = 6;
+    public static final int COL_LEAP_BALANCE_BALANCE = 7;
+    public static final int COL_LEAP_BALANCE_IS_NEGATIVE = 8;
+
+    public static final int COL_LEAP_LOGIN_ID = 0;
+    public static final int COL_LEAP_LOGIN_USER_NAME = 1;
+    public static final int COL_LEAP_LOGIN_CARD_NUMBER = 2;
+    public static final int COL_LEAP_LOGIN_EMAIL = 3;
+    public static final int COL_LEAP_LOGIN_PASSWORD = 4;
+    public static final int COL_LEAP_LOGIN_IS_ACTIVE = 5;
+
     final static String[] TABLES = {
             Database.BusEireannFavourites.TABLE_NAME,
             Database.DartFavourites.TABLE_NAME,
@@ -116,8 +133,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.LeapLogin.TABLE_NAME + "(" +
                     Database.LeapLogin.ID + " INTEGER PRIMARY KEY," +
                     Database.LeapLogin.CARD_NUMBER + " INTEGER," +
+                    Database.LeapLogin.USER_NAME + " TEXT," +
                     Database.LeapLogin.USER_EMAIL + " VARCHAR(320)," +
-                    Database.LeapLogin.USER_PASSWORD + " VARCHAR(320));";
+                    Database.LeapLogin.USER_PASSWORD + " VARCHAR(320)," +
+                    Database.LeapLogin.IS_ACTIVE + " BOOLEAN);";
 
     public static final String DELETE_TABLE_DUBLIN_BUS =
             "DROP TABLE IF EXISTS " + Database.DublinBusFavourites.TABLE_NAME + ";";
@@ -200,7 +219,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                              String destination, int frequency, String balance,
                              String date, double topUp, double expenditure,
                              double balanceChange, boolean negative,
-                             String cardNumber, String userEmail, String userPassword){
+                             String userName, String cardNumber, String userEmail,
+                             String userPassword, boolean isActive){
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -246,11 +266,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 break;
             case Database.LeapLogin.TABLE_NAME:
                 contentValues.put(Database.LeapLogin.CARD_NUMBER, cardNumber);
+                contentValues.put(Database.LeapLogin.USER_NAME, userName);
                 contentValues.put(Database.LeapLogin.USER_EMAIL, userEmail);
                 contentValues.put(Database.LeapLogin.USER_PASSWORD, userPassword);
+                contentValues.put(Database.LeapLogin.IS_ACTIVE, isActive);
             default:
                 break;
         }
+        writeDb.insert(tableName, null, contentValues);
         writeDb.close();
     }
 
@@ -271,7 +294,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                              String cardNumber, String balance,
                              String date, double topUp, double expenditure,
                              double balanceChange, boolean negative,
-                             String userEmail, String userPassword){
+                             String userName, String userEmail, String userPassword, boolean isActive){
 
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -313,8 +336,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 break;
             case Database.LeapLogin.TABLE_NAME:
                 contentValues.put(Database.LeapLogin.CARD_NUMBER, cardNumber);
+                contentValues.put(Database.LeapLogin.USER_NAME, userName);
                 contentValues.put(Database.LeapLogin.USER_EMAIL, userEmail);
                 contentValues.put(Database.LeapLogin.USER_PASSWORD, userPassword);
+                contentValues.put(Database.LeapLogin.IS_ACTIVE, isActive);
             default:
                 break;
         }

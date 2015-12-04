@@ -72,7 +72,9 @@ public class Database {
         public static final String TABLE_NAME = "leap_login_info";
         public static final String ID = "id";
         public static final String CARD_NUMBER = "number";
+        public static final String USER_NAME = "name";
         public static final String USER_EMAIL = "email";
         public static final String USER_PASSWORD = "password";
+        public static final String IS_ACTIVE = "is_active";
     }
 }

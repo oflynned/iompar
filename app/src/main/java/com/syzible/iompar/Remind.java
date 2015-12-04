@@ -1,6 +1,5 @@
 package com.syzible.iompar;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,10 +18,11 @@ public class Remind extends Fragment {
         view = inflater.inflate(R.layout.fragment_remind_me, null);
 
         DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+        databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
         databaseHelper.insertRecord(
                 Database.LeapLogin.TABLE_NAME,
                 null, null, null, null, null, null, 0, null, null, 0, 0, 0, false,
-                "12345 12345 1234", "ed@example.com", "test1");
+                Globals.USER_LEAP_NUMBER, Globals.USER_NAME, Globals.USER_EMAIL, Globals.USER_PASS, true);
         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
 
         return view;

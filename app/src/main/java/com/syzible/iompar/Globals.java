@@ -17,11 +17,14 @@ public class Globals {
     public String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
     public static String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
 
+    public static final String USER_LEAP_NUMBER = "10061 94926 1114";
     public static final String USER_NAME = "oflynned";
+    public static final String USER_EMAIL = "oflynned@tcd.ie";
     public static final String USER_PASS = "thuga8Da!";
 
     public static final int ONE_SECOND = 1000;
     public static final int TENTH_OF_SECOND = ONE_SECOND / 10;
+    public static final int FIVE_SECONDS = ONE_SECOND * 5;
     public static final int TEN_SECONDS = ONE_SECOND * 10;
 
     public String docklands[] = {
