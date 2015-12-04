@@ -373,15 +373,21 @@ public class Realtime extends Fragment {
                                 }
                                 if (isStart() && isEnd()) {
                                     if (hasPair()) {
-                                        System.out.println("start true, end true!");
-                                        System.out.println(
-                                                "start station: " + getStartPosition() + "\n" +
-                                                        "end station: " + getEndPosition());
+                                        if (position != getStartPositionComp()
+                                                && position != getEndPositionComp()) {
+                                            gridView.setItemChecked(position, false);
+                                            System.out.println("trying to check item not already checked");
+                                        } else {
+                                            System.out.println("start true, end true!");
+                                            System.out.println(
+                                                    "start station: " + getStartPosition() + "\n" +
+                                                            "end station: " + getEndPosition());
 
-                                        fetchRTPI(getStartPosition(), getEndPosition(),
-                                                getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp()));
-                                        infoPanelParams.height = getDp(100);
-                                        infoPanel.invalidate();
+                                            fetchRTPI(getStartPosition(), getEndPosition(),
+                                                    getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp()));
+                                            infoPanelParams.height = getDp(100);
+                                            infoPanel.invalidate();
+                                        }
                                     } else {
                                         if (position == getEndPositionComp()) {
                                             setEnd(false);
