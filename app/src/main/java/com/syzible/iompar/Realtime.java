@@ -34,9 +34,9 @@ public class Realtime extends Fragment {
 
     TextView leftPanel, rightPanel;
 
-    private boolean start, end = false;
+    private boolean start, end, pair = false;
     String startPosition, endPosition = "";
-    int startPositionComp, endPositionComp;
+    int startPositionComp, endPositionComp, choice;
 
     View view;
     int stage = 0;
@@ -305,62 +305,80 @@ public class Realtime extends Fragment {
                                 //RTPI Luas station parsing & syncing
                                 currentChoice = greenLuasStationsBridesGlen;
 
-                                if (!isStart() && !isEnd()) {
-                                    if (!gridView.isItemChecked(position)) {
-                                        setStart(true);
-                                        setStartPosition(String.valueOf(currentChoice[position].getTitle()));
+                                Integer[] route = new Integer[2];
+                                int startStationPosition;
+                                int endStationPosition;
+
+                                //check loop
+                                if (gridView.isItemChecked(position)) {
+                                    if (!isStart() && !isEnd()) {
+                                        System.out.println("start and end were false, now start set true with end still false");
                                         setStartPositionComp(position);
-                                        System.out.println("1");
-                                    }
-                                } else if (isStart() && !isEnd()) {
-                                    if (!gridView.isItemChecked(position)) {
-                                        setEnd(true);
-                                        setEndPosition(String.valueOf(currentChoice[position].getTitle()));
-                                        setEndPositionComp(position);
-                                        System.out.println("2");
-                                    } else if (gridView.isItemChecked(getEndPositionComp())){
-                                        setEnd(false);
-                                        setEndPosition("");
-                                        System.out.println("3");
-                                    } else if (gridView.isItemChecked(getStartPositionComp())){
-                                        Toast.makeText(getContext(), "duplicate check on start?", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else if (!isStart() && isEnd()) {
-                                    if (!gridView.isItemChecked(getEndPositionComp())) {
                                         setStart(true);
-                                        setStartPosition(String.valueOf(currentChoice[position].getTitle()));
-                                        System.out.println("4");
-                                    } else if (gridView.isItemChecked(getStartPositionComp())){
-                                        setStart(false);
-                                        setStartPosition("");
-                                        System.out.println("5");
-                                    }
-                                } else {
-                                    infoPanelParams.height = getDp(100);
-                                    infoPanel.invalidate();
-                                    fetchRTPI(
-                                            getStartPosition(),
-                                            getEndPosition(),
-                                            getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp())
-                                    );
-                                    if (gridView.isItemChecked(getStartPositionComp())) {
-                                        setStart(false);
-                                        setStartPosition("");
-                                        System.out.println("6");
-                                    } else if (gridView.isItemChecked(getEndPositionComp())){
-                                        setEnd(false);
-                                        setEndPosition("");
-                                        System.out.println("7");
+                                    } else if (isStart() && !isEnd()) {
+                                        if (position != getStartPositionComp()) {
+                                            System.out.println("end was false where start is true, now end set true");
+                                            setEndPositionComp(position);
+                                            setEnd(true);
+                                            setHasPair(true);
+                                        } else {
+                                            System.out.println("start was true, now start set false");
+                                            setStart(false);
+                                        }
                                     }
                                 }
-
-                                Toast.makeText(
-                                        getContext(),
-                                        "start: " + getStartPosition() + "\n" +
-                                                "end: " + getEndPosition() + "\n" +
-                                                "start #: " + getStartPositionComp() + "\n" +
-                                                "end # " + getEndPositionComp(),
-                                        Toast.LENGTH_SHORT).show();
+                                //uncheck loop
+                                else {
+                                    if (!isStart() && !isEnd()) {
+                                        System.out.println("start and end were false, now start set true with end still false");
+                                        setStartPositionComp(position);
+                                        setStart(true);
+                                    } else if (isStart() && !isEnd()) {
+                                        if (position != getStartPositionComp()) {
+                                            System.out.println("end was false where start is true, now end set true");
+                                            setEndPositionComp(position);
+                                            setHasPair(true);
+                                            setEnd(true);
+                                        } else {
+                                            System.out.println("start was true, now start set false");
+                                            setStart(false);
+                                        }
+                                    } else if (!isStart() && isEnd()) {
+                                        if (position != getEndPositionComp()) {
+                                            System.out.println("start was false where end is true, now start set true");
+                                            setStartPositionComp(position);
+                                            setStart(true);
+                                            setHasPair(true);
+                                        } else {
+                                            System.out.println("end was true, now end set false");
+                                            setEnd(false);
+                                        }
+                                    } else if(isStart() && isEnd()){
+                                        if(position == getStartPositionComp()){
+                                            System.out.println("start and end were true in a pair, now start set false");
+                                            setStart(false);
+                                            setHasPair(false);
+                                        } else if (position == getEndPositionComp()){
+                                            System.out.println("start and end were true in a pair, now end set false");
+                                            setEnd(false);
+                                            setHasPair(false);
+                                        }
+                                    }
+                                }
+                                if (isStart() && isEnd()) {
+                                    if(hasPair()){
+                                        System.out.println("start true, end true!");
+                                    } else {
+                                        if(position == getEndPositionComp()){
+                                            setEnd(false);
+                                            System.out.println("start true, end true, unselected end so end is false!");
+                                        } else if(position == getStartPositionComp()){
+                                            setStart(false);
+                                            System.out.println("start true, end true, unselected start so start is false!");
+                                        }
+                                        setHasPair(false);
+                                    }
+                                }
 
                             } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
                                 currentChoice = greenLuasStationsSandyford;
@@ -386,12 +404,24 @@ public class Realtime extends Fragment {
         return view;
     }
 
+    public void setCurrentChoice(int choice) {
+        this.choice = choice;
+    }
+
+    public int getCurrentChoice() {
+        return choice;
+    }
+
+    public void setHasPair(boolean pair){this.pair=pair;}
+    public boolean hasPair(){return pair;}
+
     /**
      * returns the appropriate direction the user must traverse via sync in order to
      * make an appropriate journey and scrape the appropriate end station
-     * @param currentLine current luas line the user is travelling on
+     *
+     * @param currentLine   current luas line the user is travelling on
      * @param startPosition the station which the user is departing from
-     * @param endPosition station where the user is travelling to
+     * @param endPosition   station where the user is travelling to
      * @return the line direction from globals which is passed as a param to sync
      */
     public Globals.LineDirection getDirection(LuasLines currentLine, int startPosition, int endPosition) {
@@ -419,8 +449,8 @@ public class Realtime extends Fragment {
         //heuston - connolly
         //connolly - heuston
         //red cow diversions?
-        else if(currentLine == LuasLines.RED){
-            if (endPosition > startPosition){
+        else if (currentLine == LuasLines.RED) {
+            if (endPosition > startPosition) {
                 return lineDirection = Globals.LineDirection.the_point_to_tallaght;
             } else {
                 return lineDirection = Globals.LineDirection.tallaght_to_the_point;
@@ -472,13 +502,14 @@ public class Realtime extends Fragment {
         return endPositionComp;
     }
 
-    public int getDp(float pixels){
+    public int getDp(float pixels) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 pixels, getContext().getResources().getDisplayMetrics());
     }
 
     /**
      * Fetches the appropriate RTPI data given the parameters from RTPI.ie
+     *
      * @param lineDirection the direction in which the user is travelling
      */
     private void fetchRTPI(String depart, String arrive, Globals.LineDirection lineDirection) {
