@@ -305,25 +305,24 @@ public class Realtime extends Fragment {
                                 //RTPI Luas station parsing & syncing
                                 currentChoice = greenLuasStationsBridesGlen;
 
-                                Integer[] route = new Integer[2];
-                                int startStationPosition;
-                                int endStationPosition;
-
                                 //check loop
                                 if (gridView.isItemChecked(position)) {
                                     if (!isStart() && !isEnd()) {
                                         System.out.println("start and end were false, now start set true with end still false");
                                         setStartPositionComp(position);
                                         setStart(true);
+                                        setStartPosition(currentChoice[position].getTitle());
                                     } else if (isStart() && !isEnd()) {
                                         if (position != getStartPositionComp()) {
                                             System.out.println("end was false where start is true, now end set true");
                                             setEndPositionComp(position);
                                             setEnd(true);
                                             setHasPair(true);
+                                            setEndPosition(currentChoice[position].getTitle());
                                         } else {
                                             System.out.println("start was true, now start set false");
                                             setStart(false);
+                                            setStartPosition("");
                                         }
                                     }
                                 }
@@ -333,15 +332,18 @@ public class Realtime extends Fragment {
                                         System.out.println("start and end were false, now start set true with end still false");
                                         setStartPositionComp(position);
                                         setStart(true);
+                                        setStartPosition(currentChoice[position].getTitle());
                                     } else if (isStart() && !isEnd()) {
                                         if (position != getStartPositionComp()) {
                                             System.out.println("end was false where start is true, now end set true");
                                             setEndPositionComp(position);
                                             setHasPair(true);
                                             setEnd(true);
+                                            setEndPosition(currentChoice[position].getTitle());
                                         } else {
                                             System.out.println("start was true, now start set false");
                                             setStart(false);
+                                            setEndPosition("");
                                         }
                                     } else if (!isStart() && isEnd()) {
                                         if (position != getEndPositionComp()) {
@@ -349,37 +351,48 @@ public class Realtime extends Fragment {
                                             setStartPositionComp(position);
                                             setStart(true);
                                             setHasPair(true);
+                                            setStartPosition(currentChoice[position].getTitle());
                                         } else {
                                             System.out.println("end was true, now end set false");
                                             setEnd(false);
+                                            setEndPosition("");
                                         }
-                                    } else if(isStart() && isEnd()){
-                                        if(position == getStartPositionComp()){
+                                    } else if (isStart() && isEnd()) {
+                                        if (position == getStartPositionComp()) {
                                             System.out.println("start and end were true in a pair, now start set false");
                                             setStart(false);
                                             setHasPair(false);
-                                        } else if (position == getEndPositionComp()){
+                                            setStartPosition("");
+                                        } else if (position == getEndPositionComp()) {
                                             System.out.println("start and end were true in a pair, now end set false");
                                             setEnd(false);
                                             setHasPair(false);
+                                            setEndPosition("");
                                         }
                                     }
                                 }
                                 if (isStart() && isEnd()) {
-                                    if(hasPair()){
+                                    if (hasPair()) {
                                         System.out.println("start true, end true!");
+                                        System.out.println(
+                                                "start station: " + getStartPosition() + "\n" +
+                                                        "end station: " + getEndPosition());
+
+                                        fetchRTPI(getStartPosition(), getEndPosition(),
+                                                getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp()));
+                                        infoPanelParams.height = getDp(100);
+                                        infoPanel.invalidate();
                                     } else {
-                                        if(position == getEndPositionComp()){
+                                        if (position == getEndPositionComp()) {
                                             setEnd(false);
                                             System.out.println("start true, end true, unselected end so end is false!");
-                                        } else if(position == getStartPositionComp()){
+                                        } else if (position == getStartPositionComp()) {
                                             setStart(false);
                                             System.out.println("start true, end true, unselected start so start is false!");
                                         }
                                         setHasPair(false);
                                     }
                                 }
-
                             } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
                                 currentChoice = greenLuasStationsSandyford;
                                 //fetchRTPI(currentChoice, position, Globals.LineDirection.stephens_green_to_sandyford);
@@ -412,8 +425,13 @@ public class Realtime extends Fragment {
         return choice;
     }
 
-    public void setHasPair(boolean pair){this.pair=pair;}
-    public boolean hasPair(){return pair;}
+    public void setHasPair(boolean pair) {
+        this.pair = pair;
+    }
+
+    public boolean hasPair() {
+        return pair;
+    }
 
     /**
      * returns the appropriate direction the user must traverse via sync in order to
