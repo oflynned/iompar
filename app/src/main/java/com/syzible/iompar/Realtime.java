@@ -304,116 +304,20 @@ public class Realtime extends Fragment {
                             if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
                                 //RTPI Luas station parsing & syncing
                                 currentChoice = greenLuasStationsBridesGlen;
-
-                                //check loop
-                                if (gridView.isItemChecked(position)) {
-                                    if (!isStart() && !isEnd()) {
-                                        System.out.println("start and end were false, now start set true with end still false");
-                                        setStartPositionComp(position);
-                                        setStart(true);
-                                        setStartPosition(currentChoice[position].getTitle());
-                                    } else if (isStart() && !isEnd()) {
-                                        if (position != getStartPositionComp()) {
-                                            System.out.println("end was false where start is true, now end set true");
-                                            setEndPositionComp(position);
-                                            setEnd(true);
-                                            setHasPair(true);
-                                            setEndPosition(currentChoice[position].getTitle());
-                                        } else {
-                                            System.out.println("start was true, now start set false");
-                                            setStart(false);
-                                            setStartPosition("");
-                                        }
-                                    }
-                                }
-                                //uncheck loop
-                                else {
-                                    if (!isStart() && !isEnd()) {
-                                        System.out.println("start and end were false, now start set true with end still false");
-                                        setStartPositionComp(position);
-                                        setStart(true);
-                                        setStartPosition(currentChoice[position].getTitle());
-                                    } else if (isStart() && !isEnd()) {
-                                        if (position != getStartPositionComp()) {
-                                            System.out.println("end was false where start is true, now end set true");
-                                            setEndPositionComp(position);
-                                            setHasPair(true);
-                                            setEnd(true);
-                                            setEndPosition(currentChoice[position].getTitle());
-                                        } else {
-                                            System.out.println("start was true, now start set false");
-                                            setStart(false);
-                                            setEndPosition("");
-                                        }
-                                    } else if (!isStart() && isEnd()) {
-                                        if (position != getEndPositionComp()) {
-                                            System.out.println("start was false where end is true, now start set true");
-                                            setStartPositionComp(position);
-                                            setStart(true);
-                                            setHasPair(true);
-                                            setStartPosition(currentChoice[position].getTitle());
-                                        } else {
-                                            System.out.println("end was true, now end set false");
-                                            setEnd(false);
-                                            setEndPosition("");
-                                        }
-                                    } else if (isStart() && isEnd()) {
-                                        if (position == getStartPositionComp()) {
-                                            System.out.println("start and end were true in a pair, now start set false");
-                                            setStart(false);
-                                            setHasPair(false);
-                                            setStartPosition("");
-                                        } else if (position == getEndPositionComp()) {
-                                            System.out.println("start and end were true in a pair, now end set false");
-                                            setEnd(false);
-                                            setHasPair(false);
-                                            setEndPosition("");
-                                        }
-                                    }
-                                }
-                                if (isStart() && isEnd()) {
-                                    if (hasPair()) {
-                                        if (position != getStartPositionComp()
-                                                && position != getEndPositionComp()) {
-                                            gridView.setItemChecked(position, false);
-                                            System.out.println("trying to check item not already checked");
-                                        } else {
-                                            System.out.println("start true, end true!");
-                                            System.out.println(
-                                                    "start station: " + getStartPosition() + "\n" +
-                                                            "end station: " + getEndPosition());
-
-                                            fetchRTPI(getStartPosition(), getEndPosition(),
-                                                    getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp()));
-                                            infoPanelParams.height = getDp(100);
-                                            infoPanel.invalidate();
-                                        }
-                                    } else {
-                                        if (position == getEndPositionComp()) {
-                                            setEnd(false);
-                                            System.out.println("start true, end true, unselected end so end is false!");
-                                        } else if (position == getStartPositionComp()) {
-                                            setStart(false);
-                                            System.out.println("start true, end true, unselected start so start is false!");
-                                        }
-                                        setHasPair(false);
-                                    }
-                                }
                             } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
                                 currentChoice = greenLuasStationsSandyford;
-                                //fetchRTPI(currentChoice, position, Globals.LineDirection.stephens_green_to_sandyford);
                             }
                         } else {
                             if (currentLuasDirection == LuasDirections.TALLAGHT) {
                                 currentChoice = redLuasStationsTallaght;
-                                //fetchRTPI(currentChoice, position, Globals.LineDirection.the_point_to_tallaght);
                             } else if (currentLuasDirection == LuasDirections.SAGGART) {
                                 currentChoice = redLuasStationsSaggart;
-                                //fetchRTPI(currentChoice, position, Globals.LineDirection.the_point_to_saggart);
                             } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
                                 currentChoice = redLuasStationsConnolly;
-                                //fetchRTPI(currentChoice, position, Globals.LineDirection.heuston_to_connolly);
                             }
+                        }
+                        if(!currentChoice.equals("")) {
+                            handleChoices(currentChoice, position);
                         }
                     }
                 }
@@ -421,6 +325,103 @@ public class Realtime extends Fragment {
         });
 
         return view;
+    }
+
+    private void handleChoices(Categories[] currentChoice, int position) {
+        //check loop
+        if (gridView.isItemChecked(position)) {
+            if (!isStart() && !isEnd()) {
+                System.out.println("start and end were false, now start set true with end still false");
+                setStartPositionComp(position);
+                setStart(true);
+                setStartPosition(currentChoice[position].getTitle());
+            } else if (isStart() && !isEnd()) {
+                if (position != getStartPositionComp()) {
+                    System.out.println("end was false where start is true, now end set true");
+                    setEndPositionComp(position);
+                    setEnd(true);
+                    setHasPair(true);
+                    setEndPosition(currentChoice[position].getTitle());
+                } else {
+                    System.out.println("start was true, now start set false");
+                    setStart(false);
+                    setStartPosition("");
+                }
+            }
+        }
+        //uncheck loop
+        else {
+            if (!isStart() && !isEnd()) {
+                System.out.println("start and end were false, now start set true with end still false");
+                setStartPositionComp(position);
+                setStart(true);
+                setStartPosition(currentChoice[position].getTitle());
+            } else if (isStart() && !isEnd()) {
+                if (position != getStartPositionComp()) {
+                    System.out.println("end was false where start is true, now end set true");
+                    setEndPositionComp(position);
+                    setHasPair(true);
+                    setEnd(true);
+                    setEndPosition(currentChoice[position].getTitle());
+                } else {
+                    System.out.println("start was true, now start set false");
+                    setStart(false);
+                    setEndPosition("");
+                }
+            } else if (!isStart() && isEnd()) {
+                if (position != getEndPositionComp()) {
+                    System.out.println("start was false where end is true, now start set true");
+                    setStartPositionComp(position);
+                    setStart(true);
+                    setHasPair(true);
+                    setStartPosition(currentChoice[position].getTitle());
+                } else {
+                    System.out.println("end was true, now end set false");
+                    setEnd(false);
+                    setEndPosition("");
+                }
+            } else if (isStart() && isEnd()) {
+                if (position == getStartPositionComp()) {
+                    System.out.println("start and end were true in a pair, now start set false");
+                    setStart(false);
+                    setHasPair(false);
+                    setStartPosition("");
+                } else if (position == getEndPositionComp()) {
+                    System.out.println("start and end were true in a pair, now end set false");
+                    setEnd(false);
+                    setHasPair(false);
+                    setEndPosition("");
+                }
+            }
+        }
+        if (isStart() && isEnd()) {
+            if (hasPair()) {
+                if (position != getStartPositionComp()
+                        && position != getEndPositionComp()) {
+                    gridView.setItemChecked(position, false);
+                    System.out.println("trying to check item not already checked");
+                } else {
+                    System.out.println("start true, end true!");
+                    System.out.println(
+                            "start station: " + getStartPosition() + "\n" +
+                                    "end station: " + getEndPosition());
+
+                    fetchRTPI(getStartPosition(), getEndPosition(),
+                            getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp()));
+                    infoPanelParams.height = getDp(100);
+                    infoPanel.invalidate();
+                }
+            } else {
+                if (position == getEndPositionComp()) {
+                    setEnd(false);
+                    System.out.println("start true, end true, unselected end so end is false!");
+                } else if (position == getStartPositionComp()) {
+                    setStart(false);
+                    System.out.println("start true, end true, unselected start so start is false!");
+                }
+                setHasPair(false);
+            }
+        }
     }
 
     public void setCurrentChoice(int choice) {
