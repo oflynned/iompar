@@ -21,6 +21,7 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import java.util.Arrays;
 
@@ -205,6 +206,8 @@ public class Realtime extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        globals.setTag("Realtime");
+
         view = inflater.inflate(R.layout.fragment_realtime, container, false);
         gridView = (GridView) view.findViewById(R.id.gridview);
         baseAdapter = new TransportationAdapter(this.getContext());
@@ -214,6 +217,7 @@ public class Realtime extends Fragment {
         infoPanelParams = (RelativeLayout.LayoutParams) infoPanel.getLayoutParams();
 
         infoPanelParams.height = 0;
+        infoPanel.requestLayout();
 
         leftPanel = (TextView) view.findViewById(R.id.leftpanel);
         rightPanel = (TextView) view.findViewById(R.id.rightpanel);
@@ -417,6 +421,7 @@ public class Realtime extends Fragment {
                             getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp()));
                     infoPanelParams.height = getDp(90);
                     infoPanel.invalidate();
+                    infoPanel.requestLayout();
                 }
             } else {
                 if (position == getEndPositionComp()) {
@@ -518,9 +523,7 @@ public class Realtime extends Fragment {
         return endPosition;
     }
 
-    public void setStartPositionComp(int startPositionComp) {
-        this.startPositionComp = startPositionComp;
-    }
+    public void setStartPositionComp(int startPositionComp) {this.startPositionComp = startPositionComp;}
 
     public int getStartPositionComp() {
         return startPositionComp;

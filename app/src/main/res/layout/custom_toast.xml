@@ -24,5 +24,7 @@
         android:layout_height="35dp"
         android:layout_below="@+id/toast_info_display"
         android:background="@drawable/custom_toast_triangle"
-        android:rotation="180"/>
+        android:rotation="180"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

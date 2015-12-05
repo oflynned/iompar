@@ -25,6 +25,7 @@ import static com.syzible.iompar.Fares.FareType.ADULT;
 public class Fares extends Fragment {
 
     View view;
+    Globals globals = new Globals();
 
     public enum FareType {ADULT, STUDENT, CHILD, OTHER}
 
@@ -137,10 +138,11 @@ public class Fares extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        globals.setTag("Fares");
         view = inflater.inflate(R.layout.fragment_fare, null);
         TextView textView = (TextView) view.findViewById(R.id.fares_title);
 
-        setFareType(FareType.ADULT);
+        setFareType(FareType.STUDENT);
         setFareJourney(FareJourney.SINGLE);
         setFarePayment(FarePayment.LEAP);
 

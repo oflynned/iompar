@@ -2,33 +2,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_realtime"
+        <item
+            android:id="@+id/nav_realtime"
             android:icon="@drawable/ic_autorenew_white_48dp"
             android:title="Realtime Information" />
-        <item android:id="@+id/nav_fare_calculator"
+        <item
+            android:id="@+id/nav_fare_calculator"
             android:icon="@drawable/ic_perm_scan_wifi_white_48dp"
             android:title="Fare Calculator" />
-        <item android:id="@+id/nav_remind_me"
+        <item
+            android:id="@+id/nav_remind_me"
             android:icon="@drawable/ic_schedule_white_48dp"
             android:title="Remind Me" />
-        <item android:id="@+id/nav_around_me"
+        <item
+            android:id="@+id/nav_around_me"
             android:icon="@drawable/ic_visibility_white_48dp"
             android:title="Around Me" />
-
+        <item
+            android:id="@+id/nav_manage_leap_cards"
+            android:icon="@drawable/ic_payment_white_48dp"
+            android:title="Manage Leap Cards" />
+        <item
+            android:id="@+id/nav_check_balance"
+            android:icon="@drawable/ic_attach_money_white_48dp"
+            android:title="Check balance" />
+        <item
+            android:id="@+id/nav_expenditures"
+            android:icon="@drawable/ic_trending_up_white_48dp"
+            android:title="Expenditures" />
     </group>
-
-    <item android:title="Leap Card">
-        <menu>
-            <item android:id="@+id/nav_add_leap_card"
-                android:icon="@drawable/ic_payment_white_48dp"
-                android:title="Add Leap Card" />
-            <item android:id="@+id/nav_check_balance"
-                android:icon="@drawable/ic_payment_white_48dp"
-                android:title="Check balance" />
-            <item android:id="@+id/nav_topup"
-                android:icon="@drawable/ic_flash_on_white_48dp"
-                android:title="Top up" />
-        </menu>
-    </item>
-
 </menu>

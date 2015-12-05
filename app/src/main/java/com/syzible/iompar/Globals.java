@@ -1,20 +1,19 @@
 package com.syzible.iompar;
 
-import android.widget.ImageView;
-
 /**
  * Created by ed on 28/10/15.
  */
 public class Globals {
 
+    public String tag = "";
+
     //profile
     String navName = "";
     String navLeapNumber = "";
-    ImageView navProfilePicture;
     boolean loggedIn;
 
     //http querying
-    public String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
+    public static String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
     public static String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
 
     public static final String USER_LEAP_NUMBER = "10061 94926 1114";
@@ -513,4 +512,7 @@ public class Globals {
     public boolean isLoggedIn() {
         return loggedIn;
     }
+
+    public void setTag(String tag){this.tag=tag;}
+    public String getTag(){return tag;}
 }

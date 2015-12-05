@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.syzible.iompar.MainActivity"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginTop="?attr/actionBarSize">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Manage Leap Cards"/>
+    </RelativeLayout>
+
+
+    <com.linroid.filtermenu.library.FilterMenuLayout
+        android:id="@+id/filter_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|end"
+        app:fm_expandedRadius="96dp"
+        app:fm_collapsedRadius="24dp"
+        app:fm_centerBottom="50dp"
+        app:fm_centerRight="50dp"
+        app:fm_primaryColor="@color/colorPrimary"
+        app:fm_primaryDarkColor="@color/colorPrimaryDark">
+    </com.linroid.filtermenu.library.FilterMenuLayout>
+
+</RelativeLayout>

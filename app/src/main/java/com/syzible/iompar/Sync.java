@@ -1,7 +1,5 @@
 package com.syzible.iompar;
 
-import android.content.Context;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,7 +21,6 @@ public class Sync {
 
     Globals globals = new Globals();
     Fares fares = new Fares();
-
 
     //luas
     public String requestUpdate(Globals.LineDirection direction,
@@ -125,6 +122,15 @@ public class Sync {
         setLoaded(false);
     }
 
+    /**
+     * scrapes the data from the HTML RTPI website given the start and end stations
+     * for the given line.
+     * @crash Belgard situation catastrophe where Saggart line changes depending on given time
+     * @param doc document to be scraped
+     * @param endStation station the user travels towards
+     * @param depart station the user is coming from
+     * @param arrive station the user is going to
+     */
     public void scrapeData(Document doc, String endStation, String depart, String arrive) {
         Elements elements = doc.select("table");
         endDestinationList.clear();
@@ -156,7 +162,7 @@ public class Sync {
         fares.calculateFare();
 
         setNextDue(
-                "Departing from:" + "\n" + depart + "\n" +
+                "Origin:" + "\n" + depart + "\n" +
                         "Destination:" + "\n" + arrive);
         setArrivalInfo(
                 "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
@@ -164,7 +170,8 @@ public class Sync {
                         "Cost: €" + fares.getFare());
     }
 
-    public void scrapeData(Document doc, String endStation, String endStationAlternate, String depart, String arrive) {
+    public void scrapeData(Document doc, String endStation, String endStationAlternate,
+                           String depart, String arrive) {
         Elements elements = doc.select("table");
         endDestinationList.clear();
         waitingTimeList.clear();
@@ -200,26 +207,12 @@ public class Sync {
         fares.calculateFare();
 
         setNextDue(
-                "Departing from:" + "\n" + depart + "\n" +
+                "Origin:" + "\n" + depart + "\n" +
                         "Destination:" + "\n" + arrive);
         setArrivalInfo(
                 "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                         "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                         "Cost: €" + fares.getFare());
-    }
-
-    /**
-     * Connects to Leap Card login service via ASPX and returns the balance within the page source
-     * recursively through an independent asynchronous thread
-     * @note THROWING EXCEPTION ON LOGIN
-     */
-    public void leapConnect() {
-        Thread leapThread = new Thread() {
-            public void run() {
-
-            }
-        };
-        leapThread.run();
     }
 
     public String getTimeFormat(String time) {
