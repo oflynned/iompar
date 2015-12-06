@@ -350,11 +350,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void modifyFrequency(String tableName, String tableClassName, String colId, int id, int frequency){
+    public void modifyActive(String tableName, String colId, int id, boolean active){
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(tableClassName + ".ID", frequency);
+        contentValues.put(colId, active);
+
+        String[] whereArgs = {String.valueOf(id)};
+        writeDb.update(tableName, contentValues,
+                colId + "=" + "?", whereArgs);
+        writeDb.close();
+    }
+
+    public void modifyFrequency(String tableName, String colId, int id, int frequency){
+        SQLiteDatabase writeDb = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(colId, frequency);
 
         String[] whereArgs = {String.valueOf(id)};
         writeDb.update(tableName, contentValues,

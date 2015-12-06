@@ -31,11 +31,7 @@ import java.util.Calendar;
  */
 public class AddLeapCard extends DialogFragment {
 
-    private String dialogTitle;
-    boolean modified;
-
-    private String date, rawDate;
-    private EditText leapNumberField, emailField, passwordField;
+    private EditText leapNumberField, usernameField, emailField, passwordField;
     private CheckBox transformPassword;
     private setAddLeapListener addLeapDialogListener = null;
 
@@ -92,11 +88,24 @@ public class AddLeapCard extends DialogFragment {
         leapNumberField.setLayoutParams(leapNumberParams);
         leapNumberField.setId(View.generateViewId());
 
+        usernameField = new EditText(this.getActivity());
+        RelativeLayout.LayoutParams usernameParams =
+                new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+        usernameParams.addRule(RelativeLayout.BELOW, leapNumberField.getId());
+        usernameParams.setMarginStart(getDp(16));
+        usernameParams.setMarginEnd(getDp(64));
+        usernameField.setSingleLine();
+        usernameField.setInputType(InputType.TYPE_CLASS_TEXT);
+        usernameField.setHint("Leap Card Username");
+        usernameField.setLayoutParams(usernameParams);
+        usernameField.setId(View.generateViewId());
+
         emailField = new EditText(this.getActivity());
         RelativeLayout.LayoutParams emailParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
-        emailParams.addRule(RelativeLayout.BELOW, leapNumberField.getId());
+        emailParams.addRule(RelativeLayout.BELOW, usernameField.getId());
         emailParams.setMarginStart(getDp(16));
         emailParams.setMarginEnd(getDp(64));
         emailField.setSingleLine();
@@ -142,6 +151,7 @@ public class AddLeapCard extends DialogFragment {
         });
 
         propertiesEntry.addView(leapNumberField);
+        propertiesEntry.addView(usernameField);
         propertiesEntry.addView(emailField);
         propertiesEntry.addView(passwordField);
         propertiesEntry.addView(transformPassword);
@@ -157,6 +167,7 @@ public class AddLeapCard extends DialogFragment {
     }
 
     public String getNumberField(){return leapNumberField.getText().toString();}
+    public String getUsernameField(){return usernameField.getText().toString();}
     public String getEmailField(){return emailField.getText().toString();}
     public String getPasswordField(){return passwordField.getText().toString();}
 }

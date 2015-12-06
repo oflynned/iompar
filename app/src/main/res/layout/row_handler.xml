@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableLayout
+            android:id="@+id/leap_list_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*" >
+            <TableRow
+                android:id="@+id/headings"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/leap_number_title"
+                    android:text="Leap Card Number"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/table_cell"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/leap_user_title"
+                    android:text="Username"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/table_cell"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/leap_balance_title"
+                    android:text="Balance"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/table_cell"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/leap_active_title"
+                    android:text="Active"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/table_cell"
+                    android:gravity="center"/>
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+
+</LinearLayout>

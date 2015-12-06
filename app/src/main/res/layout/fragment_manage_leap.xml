@@ -5,16 +5,13 @@
     tools:context="com.syzible.iompar.MainActivity"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginTop="?attr/actionBarSize">
+    android:layout_height="fill_parent">
 
     <RelativeLayout
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Manage Leap Cards"/>
+        <include layout="@layout/row_handler"/>
     </RelativeLayout>
 
 
