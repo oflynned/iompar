@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity
     ManageLeapCards manageLeapCards = new ManageLeapCards();
     Balance balance = new Balance();
     Expenditures expenditures = new Expenditures();
+    Globals globals = new Globals();
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
     TextView barName, barLeapCardNumber;

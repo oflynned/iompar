@@ -1,10 +1,12 @@
 package com.syzible.iompar;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
@@ -33,9 +35,17 @@ public class ManageLeapCards extends Fragment {
                 .attach(filterMenuLayout)
                 .withListener(new FilterMenu.OnMenuChangeListener() {
                     @Override
-                    public void onMenuItemClick(View view, int position) {
-                        switch (position){
+                    public void onMenuItemClick(View view, final int position) {
+                        switch (position) {
                             case 0:
+                                final AddLeapCard addLeapCard = new AddLeapCard();
+                                addLeapCard.show(ManageLeapCards.this.getFragmentManager(), "addLeapCard");
+                                addLeapCard.setAddLeapDialogListener(new AddLeapCard.setAddLeapListener() {
+                                    @Override
+                                    public void onDoneClick(DialogFragment dialogFragment) {
+
+                                    }
+                                });
                                 break;
                             case 1:
                                 break;
@@ -45,10 +55,12 @@ public class ManageLeapCards extends Fragment {
                                 break;
                         }
                     }
+
                     @Override
                     public void onMenuCollapse() {
 
                     }
+
                     @Override
                     public void onMenuExpand() {
 
