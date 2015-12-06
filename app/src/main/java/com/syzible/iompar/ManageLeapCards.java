@@ -41,7 +41,7 @@ public class ManageLeapCards extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
+                             Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_manage_leap, null);
 
         tableLayout = (TableLayout) view.findViewById(R.id.leap_list_table);
@@ -54,42 +54,68 @@ public class ManageLeapCards extends Fragment {
 
         filterMenuLayout = (FilterMenuLayout) view.findViewById(R.id.filter_menu);
         filterMenu = new FilterMenu.Builder(getActivity())
-                .addItem(R.drawable.ic_action_add)
-                .addItem(R.drawable.ic_action_clock)
-                .addItem(R.drawable.ic_action_io)
-                .addItem(R.drawable.ic_action_location_2)
+                .addItem(R.drawable.ic_add_white_18dp)
+                .addItem(R.drawable.ic_clear_white_18dp)
+                .addItem(R.drawable.ic_content_paste_white_18dp)
                 .attach(filterMenuLayout)
                 .withListener(new FilterMenu.OnMenuChangeListener() {
                     @Override
                     public void onMenuItemClick(View view, final int position) {
                         switch (position) {
+                            //open dialog to add leap to table
                             case 0:
                                 final AddLeapCard addLeapCard = new AddLeapCard();
                                 addLeapCard.show(ManageLeapCards.this.getFragmentManager(), "addLeapCard");
                                 addLeapCard.setAddLeapDialogListener(new AddLeapCard.setAddLeapListener() {
                                     @Override
                                     public void onDoneClick(DialogFragment dialogFragment) {
-                                        //inserts entered data and set active card to FALSE
-                                        //as it may not be in use
-                                        //set card to true from handler on custom table view in parent
                                         databaseHelper.insertRecord(
                                                 Database.LeapLogin.TABLE_NAME,
                                                 null, null, null, null, null, null, 0, null, null, 0, 0, 0, false,
                                                 addLeapCard.getNumberField(), addLeapCard.getUsernameField(),
-                                                addLeapCard.getEmailField(), addLeapCard.getPasswordField(), false);
+                                                addLeapCard.getEmailField(), addLeapCard.getPasswordField(), true);
                                         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                                         populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
+                                        Toast.makeText(getContext(), "Leap card added successfully", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 break;
+                            //clear table
                             case 1:
-                                databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
-                                databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
-                                populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("Clear Leap Cards")
+                                        .setMessage("Are you sure you want to remove all cards?")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
+                                                databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
+                                                populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
+                                                Toast.makeText(getContext(), "Cards all cleared successfully", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .show();
                                 break;
+                            //breakdown of costs
                             case 2:
-                                break;
-                            case 3:
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("Active Leap Card History")
+                                        .setMessage("Expenditures here")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .show();
                                 break;
                         }
                     }
@@ -109,7 +135,7 @@ public class ManageLeapCards extends Fragment {
         return view;
     }
 
-    private void populateTable(String query){
+    private void populateTable(String query) {
         SQLiteDatabase readDb = databaseHelper.getReadableDatabase();
 
         final int currNumRows = tableLayout.getChildCount();
@@ -117,7 +143,7 @@ public class ManageLeapCards extends Fragment {
             tableLayout.removeViewsInLayout(1, currNumRows - 1);
 
         final Cursor cursor = readDb.rawQuery(query, null);
-        int numRows = cursor.getCount();
+        final int numRows = cursor.getCount();
         System.out.println("Row count " + numRows);
         cursor.moveToFirst();
 
@@ -131,35 +157,17 @@ public class ManageLeapCards extends Fragment {
             //assign row via ID instantiation
             final int row = cursor.getInt(DatabaseHelper.COL_LEAP_LOGIN_ID);
 
-            //card #
-            final TextView cardNumberField = new TextView(getContext());
-            cardNumberField.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER));
-            cardNumberField.setGravity(Gravity.CENTER);
-
-            //username field
-            final TextView usernameField = new TextView(getContext());
-            usernameField.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_USER_NAME));
-            usernameField.setGravity(Gravity.CENTER);
-
-            //balance - need to work on this as it takes from other table
-            final TextView balanceField = new TextView(getContext());
-            balanceField.setText("€xxx");
-            balanceField.setGravity(Gravity.CENTER);
-
-            if (i % 2 == 0) {
-                tableRow.setBackgroundColor(ContextCompat
-                        .getColor(getContext(), R.color.colorPrimary));
-                cardNumberField.setTextColor(Color.WHITE);
-                usernameField.setTextColor(Color.WHITE);
-                balanceField.setTextColor(Color.WHITE);
-            }
-
+            //currently active leap card
             final CheckBox checkBox = new CheckBox(getContext());
             checkBox.setId(cursor.getInt(DatabaseHelper.COL_LEAP_LOGIN_ID));
-            checkBox.setGravity(Gravity.CENTER);
+            TableRow.LayoutParams checkboxParams =
+                    new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+            checkboxParams.gravity = Gravity.CENTER;
+            checkBox.setLayoutParams(checkboxParams);
             checkBoxes.add(checkBox);
 
-            if(cursor.getInt(DatabaseHelper.COL_LEAP_LOGIN_IS_ACTIVE) == 1){
+            if (cursor.getInt(DatabaseHelper.COL_LEAP_LOGIN_IS_ACTIVE) == 1) {
                 checkBox.setChecked(true);
             } else {
                 checkBox.setChecked(false);
@@ -168,10 +176,63 @@ public class ManageLeapCards extends Fragment {
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (checkBox.isChecked()) {
+                        for(CheckBox cb : checkBoxes){
+                            cb.setChecked(false);
+                        }
+                        for (int j = 0; j <= numRows; j++) {
+                            databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE, Database.LeapLogin.ID, j, false);
+                        }
+                        databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE, Database.LeapLogin.ID, row, isChecked);
+                        checkBox.setChecked(true);
+                    } else {
+                        for(CheckBox cb : checkBoxes){
+                            cb.setChecked(false);
+                        }
+                        for (int j = 0; j <= numRows; j++) {
+                            databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE, Database.LeapLogin.ID, j, false);
+                            checkBox.setChecked(false);
+                        }
+                    }
+                    tableLayout.invalidate();
                     databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                 }
             });
 
+            //card #
+            final TextView cardNumberField = new TextView(getContext());
+            cardNumberField.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER));
+            TableRow.LayoutParams cardNumberParams =
+                    new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+            cardNumberParams.gravity = Gravity.CENTER;
+            cardNumberField.setLayoutParams(cardNumberParams);
+
+            //username field
+            final TextView usernameField = new TextView(getContext());
+            usernameField.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_USER_NAME));
+            TableRow.LayoutParams usernameParams =
+                    new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+            usernameParams.gravity = Gravity.CENTER;
+            usernameField.setLayoutParams(usernameParams);
+
+            //balance - need to work on this as it takes from other table
+            final TextView balanceField = new TextView(getContext());
+            balanceField.setText("€xxx");
+            TableRow.LayoutParams balanceParams =
+                    new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+            balanceParams.gravity = Gravity.CENTER;
+            balanceField.setLayoutParams(balanceParams);
+
+            if (i % 2 == 0) {
+                tableRow.setBackgroundColor(ContextCompat
+                        .getColor(getContext(), R.color.colorPrimary));
+                cardNumberField.setTextColor(Color.WHITE);
+                usernameField.setTextColor(Color.WHITE);
+                balanceField.setTextColor(Color.WHITE);
+            }
 
             tableRow.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -182,10 +243,10 @@ public class ManageLeapCards extends Fragment {
             });
 
             //add views
+            tableRow.addView(checkBox);
             tableRow.addView(cardNumberField);
             tableRow.addView(usernameField);
             tableRow.addView(balanceField);
-            tableRow.addView(checkBox);
 
             tableLayout.addView(tableRow);
 

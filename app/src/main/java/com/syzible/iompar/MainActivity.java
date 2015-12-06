@@ -26,10 +26,7 @@ public class MainActivity extends AppCompatActivity
     Remind remind = new Remind();
     Around around = new Around();
     ManageLeapCards manageLeapCards = new ManageLeapCards();
-    Balance balance = new Balance();
     Expenditures expenditures = new Expenditures();
-    Globals globals = new Globals();
-    DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
     TextView barName, barLeapCardNumber;
     DrawerLayout drawer;
@@ -123,8 +120,6 @@ public class MainActivity extends AppCompatActivity
             changeFragment(this.around);
         } else if (id == R.id.nav_manage_leap_cards) {
             changeFragment(this.manageLeapCards);
-        } else if (id == R.id.nav_check_balance) {
-            changeFragment(this.balance);
         } else if (id == R.id.nav_expenditures) {
             changeFragment(this.expenditures);
         }

@@ -7,9 +7,17 @@
             android:icon="@drawable/ic_autorenew_white_48dp"
             android:title="Realtime Information" />
         <item
+            android:id="@+id/nav_manage_leap_cards"
+            android:icon="@drawable/ic_payment_white_48dp"
+            android:title="Manage Leap Cards" />
+        <item
             android:id="@+id/nav_fare_calculator"
             android:icon="@drawable/ic_perm_scan_wifi_white_48dp"
             android:title="Fare Calculator" />
+        <item
+            android:id="@+id/nav_expenditures"
+            android:icon="@drawable/ic_trending_up_white_48dp"
+            android:title="Expenditures" />
         <item
             android:id="@+id/nav_remind_me"
             android:icon="@drawable/ic_schedule_white_48dp"
@@ -18,17 +26,5 @@
             android:id="@+id/nav_around_me"
             android:icon="@drawable/ic_visibility_white_48dp"
             android:title="Around Me" />
-        <item
-            android:id="@+id/nav_manage_leap_cards"
-            android:icon="@drawable/ic_payment_white_48dp"
-            android:title="Manage Leap Cards" />
-        <item
-            android:id="@+id/nav_check_balance"
-            android:icon="@drawable/ic_attach_money_white_48dp"
-            android:title="Check balance" />
-        <item
-            android:id="@+id/nav_expenditures"
-            android:icon="@drawable/ic_trending_up_white_48dp"
-            android:title="Expenditures" />
     </group>
 </menu>

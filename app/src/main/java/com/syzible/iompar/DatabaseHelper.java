@@ -350,11 +350,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void modifyActive(String tableName, String colId, int id, boolean active){
+    public void modifyActive(String tableName, String colIsActive, String colId, int id, boolean active){
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(colId, active);
+        contentValues.put(colIsActive, active);
 
         String[] whereArgs = {String.valueOf(id)};
         writeDb.update(tableName, contentValues,
@@ -362,11 +362,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void modifyFrequency(String tableName, String colId, int id, int frequency){
+    public void modifyFrequency(String tableName, String colFreq, String colId, int id, int frequency){
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(colId, frequency);
+        contentValues.put(colFreq, frequency);
 
         String[] whereArgs = {String.valueOf(id)};
         writeDb.update(tableName, contentValues,

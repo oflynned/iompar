@@ -6,20 +6,11 @@
     android:layout_height="fill_parent"
     android:layout_marginTop="?attr/actionBarSize">
 
-        <TextView
-            android:id="@+id/realtimeTitle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="Real Time"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
         <RelativeLayout
             android:id="@+id/infopanel"
+            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/realtimeTitle">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/firstLayout"
@@ -27,7 +18,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/secondView"
                 android:orientation="vertical"
-                android:padding="5dp">
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/leftpanel"

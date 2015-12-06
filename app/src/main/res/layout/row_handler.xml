@@ -6,14 +6,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TableLayout
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:id="@+id/leap_list_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="*" >
             <TableRow
+                android:layout_gravity="center"
                 android:id="@+id/headings"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/leap_active_title"
+                    android:text="Active"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/table_cell"
+                    android:gravity="center"/>
                 <TextView
                     android:id="@+id/leap_number_title"
                     android:text="Leap Card Number"
@@ -31,13 +41,6 @@
                 <TextView
                     android:id="@+id/leap_balance_title"
                     android:text="Balance"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/table_cell"
-                    android:gravity="center"/>
-                <TextView
-                    android:id="@+id/leap_active_title"
-                    android:text="Active"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:background="@drawable/table_cell"

@@ -206,6 +206,9 @@ public class Sync {
         fares.setLuasFareCost(Fares.LuasFareCost.THREE_ZONES);
         fares.calculateFare();
 
+        /**
+         * @crash when no trams available
+         */
         setNextDue(
                 "Origin:" + "\n" + depart + "\n" +
                         "Destination:" + "\n" + arrive);

@@ -28,4 +28,5 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.linroid.filtermenu:library:0.2.+@aar'
+    compile 'com.github.paolorotolo:appintro:3.3.0'
 }
