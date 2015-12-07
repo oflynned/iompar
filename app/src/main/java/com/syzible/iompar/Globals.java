@@ -15,6 +15,7 @@ public class Globals {
     //http querying
     public static String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
     public static String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
+    public static String LEAP_LOGIN_AUTH_KEY = "https://www.leapcard.ie/en/login.aspx?ReturnUrl=%2fen%2fSelfServices%2fCardServices%2fCardOverView.aspx%3fVal%3dRGGa69Suo7YIneO22PynN6N8FOuJdgKS6l1P6mkeDS9A0ZD%252boKRzDS8slbiMTZsXpLx%252fQxSRpmHyvKU3e0elKxfM%252fIN9lgdlt0S6Bw7qvnZCXamJ%252bES1jfdNxCCHrlkyYEZOrm%252fqe4DCcQkxDRYfXfAmoG%252bmwl6i9Gt04pqxTxE%253d&Val=RGGa69Suo7YIneO22PynN6N8FOuJdgKS6l1P6mkeDS9A0ZD%2boKRzDS8slbiMTZsXpLx%2fQxSRpmHyvKU3e0elKxfM%2fIN9lgdlt0S6Bw7qvnZCXamJ%2bES1jfdNxCCHrlkyYEZOrm%2fqe4DCcQkxDRYfXfAmoG%2bmwl6i9Gt04pqxTxE%3d";
 
     public static final String USER_LEAP_NUMBER = "10061 94926 1114";
     public static final String USER_NAME = "oflynned";

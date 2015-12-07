@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -57,6 +58,7 @@ public class ManageLeapCards extends Fragment {
                 .addItem(R.drawable.ic_add_white_18dp)
                 .addItem(R.drawable.ic_clear_white_18dp)
                 .addItem(R.drawable.ic_content_paste_white_18dp)
+                .addItem(R.drawable.ic_input_white_18dp)
                 .attach(filterMenuLayout)
                 .withListener(new FilterMenu.OnMenuChangeListener() {
                     @Override
@@ -73,7 +75,7 @@ public class ManageLeapCards extends Fragment {
                                                 Database.LeapLogin.TABLE_NAME,
                                                 null, null, null, null, null, null, 0, null, null, 0, 0, 0, false,
                                                 addLeapCard.getNumberField(), addLeapCard.getUsernameField(),
-                                                addLeapCard.getEmailField(), addLeapCard.getPasswordField(), true);
+                                                addLeapCard.getEmailField(), addLeapCard.getPasswordField(), false);
                                         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                                         populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                                         Toast.makeText(getContext(), "Leap card added successfully", Toast.LENGTH_SHORT).show();
@@ -117,6 +119,13 @@ public class ManageLeapCards extends Fragment {
                                         })
                                         .show();
                                 break;
+                            case 3:
+                                LeapScraping leapScraping = new LeapScraping(getContext());
+                                try {
+                                    leapScraping.scrape();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                         }
                     }
 
