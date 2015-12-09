@@ -69,7 +69,8 @@ public class Sync {
                     } else if(direction.equals(Globals.LineDirection.belgard_to_tallaght)){
                         System.out.println("towards tallaght");
                         scrapeData(doc, "Tallaght", depart, arrive);
-                    } else if(direction.equals(Globals.LineDirection.belgard_to_the_point)){
+                    } else if(direction.equals(Globals.LineDirection.belgard_to_the_point) ||
+                            direction.equals(Globals.LineDirection.tallaght_to_the_point)){
                         System.out.println("towards the point");
                         scrapeData(doc, "The Point", depart, arrive);
                     }  else if(direction.equals(Globals.LineDirection.tallaght_to_belgard) ||
