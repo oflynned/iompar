@@ -50,7 +50,7 @@ public class Realtime extends Fragment {
     private enum LuasLines {GREEN, RED}
 
     private enum LuasDirections {
-        TALLAGHT, SAGGART, POINT,
+        TALLAGHT, SAGGART, POINT, BELGARD,
         BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
         CONNOLLY, HEUSTON
     }
@@ -301,7 +301,7 @@ public class Realtime extends Fragment {
                                     stage++;
                                     gridView.setAdapter(baseAdapter);
                                     break;
-                                case 3:
+                                case 2:
                                     currentLuasDirection = LuasDirections.CONNOLLY;
                                     stage++;
                                     gridView.setAdapter(baseAdapter);
@@ -358,7 +358,7 @@ public class Realtime extends Fragment {
                     setStart(false);
                     setStartPosition("");
                 }
-            } else if (!isStart() && isEnd()){
+            } else if (!isStart() && isEnd()) {
                 if (position != getStartPositionComp()) {
                     System.out.println("start was false where end is true, now start set true");
                     setStartPositionComp(position);
@@ -429,7 +429,7 @@ public class Realtime extends Fragment {
                             "start station: " + getStartPosition() + "\n" +
                                     "end station: " + getEndPosition());
                     fetchRTPI(getStartPosition(), getEndPosition(),
-                            getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp()));
+                            getDirection(currentLuasLine, currentLuasDirection, getStartPositionComp(), getEndPositionComp()));
                     infoPanelParams.height = getDp(90);
                     infoPanel.invalidate();
                     infoPanel.requestLayout();
@@ -475,7 +475,8 @@ public class Realtime extends Fragment {
      * @param endPosition   station where the user is travelling to
      * @return the line direction from globals which is passed as a param to sync
      */
-    public Globals.LineDirection getDirection(LuasLines currentLine, int startPosition, int endPosition) {
+    public Globals.LineDirection getDirection(LuasLines currentLine, LuasDirections currentLuasDirection,
+                                              int startPosition, int endPosition) {
         if (currentLine == LuasLines.GREEN) {
             //stephen's green - sandyford
             //sandyford - bride's glen
@@ -484,32 +485,72 @@ public class Realtime extends Fragment {
             //bride's glen - stephen's green
             //sandyford - stephen's green
             if (endPosition > startPosition) {
-                return lineDirection = Globals.LineDirection.stephens_green_to_brides_glen;
+                return Globals.LineDirection.stephens_green_to_brides_glen;
             } else if (endPosition < startPosition) {
-                return lineDirection = Globals.LineDirection.brides_glen_to_stephens_green;
-            } else {
-                return null;
+                return Globals.LineDirection.brides_glen_to_stephens_green;
+            }
+        } else if (currentLine == LuasLines.RED) {
+            if (currentLuasDirection == LuasDirections.TALLAGHT) {
+                if (endPosition > startPosition) {
+                    if (endPosition <= Globals.BELGARD_ID &&
+                            startPosition < Globals.BELGARD_ID) {
+                        return Globals.LineDirection.the_point_to_belgard;
+                    } else if (endPosition > Globals.BELGARD_ID &&
+                            endPosition <= Globals.TALLAGHT_ID) {
+                        return Globals.LineDirection.belgard_to_tallaght;
+                    }
+                } else {
+                    if (startPosition > endPosition) {
+                        if (startPosition > Globals.BELGARD_ID &&
+                                endPosition <= Globals.BELGARD_ID) {
+                            return Globals.LineDirection.tallaght_to_belgard;
+                        } else if (startPosition >= Globals.BELGARD_ID &&
+                                endPosition <= Globals.THE_POINT_ID) {
+                            return Globals.LineDirection.belgard_to_the_point;
+                        }
+                    }
+                }
+            } else if (currentLuasDirection == LuasDirections.SAGGART) {
+                if (endPosition > startPosition) {
+                    if (endPosition <= Globals.BELGARD_ID &&
+                            startPosition < Globals.BELGARD_ID) {
+                        return Globals.LineDirection.the_point_to_saggart;
+                    } else if (endPosition > Globals.BELGARD_ID &&
+                            endPosition <= Globals.TALLAGHT_ID) {
+                        return Globals.LineDirection.belgard_to_saggart;
+                    }
+                } else {
+                    if (startPosition > endPosition) {
+                        if (startPosition > Globals.BELGARD_ID &&
+                                endPosition <= Globals.BELGARD_ID) {
+                            return Globals.LineDirection.saggart_to_belgard;
+                        } else if (startPosition >= Globals.BELGARD_ID &&
+                                endPosition <= Globals.THE_POINT_ID) {
+                            return Globals.LineDirection.belgard_to_the_point;
+                        }
+                    }
+                }
+            } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                if (startPosition > endPosition) {
+                    if (startPosition >= Globals.SAGGART_ID &&
+                            startPosition < Globals.HEUSTON_ID) {
+                        return Globals.LineDirection.saggart_to_connolly;
+                    } else if (startPosition >= Globals.HEUSTON_ID &&
+                            startPosition < Globals.CONNOLLY_ID) {
+                        return Globals.LineDirection.heuston_to_connolly;
+                    }
+                } else {
+                    if (startPosition >= Globals.CONNOLLY_ID &&
+                            endPosition <= Globals.HEUSTON_ID) {
+                        return Globals.LineDirection.connolly_to_heuston;
+                    } else if (startPosition >= Globals.CONNOLLY_ID &&
+                            endPosition > Globals.CONNOLLY_ID) {
+                        return Globals.LineDirection.connolly_to_saggart;
+                    }
+                }
             }
         }
-        //point - tallaght
-        //tallaght - point
-        //point - saggart
-        //saggart - point
-        //saggart - belgard
-        //belgard - saggart
-        //heuston - connolly
-        //connolly - heuston
-        //red cow diversions?
-        else if (currentLine == LuasLines.RED) {
-            if (endPosition > startPosition) {
-                return lineDirection = Globals.LineDirection.the_point_to_tallaght;
-            } else {
-                return lineDirection = Globals.LineDirection.tallaght_to_the_point;
-            }
-        } else {
-            System.out.println("entered else loop -- check conditions");
-            return null;
-        }
+        return null;
     }
 
     public static boolean getZone(String station, String[] items) {
@@ -537,7 +578,9 @@ public class Realtime extends Fragment {
         return endPosition;
     }
 
-    public void setStartPositionComp(int startPositionComp) {this.startPositionComp = startPositionComp;}
+    public void setStartPositionComp(int startPositionComp) {
+        this.startPositionComp = startPositionComp;
+    }
 
     public int getStartPositionComp() {
         return startPositionComp;

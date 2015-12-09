@@ -1,30 +1,21 @@
 package com.syzible.iompar;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
-import android.text.method.SingleLineTransformationMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * Created by ed on 29/10/15.

@@ -56,47 +56,36 @@ public class Sync {
                     if (direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                             direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
                         if (stationBeforeSandyford(depart, arrive, globals.greenLineBeforeSandyford)) {
-                            // green line - travelling to any station common to bride's glen/sandyford
-                            // from stephen's green
                             System.out.println("towards Sandyford/Bride's Glen");
                             scrapeData(doc, "Sandyford", "Bride's Glen", depart, arrive);
-
                         } else {
-                            // else we're travelling to beyond sandyford and can only take
-                            // bride's glen trams away from stephen's green
                             System.out.println("towards Bride's Glen");
                             scrapeData(doc, "Bride's Glen", depart, arrive);
                         }
                     } else if (direction.equals(Globals.LineDirection.sandyford_to_stephens_green) ||
                             direction.equals(Globals.LineDirection.brides_glen_to_stephens_green)) {
-                        // else if we're travelling inversely from sandyford/bride's glen towards
-                        // stephen's green, we can take any tram as they all have the same terminus
                         System.out.println("towards stephen's green");
                         scrapeData(doc, "St. Stephen's Green", depart, arrive);
-                    } else if (direction.equals(Globals.LineDirection.the_point_to_tallaght)) {
-                        // else we're dealing with the red line of the luas and must check direction
-                        // and poll the appropriate sub-lines
-                        // getting scaldy in tallaght? red line from point to the square
+                    } else if(direction.equals(Globals.LineDirection.belgard_to_saggart)){
+                        System.out.println("towards saggart");
+                        scrapeData(doc, "Saggart", depart, arrive);
+                    } else if(direction.equals(Globals.LineDirection.connolly_to_saggart)){
+                        System.out.println("towards saggart");
+                        scrapeData(doc, "Saggart", depart, arrive);
+                    } else if(direction.equals(Globals.LineDirection.saggart_to_connolly)){
+                        System.out.println("towards saggart");
+                        scrapeData(doc, "Connolly", depart, arrive);
+                    } else if(direction.equals(Globals.LineDirection.belgard_to_tallaght)){
                         System.out.println("towards tallaght");
                         scrapeData(doc, "Tallaght", depart, arrive);
-                    } else if (direction.equals(Globals.LineDirection.tallaght_to_the_point)) {
-                        // else we're moving from tallaght towards the point on a tram
-                        // and probably spitting at people on the way
-                        System.out.println("towards the point from tallaght");
-                        scrapeData(doc, "The Point", depart, arrive);
-                    } else if (direction.equals(Globals.LineDirection.saggart_to_the_point)) {
-                        // else heading from Saggart towards town where I need to interchange at Belgard
-                        // ONLY TRUE FOR SAGGART-TOWN ROUTE OUTSIDE OF PEAK TIMES
-                        // weekdays: before 7am, after 6:30pm
-                        // saturday: before 8am, after 6pm
-                        // sunday: all day
-                        System.out.println("towards the point from saggart WITH CERTAIN RULES");
-                        scrapeData(doc, "Belgard", "The Point", depart, arrive);
-                    } else if (direction.equals(Globals.LineDirection.the_point_to_saggart)) {
-                        // else we're going from town to saggart
-                        // this is mostly running, need to check if it polled as exceptions were thrown
-                        System.out.println("towards Saggart from town");
-                        scrapeData(doc, "Saggart", depart, arrive);
+                    } else if(direction.equals(Globals.LineDirection.belgard_to_the_point) ||
+                                direction.equals(Globals.LineDirection.tallaght_to_belgard) ||
+                                direction.equals(Globals.LineDirection.saggart_to_belgard)){
+                        System.out.println("towards the point");
+                        scrapeData(doc, "The Point", "Belgard", depart, arrive);
+                    } else if(direction.equals(Globals.LineDirection.the_point_to_belgard)){
+                        System.out.println("towards the point");
+                        scrapeData(doc, "Tallaght", "Saggart", depart, arrive);
                     } else if (direction.equals(Globals.LineDirection.heuston_to_connolly)) {
                         System.out.println("towards Connolly");
                         scrapeData(doc, "Connolly", depart, arrive);
@@ -125,11 +114,12 @@ public class Sync {
     /**
      * scrapes the data from the HTML RTPI website given the start and end stations
      * for the given line.
-     * @crash Belgard situation catastrophe where Saggart line changes depending on given time
-     * @param doc document to be scraped
+     *
+     * @param doc        document to be scraped
      * @param endStation station the user travels towards
-     * @param depart station the user is coming from
-     * @param arrive station the user is going to
+     * @param depart     station the user is coming from
+     * @param arrive     station the user is going to
+     * @crash Belgard catastrophe where Saggart line changes depending on given time
      */
     public void scrapeData(Document doc, String endStation, String depart, String arrive) {
         Elements elements = doc.select("table");
@@ -146,9 +136,6 @@ public class Sync {
                         waitingTimeList.add(rowItems.get(j + 1).text());
                         System.out.println(rowItems.get(j).text());
                         System.out.println(rowItems.get(j + 1).text());
-                    } else if (rowItems.get(j).equals("No departures found")) {
-                        endDestinationList.add("Unavailable");
-                        waitingTimeList.add("Unavailable");
                     }
                 }
             }
@@ -191,9 +178,56 @@ public class Sync {
                         waitingTimeList.add(rowItems.get(j + 1).text());
                         System.out.println(rowItems.get(j).text());
                         System.out.println(rowItems.get(j + 1).text());
-                    } else if (rowItems.get(j).equals("No departures found")) {
-                        endDestinationList.add("Unavailable");
-                        waitingTimeList.add("Unavailable");
+                    }
+                }
+            }
+        }
+        //must poll time & payment method or show both
+        fares.setFareType(Fares.FareType.ADULT);
+        fares.setFareCaps(Fares.FareCaps.ON_PEAK);
+        fares.setFarePayment(Fares.FarePayment.LEAP);
+        fares.setFareJourney(Fares.FareJourney.SINGLE);
+        fares.setLuasFareCost(Fares.LuasFareCost.THREE_ZONES);
+        fares.calculateFare();
+
+        /**
+         * @crash when no trams available
+         */
+        setNextDue(
+                "Origin:" + "\n" + depart + "\n" +
+                        "Destination:" + "\n" + arrive);
+        setArrivalInfo(
+                "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
+                        "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                        "Cost: €" + fares.getFare());
+    }
+
+    public void scrapeData(Document doc, String endStation, String endStationAlternate,
+                           String endStationSecondAlternate, String depart, String arrive) {
+        Elements elements = doc.select("table");
+        endDestinationList.clear();
+        waitingTimeList.clear();
+        Elements tableRowElements = elements.select("tr");
+        if (tableRowElements != null) {
+            for (int i = 0; i < tableRowElements.size(); i++) {
+                Element row = tableRowElements.get(i);
+                Elements rowItems = row.select("td");
+                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
+                    if (rowItems.get(j).text().equals(endStation)) {
+                        endDestinationList.add(rowItems.get(j).text());
+                        waitingTimeList.add(rowItems.get(j + 1).text());
+                        System.out.println(rowItems.get(j).text());
+                        System.out.println(rowItems.get(j + 1).text());
+                    } else if (rowItems.get(j).text().equals(endStationAlternate)) {
+                        endDestinationList.add(rowItems.get(j).text());
+                        waitingTimeList.add(rowItems.get(j + 1).text());
+                        System.out.println(rowItems.get(j).text());
+                        System.out.println(rowItems.get(j + 1).text());
+                    } else if (rowItems.get(j).text().equals(endStationSecondAlternate)) {
+                        endDestinationList.add(rowItems.get(j).text());
+                        waitingTimeList.add(rowItems.get(j + 1).text());
+                        System.out.println(rowItems.get(j).text());
+                        System.out.println(rowItems.get(j + 1).text());
                     }
                 }
             }

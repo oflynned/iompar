@@ -27,6 +27,7 @@ public class Globals {
     public static final int FIVE_SECONDS = ONE_SECOND * 5;
     public static final int TEN_SECONDS = ONE_SECOND * 10;
 
+    //zone IDs
     public static final int DOCKLANDS_ID = 1;
     public static final int CENTRAL_1_ID = 2;
     public static final int RED_2_ID = 3;
@@ -36,6 +37,21 @@ public class Globals {
     public static final int GREEN_3_ID = 7;
     public static final int GREEN_4_ID = 8;
     public static final int GREEN_5_ID = 9;
+
+    //green
+    public static final int STEPHENS_GREEN_ID = 0;
+    public static final int SANDYFORD_ID = 12;
+    public static final int BRIDES_GLEN_ID = 21;
+
+    //interstation red
+    public static final int CONNOLLY_ID = 0;
+    public static final int HEUSTON_ID = 8;
+
+    //red
+    public static final int THE_POINT_ID = 0;
+    public static final int BELGARD_ID = 22;
+    public static final int TALLAGHT_ID = 25;
+    public static final int SAGGART_ID = 27;
 
     public String docklands[] = {
             "The Point",
@@ -273,14 +289,30 @@ public class Globals {
     public enum LineDirection {
         the_point_to_tallaght,
         the_point_to_saggart,
-        saggart_to_the_point,
+        the_point_to_belgard,
+
         tallaght_to_the_point,
+        tallaght_to_belgard,
+
+        saggart_to_the_point,
+        saggart_to_belgard,
+        saggart_to_connolly,
+
+        belgard_to_the_point,
+        belgard_to_saggart,
+        belgard_to_tallaght,
+
+        heuston_to_connolly,
+        connolly_to_heuston,
+        connolly_to_saggart,
+
         stephens_green_to_brides_glen,
         stephens_green_to_sandyford,
+
+        sandyford_to_brides_glen,
         sandyford_to_stephens_green,
-        brides_glen_to_stephens_green,
-        heuston_to_connolly,
-        connolly_to_heuston
+        brides_glen_to_sandyford,
+        brides_glen_to_stephens_green
     }
 
     public String getLuasStation(String string) {
@@ -454,42 +486,6 @@ public class Globals {
         return RTPI;
     }
 
-    public String getLuasLine(Line line) {
-        String luasLine = "";
-        switch (line) {
-            case green:
-                luasLine = "Green";
-                break;
-            case red:
-                luasLine = "Red";
-                break;
-            default:
-                break;
-        }
-        return luasLine;
-    }
-
-    public String getLuasDirection(LineDirection lineDirection) {
-        String direction = "";
-        switch (lineDirection) {
-            case stephens_green_to_sandyford:
-                direction = "Sandyford";
-                break;
-            case stephens_green_to_brides_glen:
-                direction = "Bride's Glen";
-                break;
-            case sandyford_to_stephens_green:
-                direction = "St. Stephen's Green";
-                break;
-            case brides_glen_to_stephens_green:
-                direction = "St. Stephen's Green";
-                break;
-            default:
-                break;
-        }
-        return direction;
-    }
-
     public void setNavName(String navName) {
         this.navName = navName;
     }
@@ -515,5 +511,6 @@ public class Globals {
     }
 
     public void setTag(String tag){this.tag=tag;}
+
     public String getTag(){return tag;}
 }
