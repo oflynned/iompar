@@ -552,15 +552,6 @@ public class Realtime extends Fragment {
         return null;
     }
 
-    public static boolean getZone(String station, String[] items) {
-        for (String item : items) {
-            if (station.contains(item)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void setStartPosition(String startPosition) {
         this.startPosition = startPosition;
     }

@@ -631,6 +631,10 @@ public class Fares extends Fragment {
         return false;
     }
 
+    public void getZone(String startStation, String endStation){
+
+    }
+
     public String formatDecimals(double fare){
         return String.format("%.2f", fare );
     }
