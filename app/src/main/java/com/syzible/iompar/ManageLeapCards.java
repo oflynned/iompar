@@ -121,16 +121,12 @@ public class ManageLeapCards extends Fragment {
                                 break;
                             case 3:
                                 LeapScraping leapScraping = new LeapScraping(getContext());
-                                try {
-                                    leapScraping.scrape();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                leapScraping.scrape();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onMenuCollapse() {
+                        @Override
+                        public void onMenuCollapse () {
 
                     }
 

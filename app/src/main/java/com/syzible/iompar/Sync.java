@@ -45,7 +45,7 @@ public class Sync {
                 setLoaded(false);
                 Document doc;
                 try {
-                    URL url = new URL(globals.RTPI + globals.getLuasStation(depart));
+                    URL url = new URL(Globals.RTPI + globals.getLuasStation(depart));
                     doc = Jsoup.connect(url.toString()).get();
 
                     System.out.println("got URL");

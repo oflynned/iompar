@@ -327,7 +327,7 @@ public class Realtime extends Fragment {
                                 currentChoice = redLuasStationsConnolly;
                             }
                         }
-                        if(!Arrays.toString(currentChoice).equals("")) {
+                        if (!Arrays.toString(currentChoice).equals("")) {
                             handleChoices(currentChoice, position);
                         }
                     }
@@ -355,6 +355,18 @@ public class Realtime extends Fragment {
                     setEndPosition(currentChoice[position].getTitle());
                 } else {
                     System.out.println("start was true, now start set false");
+                    setStart(false);
+                    setStartPosition("");
+                }
+            } else if (!isStart() && isEnd()){
+                if (position != getStartPositionComp()) {
+                    System.out.println("start was false where end is true, now start set true");
+                    setStartPositionComp(position);
+                    setStart(true);
+                    setHasPair(true);
+                    setStartPosition(currentChoice[position].getTitle());
+                } else {
+                    System.out.println("start was false, now start set true");
                     setStart(false);
                     setStartPosition("");
                 }
@@ -416,7 +428,6 @@ public class Realtime extends Fragment {
                     System.out.println(
                             "start station: " + getStartPosition() + "\n" +
                                     "end station: " + getEndPosition());
-
                     fetchRTPI(getStartPosition(), getEndPosition(),
                             getDirection(currentLuasLine, getStartPositionComp(), getEndPositionComp()));
                     infoPanelParams.height = getDp(90);
@@ -434,6 +445,9 @@ public class Realtime extends Fragment {
                 setHasPair(false);
             }
         }
+        System.out.println("Start pos: " + getStartPosition() + ", end pos: " + getEndPosition());
+        baseAdapter.notifyDataSetChanged();
+        baseAdapter.notifyDataSetInvalidated();
     }
 
     public void setCurrentChoice(int choice) {

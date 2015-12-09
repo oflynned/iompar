@@ -180,6 +180,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SELECT_ALL_LEAP_LOGIN =
             "SELECT * FROM " + Database.LeapLogin.TABLE_NAME + ";";
 
+    public static final String SELECT_ALL_ACTIVE_LEAP_CARDS =
+            "SELECT * FROM " + Database.LeapLogin.TABLE_NAME +
+                    " WHERE " + Database.LeapLogin.IS_ACTIVE + " = 1;";
+
     public static final String SUM_EXPENDITURES_COLUMN =
             "SELECT SUM " + Database.LeapBalance.EXPENDITURE + " FROM " + Database.LeapBalance.TABLE_NAME + ";";
 
