@@ -66,29 +66,28 @@ public class Sync {
                     } else if(direction.equals(Globals.LineDirection.belgard_to_saggart)){
                         System.out.println("towards saggart");
                         scrapeData(doc, "Saggart", depart, arrive);
-                    } else if(direction.equals(Globals.LineDirection.connolly_to_saggart)){
-                        System.out.println("towards saggart");
-                        scrapeData(doc, "Saggart", depart, arrive);
-                    } else if(direction.equals(Globals.LineDirection.saggart_to_connolly)){
-                        System.out.println("towards saggart");
-                        scrapeData(doc, "Connolly", depart, arrive);
                     } else if(direction.equals(Globals.LineDirection.belgard_to_tallaght)){
                         System.out.println("towards tallaght");
                         scrapeData(doc, "Tallaght", depart, arrive);
-                    } else if(direction.equals(Globals.LineDirection.belgard_to_the_point) ||
-                                direction.equals(Globals.LineDirection.tallaght_to_belgard) ||
-                                direction.equals(Globals.LineDirection.saggart_to_belgard)){
+                    } else if(direction.equals(Globals.LineDirection.belgard_to_the_point)){
                         System.out.println("towards the point");
+                        scrapeData(doc, "The Point", depart, arrive);
+                    }  else if(direction.equals(Globals.LineDirection.tallaght_to_belgard) ||
+                            direction.equals(Globals.LineDirection.saggart_to_belgard)){
+                        System.out.println("towards belgard");
                         scrapeData(doc, "The Point", "Belgard", depart, arrive);
                     } else if(direction.equals(Globals.LineDirection.the_point_to_belgard)){
                         System.out.println("towards the point");
                         scrapeData(doc, "Tallaght", "Saggart", depart, arrive);
+                    } else if(direction.equals(Globals.LineDirection.saggart_to_the_point)){
+                        System.out.println("towards the point");
+                        scrapeData(doc, "The Point", "Belgard", depart, arrive);
                     } else if (direction.equals(Globals.LineDirection.heuston_to_connolly)) {
                         System.out.println("towards Connolly");
-                        scrapeData(doc, "Connolly", depart, arrive);
+                        scrapeData(doc, "Connolly", "The Point", depart, arrive);
                     } else if (direction.equals(Globals.LineDirection.connolly_to_heuston)) {
                         System.out.println("towards Heuston from town");
-                        scrapeData(doc, "Heuston", depart, arrive);
+                        scrapeData(doc, "Heuston", "Saggart", depart, arrive);
                     }
                     System.out.println(nextDue);
                 } catch (IOException e) {

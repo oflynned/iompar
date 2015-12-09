@@ -517,39 +517,35 @@ public class Realtime extends Fragment {
                 if (endPosition > startPosition) {
                     if (endPosition <= Globals.BELGARD_ID &&
                             startPosition < Globals.BELGARD_ID) {
-                        return Globals.LineDirection.the_point_to_saggart;
-                    } else if (endPosition > Globals.BELGARD_ID &&
-                            endPosition <= Globals.TALLAGHT_ID) {
+                        return Globals.LineDirection.the_point_to_belgard;
+                    } else if (startPosition >= Globals.BELGARD_ID &&
+                            endPosition > Globals.BELGARD_ID &&
+                            endPosition <= Globals.SAGGART_ID) {
                         return Globals.LineDirection.belgard_to_saggart;
+                    } else if (startPosition < Globals.BELGARD_ID &&
+                            endPosition > Globals.BELGARD_ID) {
+                        return Globals.LineDirection.the_point_to_saggart;
                     }
                 } else {
-                    if (startPosition > endPosition) {
-                        if (startPosition > Globals.BELGARD_ID &&
-                                endPosition <= Globals.BELGARD_ID) {
-                            return Globals.LineDirection.saggart_to_belgard;
-                        } else if (startPosition >= Globals.BELGARD_ID &&
-                                endPosition <= Globals.THE_POINT_ID) {
-                            return Globals.LineDirection.belgard_to_the_point;
-                        }
+                    if (startPosition <= Globals.SAGGART_ID &&
+                            startPosition > Globals.BELGARD_ID &&
+                            endPosition >= Globals.BELGARD_ID) {
+                        return Globals.LineDirection.saggart_to_belgard;
+                    } else if (startPosition <= Globals.BELGARD_ID &&
+                            endPosition < Globals.BELGARD_ID &&
+                            endPosition >= Globals.THE_POINT_ID) {
+                        return Globals.LineDirection.belgard_to_the_point;
+                    } else if (startPosition > Globals.BELGARD_ID &&
+                            startPosition <= Globals.SAGGART_ID &&
+                            endPosition < Globals.BELGARD_ID) {
+                        return Globals.LineDirection.saggart_to_the_point;
                     }
                 }
             } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
                 if (startPosition > endPosition) {
-                    if (startPosition >= Globals.SAGGART_ID &&
-                            startPosition < Globals.HEUSTON_ID) {
-                        return Globals.LineDirection.saggart_to_connolly;
-                    } else if (startPosition >= Globals.HEUSTON_ID &&
-                            startPosition < Globals.CONNOLLY_ID) {
-                        return Globals.LineDirection.heuston_to_connolly;
-                    }
+                    return Globals.LineDirection.heuston_to_connolly;
                 } else {
-                    if (startPosition >= Globals.CONNOLLY_ID &&
-                            endPosition <= Globals.HEUSTON_ID) {
-                        return Globals.LineDirection.connolly_to_heuston;
-                    } else if (startPosition >= Globals.CONNOLLY_ID &&
-                            endPosition > Globals.CONNOLLY_ID) {
-                        return Globals.LineDirection.connolly_to_saggart;
-                    }
+                    return Globals.LineDirection.connolly_to_heuston;
                 }
             }
         }
