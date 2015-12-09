@@ -50,9 +50,6 @@ public class Sync {
 
                     System.out.println("got URL");
 
-                    /**
-                     * @note crash on same station selection for start and end stops
-                     */
                     if (direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                             direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
                         if (stationBeforeSandyford(depart, arrive, globals.greenLineBeforeSandyford)) {
@@ -92,11 +89,6 @@ public class Sync {
                     } else if (direction.equals(Globals.LineDirection.connolly_to_heuston)) {
                         System.out.println("towards Heuston from town");
                         scrapeData(doc, "Heuston", depart, arrive);
-                    } else {
-                        setNextDue("Jumped to else loop -- no conditions satisfied -- check luas directions");
-                        System.out.println("Jumped to else loop -- no conditions satisfied -- check luas directions");
-                        setLoaded(true);
-                        return;
                     }
                     System.out.println(nextDue);
                 } catch (IOException e) {

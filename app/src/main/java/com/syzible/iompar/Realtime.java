@@ -52,7 +52,7 @@ public class Realtime extends Fragment {
     private enum LuasDirections {
         TALLAGHT, SAGGART, POINT, BELGARD,
         BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
-        CONNOLLY, HEUSTON
+        CONNOLLY
     }
 
     Globals.LineDirection lineDirection;
@@ -313,7 +313,6 @@ public class Realtime extends Fragment {
                     if (currentCategory == TransportationCategories.LUAS) {
                         if (currentLuasLine == LuasLines.GREEN) {
                             if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
-                                //RTPI Luas station parsing & syncing
                                 currentChoice = greenLuasStationsBridesGlen;
                             } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
                                 currentChoice = greenLuasStationsSandyford;
@@ -428,6 +427,8 @@ public class Realtime extends Fragment {
                     System.out.println(
                             "start station: " + getStartPosition() + "\n" +
                                     "end station: " + getEndPosition());
+                    System.out.println("CURRENT DIRECTION " + getDirection(currentLuasLine, currentLuasDirection, getStartPositionComp(), getEndPositionComp()));
+
                     fetchRTPI(getStartPosition(), getEndPosition(),
                             getDirection(currentLuasLine, currentLuasDirection, getStartPositionComp(), getEndPositionComp()));
                     infoPanelParams.height = getDp(90);
@@ -478,12 +479,6 @@ public class Realtime extends Fragment {
     public Globals.LineDirection getDirection(LuasLines currentLine, LuasDirections currentLuasDirection,
                                               int startPosition, int endPosition) {
         if (currentLine == LuasLines.GREEN) {
-            //stephen's green - sandyford
-            //sandyford - bride's glen
-            //stephen's green - bride's glen
-
-            //bride's glen - stephen's green
-            //sandyford - stephen's green
             if (endPosition > startPosition) {
                 return Globals.LineDirection.stephens_green_to_brides_glen;
             } else if (endPosition < startPosition) {
@@ -495,19 +490,27 @@ public class Realtime extends Fragment {
                     if (endPosition <= Globals.BELGARD_ID &&
                             startPosition < Globals.BELGARD_ID) {
                         return Globals.LineDirection.the_point_to_belgard;
-                    } else if (endPosition > Globals.BELGARD_ID &&
+                    } else if (startPosition >= Globals.BELGARD_ID &&
+                            endPosition > Globals.BELGARD_ID &&
                             endPosition <= Globals.TALLAGHT_ID) {
                         return Globals.LineDirection.belgard_to_tallaght;
+                    } else if (startPosition < Globals.BELGARD_ID &&
+                            endPosition > Globals.BELGARD_ID) {
+                        return Globals.LineDirection.the_point_to_tallaght;
                     }
                 } else {
-                    if (startPosition > endPosition) {
-                        if (startPosition > Globals.BELGARD_ID &&
-                                endPosition <= Globals.BELGARD_ID) {
-                            return Globals.LineDirection.tallaght_to_belgard;
-                        } else if (startPosition >= Globals.BELGARD_ID &&
-                                endPosition <= Globals.THE_POINT_ID) {
-                            return Globals.LineDirection.belgard_to_the_point;
-                        }
+                    if (startPosition <= Globals.TALLAGHT_ID &&
+                            startPosition > Globals.BELGARD_ID &&
+                            endPosition >= Globals.BELGARD_ID) {
+                        return Globals.LineDirection.tallaght_to_belgard;
+                    } else if (startPosition <= Globals.BELGARD_ID &&
+                            endPosition < Globals.BELGARD_ID &&
+                            endPosition >= Globals.THE_POINT_ID) {
+                        return Globals.LineDirection.belgard_to_the_point;
+                    } else if (startPosition > Globals.BELGARD_ID &&
+                            startPosition <= Globals.TALLAGHT_ID &&
+                            endPosition < Globals.BELGARD_ID) {
+                        return Globals.LineDirection.tallaght_to_the_point;
                     }
                 }
             } else if (currentLuasDirection == LuasDirections.SAGGART) {
