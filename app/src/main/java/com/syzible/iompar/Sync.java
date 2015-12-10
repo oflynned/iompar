@@ -50,7 +50,7 @@ public class Sync {
 
                     if (direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                             direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
-                        if (stationBeforeSandyford(arrive, globals.greenLineBeforeSandyford)) {
+                        if (stationBeforeSandyford(arrive, Globals.greenLineBeforeSandyford)) {
                             System.out.println("towards Sandyford/Bride's Glen");
                             scrapeData(doc, "Sandyford", "Bride's Glen", depart, arrive);
                         } else {
