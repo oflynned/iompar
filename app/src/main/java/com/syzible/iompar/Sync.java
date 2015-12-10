@@ -64,7 +64,8 @@ public class Sync {
                     } else if(direction.equals(Globals.LineDirection.belgard_to_saggart)){
                         System.out.println("towards saggart");
                         scrapeData(doc, "Saggart", depart, arrive);
-                    } else if(direction.equals(Globals.LineDirection.belgard_to_tallaght)){
+                    } else if(direction.equals(Globals.LineDirection.belgard_to_tallaght) ||
+                            direction.equals(Globals.LineDirection.the_point_to_tallaght)){
                         System.out.println("towards tallaght");
                         scrapeData(doc, "Tallaght", depart, arrive);
                     } else if(direction.equals(Globals.LineDirection.belgard_to_the_point) ||
@@ -128,13 +129,6 @@ public class Sync {
                 }
             }
         }
-        //must poll time & payment method or show both
-        fares.setFareType(Fares.FareType.ADULT);
-        fares.setFareCaps(Fares.FareCaps.ON_PEAK);
-        fares.setFarePayment(Fares.FarePayment.LEAP);
-        fares.setFareJourney(Fares.FareJourney.SINGLE);
-        fares.setLuasFareCost(Fares.LuasFareCost.THREE_ZONES);
-        fares.calculateFare();
 
         setNextDue(
                 "Origin:" + "\n" + depart + "\n" +
@@ -142,7 +136,7 @@ public class Sync {
         setArrivalInfo(
                 "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                         "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                        "Cost: €" + fares.getFare());
+                        "Cost: €" + fares.getZoneTraversal(depart, arrive));
     }
 
     public void scrapeData(Document doc, String endStation, String endStationAlternate,
@@ -170,24 +164,14 @@ public class Sync {
                 }
             }
         }
-        //must poll time & payment method or show both
-        fares.setFareType(Fares.FareType.ADULT);
-        fares.setFareCaps(Fares.FareCaps.ON_PEAK);
-        fares.setFarePayment(Fares.FarePayment.LEAP);
-        fares.setFareJourney(Fares.FareJourney.SINGLE);
-        fares.setLuasFareCost(Fares.LuasFareCost.THREE_ZONES);
-        fares.calculateFare();
 
-        /**
-         * @crash when no trams available
-         */
         setNextDue(
                 "Origin:" + "\n" + depart + "\n" +
                         "Destination:" + "\n" + arrive);
         setArrivalInfo(
                 "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                         "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                        "Cost: €" + fares.getFare());
+                        "Cost: €" + fares.getZoneTraversal(depart, arrive));
     }
 
     public void scrapeData(Document doc, String endStation, String endStationAlternate,
@@ -220,24 +204,14 @@ public class Sync {
                 }
             }
         }
-        //must poll time & payment method or show both
-        fares.setFareType(Fares.FareType.ADULT);
-        fares.setFareCaps(Fares.FareCaps.ON_PEAK);
-        fares.setFarePayment(Fares.FarePayment.LEAP);
-        fares.setFareJourney(Fares.FareJourney.SINGLE);
-        fares.setLuasFareCost(Fares.LuasFareCost.THREE_ZONES);
-        fares.calculateFare();
 
-        /**
-         * @crash when no trams available
-         */
         setNextDue(
                 "Origin:" + "\n" + depart + "\n" +
                         "Destination:" + "\n" + arrive);
         setArrivalInfo(
                 "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                         "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                        "Cost: €" + fares.getFare());
+                        "Cost: €" + fares.getZoneTraversal(depart, arrive));
     }
 
     public String getTimeFormat(String time) {

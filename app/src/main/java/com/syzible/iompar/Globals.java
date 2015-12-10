@@ -52,6 +52,10 @@ public class Globals {
 
     //red
     public static final int THE_POINT_ID = 0;
+    public static final int BUSARAS_TALLAGHT_ID = 4;
+    public static final int HEUSTON_TALLAGHT_ID = 10;
+    public static final int SUIT_ROAD_TALLAGHT_ID = 14;
+    public static final int RED_COW_TALLAGHT_ID = 20;
     public static final int BELGARD_ID = 22;
     public static final int TALLAGHT_ID = 25;
     public static final int SAGGART_ID = 27;
@@ -69,9 +73,9 @@ public class Globals {
     public static final int RED_COW_TRANSITION_SAGGART = 17;
 
     //transition zones - green line
-    public static final int CHARLEMONT_TRANSITION = 0;
-    public static final int DUNDRUM_TRANSITION = 0;
-    public static final int SANDYFORD_TRANSITION = 0;
+    public static final int CHARLEMONT_TRANSITION = 2;
+    public static final int DUNDRUM_TRANSITION = 8;
+    public static final int SANDYFORD_TRANSITION = 12;
 
     public static String docklands[] = {
             "The Point",

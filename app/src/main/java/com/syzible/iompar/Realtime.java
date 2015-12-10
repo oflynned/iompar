@@ -36,7 +36,7 @@ public class Realtime extends Fragment {
     TextView leftPanel, rightPanel;
 
     private boolean start, end, pair = false;
-    String startPosition, endPosition = "";
+    String startPosition, endPosition, direction = "";
     int startPositionComp, endPositionComp, choice;
 
     View view;
