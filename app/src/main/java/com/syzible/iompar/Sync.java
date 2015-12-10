@@ -72,17 +72,17 @@ public class Sync {
                     } else if(direction.equals(Globals.LineDirection.belgard_to_the_point) ||
                             direction.equals(Globals.LineDirection.tallaght_to_the_point)){
                         System.out.println("towards the point");
-                        scrapeData(doc, "The Point", depart, arrive);
+                        scrapeData(doc, "The Point", "Connolly", depart, arrive);
                     }  else if(direction.equals(Globals.LineDirection.tallaght_to_belgard) ||
                             direction.equals(Globals.LineDirection.saggart_to_belgard)){
                         System.out.println("towards belgard");
-                        scrapeData(doc, "The Point", "Belgard", depart, arrive);
+                        scrapeData(doc, "The Point", "Belgard", "Connolly", depart, arrive);
                     } else if(direction.equals(Globals.LineDirection.the_point_to_belgard)){
                         System.out.println("towards the point");
                         scrapeData(doc, "Tallaght", "Saggart", depart, arrive);
                     } else if(direction.equals(Globals.LineDirection.saggart_to_the_point)){
                         System.out.println("towards the point");
-                        scrapeData(doc, "The Point", "Belgard", depart, arrive);
+                        scrapeData(doc, "The Point", "Belgard", "Connolly", depart, arrive);
                     } else if (direction.equals(Globals.LineDirection.heuston_to_connolly)) {
                         System.out.println("towards Connolly");
                         scrapeData(doc, "Connolly", "The Point", depart, arrive);
