@@ -26,7 +26,6 @@ public class Sync {
     public String requestUpdate(Globals.LineDirection direction,
                                 String depart,
                                 String arrive) throws Exception {
-
         threadConnect(direction, depart, arrive);
         return getDepartures();
     }
@@ -34,7 +33,6 @@ public class Sync {
     /**
      * Connects to the RTPI URL with the respective stations given and returns the appropriate
      * scraped values for the depart station to destination
-     *
      * @param direction direction in which the user is travelling
      * @param depart    departure station in string format where the user is leaving from
      * @param arrive    name of station at which the user is arriving
@@ -52,7 +50,7 @@ public class Sync {
 
                     if (direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                             direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
-                        if (stationBeforeSandyford(depart, arrive, globals.greenLineBeforeSandyford)) {
+                        if (stationBeforeSandyford(arrive, globals.greenLineBeforeSandyford)) {
                             System.out.println("towards Sandyford/Bride's Glen");
                             scrapeData(doc, "Sandyford", "Bride's Glen", depart, arrive);
                         } else {
@@ -106,12 +104,10 @@ public class Sync {
     /**
      * scrapes the data from the HTML RTPI website given the start and end stations
      * for the given line.
-     *
      * @param doc        document to be scraped
      * @param endStation station the user travels towards
      * @param depart     station the user is coming from
      * @param arrive     station the user is going to
-     * @crash Belgard catastrophe where Saggart line changes depending on given time
      */
     public void scrapeData(Document doc, String endStation, String depart, String arrive) {
         Elements elements = doc.select("table");
@@ -255,7 +251,7 @@ public class Sync {
         }
     }
 
-    public static boolean stationBeforeSandyford(String depart, String arrive, String[] items) {
+    public static boolean stationBeforeSandyford(String arrive, String[] items) {
         for (String item : items) {
             if (arrive.contains(item)) {
                 return true;

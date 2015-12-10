@@ -38,7 +38,6 @@ public class AddLeapCard extends DialogFragment {
     /**
      * onCreateDialog is a generic builder for generating a dialog
      * per row id given, such that tasks can be added to the db
-     *
      * @param savedInstanceState the parsed data for the given context
      * @return the appropriate dialog
      */

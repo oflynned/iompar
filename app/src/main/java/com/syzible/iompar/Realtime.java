@@ -143,15 +143,15 @@ public class Realtime extends Fragment {
         //assign transportation types to adapter
         categories = new Categories[5];
         categories[0] =
-                new Categories("Luas", "local");
-        categories[1] =
-                new Categories("Dublin Bus", "local");
-        categories[2] =
-                new Categories("DART", "local");
-        categories[3] =
-                new Categories("Train", "regional");
-        categories[4] =
                 new Categories("Bus Éireann", "regional");
+        categories[1] =
+                new Categories("DART", "local");
+        categories[2] =
+                new Categories("Dublin Bus", "local");
+        categories[3] =
+                new Categories("Luas", "local");
+        categories[4] =
+                new Categories("Train", "regional");
 
         //luas line types
         luasCategories = new Categories[2];
@@ -171,35 +171,35 @@ public class Realtime extends Fragment {
         luasDirectionRed[0] =
                 new Categories("Tallaght-The Point Line");
         luasDirectionRed[1] =
-                new Categories("Saggart-The Point Line");
+                new Categories("Saggart-Connolly Line");
         //fuck my life and Veolia's ridiculous planning to have 2 stations 50m apart on a sub route
         luasDirectionRed[2] =
                 new Categories("Heuston-Connolly Line");
 
         //luas stations
-        greenLuasStationsBridesGlen = new Categories[globals.greenLineStationsBridesGlenStephensGreen.length];
-        for (int i = 0; i < globals.greenLineStationsBridesGlenStephensGreen.length; i++) {
-            greenLuasStationsBridesGlen[i] = new Categories(globals.greenLineStationsBridesGlenStephensGreen[i]);
+        greenLuasStationsBridesGlen = new Categories[Globals.greenLineStationsBridesGlenStephensGreen.length];
+        for (int i = 0; i < Globals.greenLineStationsBridesGlenStephensGreen.length; i++) {
+            greenLuasStationsBridesGlen[i] = new Categories(Globals.greenLineStationsBridesGlenStephensGreen[i]);
         }
 
-        greenLuasStationsSandyford = new Categories[globals.greenLineBeforeSandyford.length];
-        for (int i = 0; i < globals.greenLineBeforeSandyford.length; i++) {
-            greenLuasStationsSandyford[i] = new Categories(globals.greenLineStationsSandyfordStephensGreen[i]);
+        greenLuasStationsSandyford = new Categories[Globals.greenLineBeforeSandyford.length];
+        for (int i = 0; i < Globals.greenLineBeforeSandyford.length; i++) {
+            greenLuasStationsSandyford[i] = new Categories(Globals.greenLineStationsSandyfordStephensGreen[i]);
         }
 
-        redLuasStationsTallaght = new Categories[globals.redLineStationsTallaghtPoint.length];
-        for (int i = 0; i < globals.redLineStationsTallaghtPoint.length; i++) {
-            redLuasStationsTallaght[i] = new Categories(globals.redLineStationsTallaghtPoint[i]);
+        redLuasStationsTallaght = new Categories[Globals.redLineStationsTallaghtPoint.length];
+        for (int i = 0; i < Globals.redLineStationsTallaghtPoint.length; i++) {
+            redLuasStationsTallaght[i] = new Categories(Globals.redLineStationsTallaghtPoint[i]);
         }
 
-        redLuasStationsSaggart = new Categories[globals.redLineStationsSaggartPoint.length];
-        for (int i = 0; i < globals.redLineStationsSaggartPoint.length; i++) {
-            redLuasStationsSaggart[i] = new Categories(globals.redLineStationsSaggartPoint[i]);
+        redLuasStationsSaggart = new Categories[Globals.redLineStationsSaggartPoint.length];
+        for (int i = 0; i < Globals.redLineStationsSaggartPoint.length; i++) {
+            redLuasStationsSaggart[i] = new Categories(Globals.redLineStationsSaggartPoint[i]);
         }
 
-        redLuasStationsConnolly = new Categories[globals.redLineStationsHeustonConnolly.length];
-        for (int i = 0; i < globals.redLineStationsHeustonConnolly.length; i++) {
-            redLuasStationsConnolly[i] = new Categories(globals.redLineStationsHeustonConnolly[i]);
+        redLuasStationsConnolly = new Categories[Globals.redLineStationsHeustonConnolly.length];
+        for (int i = 0; i < Globals.redLineStationsHeustonConnolly.length; i++) {
+            redLuasStationsConnolly[i] = new Categories(Globals.redLineStationsHeustonConnolly[i]);
         }
     }
 
@@ -233,24 +233,24 @@ public class Realtime extends Fragment {
 
                     switch (position) {
                         case 0:
-                            //luas
-                            setCurrentCategory(TransportationCategories.LUAS);
+                            //bus eireann
+                            setCurrentCategory(TransportationCategories.BUS_EIREANN);
                             break;
                         case 1:
-                            //train
-                            setCurrentCategory(TransportationCategories.TRAIN);
-                            break;
-                        case 2:
                             //DART
                             setCurrentCategory(TransportationCategories.DART);
                             break;
-                        case 3:
+                        case 2:
                             //dublin bus
                             setCurrentCategory(TransportationCategories.BUS);
                             break;
+                        case 3:
+                            //luas
+                            setCurrentCategory(TransportationCategories.LUAS);
+                            break;
                         case 4:
-                            //bus eireann
-                            setCurrentCategory(TransportationCategories.BUS_EIREANN);
+                            //train
+                            setCurrentCategory(TransportationCategories.TRAIN);
                             break;
                     }
                     gridView.setAdapter(baseAdapter);

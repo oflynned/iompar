@@ -27,6 +27,8 @@ public class Fares extends Fragment {
     View view;
     Globals globals = new Globals();
 
+    int index;
+
     public enum FareType {ADULT, STUDENT, CHILD, OTHER}
 
     public enum FareCaps {ON_PEAK, OFF_PEAK}
@@ -49,11 +51,11 @@ public class Fares extends Fragment {
     private String fare;
 
     String[] faresSingleEuroAdult = {
-            "1.80",
-            "2.20",
-            "2.60",
+            "1.90",
+            "2.30",
+            "2.70",
             "2.80",
-            "3.00"
+            "3.10"
     };
 
     String[] faresSingleEuroChild = {
@@ -65,11 +67,11 @@ public class Fares extends Fragment {
     };
 
     String[] faresReturnAdult = {
-            "3.40",
-            "4.00",
-            "4.80",
-            "5.20",
-            "5.50"
+            "3.50",
+            "4.10",
+            "4.90",
+            "5.30",
+            "5.60"
     };
 
     String[] faresReturnChild = {
@@ -114,10 +116,10 @@ public class Fares extends Fragment {
 
     String[] faresLeapPeakAdultStudent = {
             "1.44",
-            "1.75",
-            "2.08",
-            "2.24",
-            "2.40"
+            "1.70",
+            "2.05",
+            "2.19",
+            "2.35"
     };
 
     String[] faresLeapOffPeakChild = {
@@ -140,13 +142,10 @@ public class Fares extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         globals.setTag("Fares");
         view = inflater.inflate(R.layout.fragment_fare, null);
-        TextView textView = (TextView) view.findViewById(R.id.fares_title);
 
         setFareType(FareType.STUDENT);
         setFareJourney(FareJourney.SINGLE);
-        setFarePayment(FarePayment.LEAP);
-
-        setLuasFareCost(getNumberOfZones());
+        setFarePayment(FarePayment.CASH);
 
         if(isPeak()){
             setFareCaps(FareCaps.ON_PEAK);
@@ -156,14 +155,184 @@ public class Fares extends Fragment {
             System.out.println("It is currently NOT peak hour");
         }
 
+        String origin = "The Point";
+        String destination = "Tallaght";
+        int zoneIdOrigin = Globals.DOCKLANDS_ID;
+        int zoneIdDestination = Globals.RED_4_ID;
+        Fares.LuasZones zoneOrigin = returnStationZone(origin, zoneIdOrigin);
+        Fares.LuasZones zoneDestination = returnStationZone(destination, zoneIdDestination);
+
+        System.out.println(origin + " is in zone: " + zoneOrigin
+                + " (which is " + isInZone(origin, zoneOrigin) + ")" + " (at index " + getIndex() + ")");
+        System.out.println(destination + " is in zone: " + zoneDestination
+                 + " (which is " + isInZone(destination, zoneDestination)  + ")" + " (at index " + getIndex() +")");
+
+        setLuasFareCost(getZoneDifference(zoneIdOrigin, zoneIdDestination));
         calculateFare();
 
-        String fare = "€" + getFare();
-        Toast.makeText(getContext(), fare, Toast.LENGTH_SHORT).show();
-        textView.setText(fare);
+        System.out.println("Fare cost: €" + getFare());
 
         return view;
     }
+
+    public int getOriginZoneId(String origin, String destination){
+
+        return 0;
+    }
+
+    public LuasFareCost getZoneDifference(int origin, int destination){
+        int difference = origin - destination;
+        if(difference < 0){
+            difference = difference * -1;
+        }
+        System.out.println("Zone difference: " + difference);
+
+        switch (difference){
+            case 0:
+                return LuasFareCost.ONE_ZONE;
+            case 1:
+                return LuasFareCost.TWO_ZONES;
+            case 2:
+                return LuasFareCost.THREE_ZONES;
+            case 3:
+                return LuasFareCost.FOUR_ZONES;
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                return LuasFareCost.FIVE_EIGHT_ZONES;
+            default:
+                return null;
+        }
+    }
+
+    public LuasZones returnStationZone(String station, int zoneId){
+        switch(zoneId){
+            case 1:
+                for (String searchStation : Globals.docklands) {
+                    setIndex(getIndex() + 1);
+                    if (searchStation.contains(station)){
+                        return LuasZones.DOCKLANDS;
+                    }
+                }
+                break;
+            case 2:
+                for (String searchStation : Globals.central_1) {
+                    setIndex(getIndex() + 1);
+                    if (searchStation.contains(station)){
+                        return LuasZones.CENTRAL_1;
+                    }
+                }
+                break;
+            case 3:
+                for (String searchStation : Globals.red_2) {
+                    setIndex(getIndex() + 1);
+                    if (searchStation.contains(station)){
+                        return LuasZones.RED_2;
+                    }
+                }
+                break;
+            case 4:
+                for (String searchStation : Globals.red_3) {
+                    setIndex(getIndex() + 1);
+                    if (searchStation.contains(station)){
+                        return LuasZones.RED_3;
+                    }
+                }
+                break;
+            case 5:
+                for (String searchStation : Globals.red_4) {
+                    setIndex(getIndex() + 1);
+                    if (searchStation.contains(station)){
+                        return LuasZones.RED_4;
+                    }
+                }
+                break;
+            case 6:
+                for (String searchStation : Globals.green_2) {
+                    setIndex(getIndex() + 1);
+                    if (searchStation.contains(station)){
+                        return LuasZones.GREEN_2;
+                    }
+                }
+                break;
+            case 7:
+                for (String searchStation : Globals.green_3) {
+                    setIndex(getIndex() + 1);
+                    if (searchStation.contains(station)){
+                        return LuasZones.GREEN_3;
+                    }
+                }
+                break;
+            case 8:
+                for (String searchStation : Globals.green_4) {
+                    setIndex(getIndex() + 1);
+                    if (searchStation.contains(station)){
+                        return LuasZones.GREEN_4;
+                    }
+                }
+                break;
+            case 9:
+                for (String searchStation : Globals.green_5) {
+                    setIndex(getIndex() + 1);
+                    if (searchStation.contains(station)){
+                        return LuasZones.GREEN_5;
+                    }
+                }
+                break;
+        }
+        return null;
+    }
+
+    public boolean isInZone(String startStation, LuasZones line){
+        setIndex(0);
+        switch (line){
+            case DOCKLANDS:
+                for (String station : Globals.docklands) {
+                    setIndex(getIndex() + 1);
+                    if (station.contains(startStation)){
+                        return true;
+                    }
+                }
+                break;
+            case CENTRAL_1:
+                for (String station : Globals.central_1) {
+                    setIndex(getIndex() + 1);
+                    if (station.contains(startStation)){
+                        return true;
+                    }
+                }
+                break;
+            case RED_2:
+                for (String station : Globals.red_2) {
+                    setIndex(getIndex() + 1);
+                    if (station.contains(startStation)){
+                        return true;
+                    }
+                }
+                break;
+            case RED_3:
+                for (String station : Globals.red_3) {
+                    setIndex(getIndex() + 1);
+                    if (station.contains(startStation)){
+                        return true;
+                    }
+                }
+                break;
+            case RED_4:
+                for (String station : Globals.red_4) {
+                    setIndex(getIndex() + 1);
+                    if (station.contains(startStation)){
+                        return true;
+                    }
+                }
+                break;
+        }
+        return false;
+    }
+
+    public void setIndex(int index){this.index=index;}
+    public int getIndex(){return index;}
 
     public void calculateFare() {
         switch (getFareType()) {
@@ -629,10 +798,6 @@ public class Fares extends Fragment {
             }
         }
         return false;
-    }
-
-    public void getZone(String startStation, String endStation){
-
     }
 
     public String formatDecimals(double fare){

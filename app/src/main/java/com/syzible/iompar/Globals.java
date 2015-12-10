@@ -17,6 +17,9 @@ public class Globals {
     public static String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
     public static String LEAP_LOGIN_ACCOUNT_PAGE = "https://www.leapcard.ie/en/SelfServices/CardServices/CardOverView.aspx";
 
+    public static String DUBLIN_BUS_SEARCH_BY_STOP_NUMBER = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
+    public static String DUBLIN_BUS_SEARCH_BY_ROUTE = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=route&searchquery=";
+
     public static final String USER_LEAP_NUMBER = "10061949261114";
     public static final String USER_NAME = "oflynned";
     public static final String USER_EMAIL = "oflynned@tcd.ie";
@@ -53,7 +56,24 @@ public class Globals {
     public static final int TALLAGHT_ID = 25;
     public static final int SAGGART_ID = 27;
 
-    public String docklands[] = {
+    //transition zones - red line TALLAGHT
+    public static final int GEORGES_DOCK_TRANSITION_TALLAGHT = 3;
+    public static final int HEUSTON_TRANSITION_TALLAGHT = 9;
+    public static final int SUIR_ROADTRANSITION_TALLAGHT = 13;
+    public static final int RED_COW_TRANSITION_TALLAGHT = 19;
+
+    //transition zones - red line SAGGART
+    public static final int CONNOLLY_TRANSITION_SAGGART = 0; //haven't accounted in saggart
+    public static final int HEUSTON_TRANSITION_SAGGART = 7;
+    public static final int SUIR_ROADTRANSITION_SAGGART = 11;
+    public static final int RED_COW_TRANSITION_SAGGART = 17;
+
+    //transition zones - green line
+    public static final int CHARLEMONT_TRANSITION = 0;
+    public static final int DUNDRUM_TRANSITION = 0;
+    public static final int SANDYFORD_TRANSITION = 0;
+
+    public static String docklands[] = {
             "The Point",
             "Spencer Dock",
             "Mayor Square - NCI",
@@ -61,7 +81,7 @@ public class Globals {
             "Connolly"
     };
 
-    public String central_1[] = {
+    public static String central_1[] = {
             "St. Stephen's Green",
             "Harcourt Street",
             "Charlemont",
@@ -76,7 +96,7 @@ public class Globals {
             "Heuston"
     };
 
-    public String red_2[] = {
+    public static String red_2[] = {
             "Heuston",
             "James's",
             "Fatima",
@@ -84,7 +104,7 @@ public class Globals {
             "Suir Road"
     };
 
-    public String red_3[] = {
+    public static String red_3[] = {
             "Suir Road",
             "Goldenbridge",
             "Drimnagh",
@@ -94,7 +114,7 @@ public class Globals {
             "Red Cow"
     };
 
-    public String red_4[] = {
+    public static String red_4[] = {
             "Red Cow",
             "Belgard",
             "Cookstown",
@@ -107,7 +127,7 @@ public class Globals {
             "Saggart"
     };
 
-    public String green_2[] = {
+    public static String green_2[] = {
             "Charlemont",
             "Ranelagh",
             "Beechwood",
@@ -117,7 +137,7 @@ public class Globals {
             "Dundrum"
     };
 
-    public String green_3[] = {
+    public static String green_3[] = {
             "Dundrum",
             "Balally",
             "Kilmacud",
@@ -125,7 +145,7 @@ public class Globals {
             "Sandyford"
     };
 
-    public String green_4[] = {
+    public static String green_4[] = {
             "Sandyford",
             "Central Park",
             "Glencairn",
@@ -134,14 +154,14 @@ public class Globals {
             "Ballyogan Wood"
     };
 
-    public String green_5[] = {
+    public static String green_5[] = {
             "Carrickmines",
             "Laughanstown",
             "Cherrywood",
             "Bride's Glen"
     };
 
-    public String greenLineBeforeSandyford[] = {
+    public static String greenLineBeforeSandyford[] = {
             "St. Stephen's Green",
             "Harcourt St.",
             "Charlemont",
@@ -157,7 +177,7 @@ public class Globals {
             "Sandyford"
     };
 
-    public String greenLineBeforeBridesGlen[] = {
+    public static String greenLineBeforeBridesGlen[] = {
             "Central Park",
             "Glencairn",
             "The Gallops",
@@ -169,7 +189,7 @@ public class Globals {
             "Bride's Glen"
     };
 
-    public String greenLineStationsBridesGlenStephensGreen[] = {
+    public static String greenLineStationsBridesGlenStephensGreen[] = {
             "St. Stephen's Green",
             "Harcourt St.",
             "Charlemont",
@@ -194,7 +214,7 @@ public class Globals {
             "Bride's Glen"
     };
 
-    public String greenLineStationsSandyfordStephensGreen[] = {
+    public static String greenLineStationsSandyfordStephensGreen[] = {
             "St. Stephen's Green",
             "Harcourt St.",
             "Charlemont",
@@ -210,11 +230,8 @@ public class Globals {
             "Sandyford"
     };
 
-    public String redLineStationsSaggartPoint[] = {
-            "The Point",
-            "Spencer Dock",
-            "Mayor Square - NCI",
-            "George's Dock",
+    public static String redLineStationsSaggartPoint[] = {
+            "Connolly",
             "Busaras",
             "Abbey Street",
             "Jervis",
@@ -241,7 +258,7 @@ public class Globals {
             "Saggart"
     };
 
-    public String redLineStationsHeustonConnolly[] = {
+    public static String redLineStationsHeustonConnolly[] = {
             "Connolly",
             "Busaras",
             "Abbey Street",
@@ -252,7 +269,7 @@ public class Globals {
             "Heuston"
     };
 
-    public String redLineStationsTallaghtPoint[] = {
+    public static String redLineStationsTallaghtPoint[] = {
             "The Point",
             "Spencer Dock",
             "Mayor Square - NCI",
@@ -280,11 +297,6 @@ public class Globals {
             "Hospital",
             "Tallaght"
     };
-
-    public enum Line {
-        red,
-        green
-    }
 
     public enum LineDirection {
         the_point_to_tallaght,
