@@ -145,12 +145,12 @@ public class Fares extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fare, null);
 
-        getZoneTraversal("Heuston", "Tallaght");
+        getZoneTraversal(Realtime.LuasDirections.TALLAGHT, "Heuston", "Tallaght");
 
         return view;
     }
 
-    public String getZoneTraversal(String origin, String destination) {
+    public String getZoneTraversal(Realtime.LuasDirections line, String origin, String destination) {
         //payment type
         setFareType(FareType.ADULT);
         setFareJourney(FareJourney.SINGLE);
@@ -165,19 +165,43 @@ public class Fares extends Fragment {
             System.out.println("It is currently NOT peak hour");
         }
 
-        setOriginId(getStationIndex(origin));
-        setDestinationId(getStationIndex(destination));
+        setOriginId(getStationIndex(line, origin));
+        setDestinationId(getStationIndex(line, destination));
         System.out.println("origin id: " + getOriginId());
         System.out.println("destination id: " + getDestinationId());
 
         setDirection(getOriginId(), getDestinationId());
         System.out.println("Direction set: " + getDirection());
-        System.out.println("Origin zone: " + getTallaghtOriginZoneId(getOriginId(), getDestinationId()));
-        System.out.println("Destination zone: " + getTallaghtDestinationZoneId(getOriginId(), getDestinationId()));
+        System.out.println("Line parameter: " + line);
 
-        //TALLAGHT ONLY
-        setLuasFareCost(getZoneDifference(getTallaghtOriginZoneId(getOriginId(), getDestinationId()),
-                getTallaghtDestinationZoneId(getOriginId(), getDestinationId())));
+        switch(line){
+            //tallaght-point
+            case TALLAGHT:
+                System.out.println("Origin zone: " + getTallaghtZoneId(getOriginId(), getDestinationId()));
+                System.out.println("Destination zone: " + getTallaghtZoneId(getOriginId(), getDestinationId()));
+                setLuasFareCost(getZoneDifference(getTallaghtZoneId(getOriginId(), getDestinationId()),
+                        getTallaghtZoneId(getDestinationId(), getOriginId())));
+                break;
+            //saggart-connolly or inter station
+            case CONNOLLY:
+            case SAGGART:
+                System.out.println("Origin zone: " + getSaggartZoneId(getOriginId(), getDestinationId()));
+                System.out.println("Destination zone: " + getSaggartZoneId(getOriginId(), getDestinationId()));
+                setLuasFareCost(getZoneDifference(getSaggartZoneId(getOriginId(), getDestinationId()),
+                        getSaggartZoneId(getDestinationId(), getOriginId())));
+                break;
+            case POINT:
+                setLuasFareCost(getZoneDifference(getTallaghtZoneId(getOriginId(), getDestinationId()),
+                        getTallaghtZoneId(getDestinationId(), getOriginId())));
+                break;
+            case SANDYFORD:
+                break;
+            case BRIDES_GLEN:
+                break;
+            default:
+                System.out.println("no zone line parsed?");
+                return "error";
+        }
         calculateFare();
 
         System.out.println("Fare cost: €" + getFare());
@@ -185,7 +209,8 @@ public class Fares extends Fragment {
     }
 
     //red line - tallaght-point
-    public int getTallaghtOriginZoneId(int originIndex, int destinationIndex) {
+    public int getTallaghtZoneId(int originIndex, int destinationIndex) {
+        System.out.println("called tallaght zone id calc");
         if (originIndex >= Globals.THE_POINT_TALLAGHT_ID && originIndex < Globals.GEORGES_DOCK_TALLAGHT_ID) {
             return Globals.DOCKLANDS_ID;
         } else if (originIndex >= Globals.BUSARAS_TALLAGHT_ID && originIndex < Globals.HEUSTON_TALLAGHT_ID) {
@@ -232,145 +257,41 @@ public class Fares extends Fragment {
         return 0;
     }
 
-    //red line - tallaght-point
-    public int getTallaghtDestinationZoneId(int originIndex, int destinationIndex) {
-        if (destinationIndex >= Globals.THE_POINT_TALLAGHT_ID && destinationIndex < Globals.GEORGES_DOCK_TALLAGHT_ID) {
-            return Globals.DOCKLANDS_ID;
-        } else if (destinationIndex > Globals.GEORGES_DOCK_TALLAGHT_ID && destinationIndex < Globals.HEUSTON_TALLAGHT_ID) {
+    public int getSaggartZoneId(int originIndex, int destinationIndex) {
+        System.out.println("called saggart zone id calc");
+        if (originIndex >= Globals.CONNOLLY_SAGGART_ID && originIndex < Globals.HEUSTON_SAGGART_ID) {
             return Globals.CENTRAL_1_ID;
-        } else if (destinationIndex > Globals.HEUSTON_TALLAGHT_ID && destinationIndex < Globals.SUIR_ROAD_TALLAGHT_ID) {
+        } else if (originIndex > Globals.HEUSTON_SAGGART_ID && originIndex < Globals.SUIR_ROAD_SAGGART_ID) {
             return Globals.RED_2_ID;
-        } else if (destinationIndex > Globals.SUIR_ROAD_TALLAGHT_ID && destinationIndex < Globals.RED_COW_TALLAGHT_ID) {
+        } else if (originIndex > Globals.SUIR_ROAD_SAGGART_ID && originIndex < Globals.RED_COW_SAGGART_ID) {
             return Globals.RED_3_ID;
-        } else if (destinationIndex > Globals.RED_COW_TALLAGHT_ID) {
+        }  else if (originIndex > Globals.RED_COW_SAGGART_ID) {
             return Globals.RED_4_ID;
         }
-        //george's dock transition station
-        else if (destinationIndex == Globals.GEORGES_DOCK_TALLAGHT_ID &&
-                originIndex < Globals.GEORGES_DOCK_TALLAGHT_ID) {
-            return Globals.DOCKLANDS_ID;
-        } else if (destinationIndex == Globals.GEORGES_DOCK_TALLAGHT_ID &&
-                originIndex > Globals.GEORGES_DOCK_TALLAGHT_ID) {
-            return Globals.CENTRAL_1_ID;
-        }
         //heuston transition station
-        else if (destinationIndex == Globals.HEUSTON_TALLAGHT_ID &&
-                originIndex < Globals.HEUSTON_TALLAGHT_ID) {
+        else if (originIndex == Globals.HEUSTON_SAGGART_ID &&
+                destinationIndex < Globals.HEUSTON_SAGGART_ID) {
             return Globals.CENTRAL_1_ID;
-        } else if (destinationIndex == Globals.HEUSTON_TALLAGHT_ID &&
-                originIndex > Globals.HEUSTON_TALLAGHT_ID) {
+        } else if (originIndex == Globals.HEUSTON_SAGGART_ID &&
+                destinationIndex > Globals.HEUSTON_SAGGART_ID) {
             return Globals.RED_2_ID;
         }
         //suir road transition station
-        else if (destinationIndex == Globals.SUIR_ROAD_TALLAGHT_ID &&
-                originIndex < Globals.SUIR_ROAD_TALLAGHT_ID) {
+        else if (originIndex == Globals.SUIR_ROAD_SAGGART_ID &&
+                destinationIndex < Globals.SUIR_ROAD_SAGGART_ID) {
             return Globals.RED_2_ID;
-        } else if (destinationIndex == Globals.SUIR_ROAD_TALLAGHT_ID &&
-                originIndex > Globals.SUIR_ROAD_TALLAGHT_ID) {
+        } else if (originIndex == Globals.SUIR_ROAD_SAGGART_ID &&
+                destinationIndex > Globals.SUIR_ROAD_SAGGART_ID) {
             return Globals.RED_3_ID;
         }
         //red cow transition station
-        else if (destinationIndex == Globals.RED_COW_TALLAGHT_ID &&
-                originIndex < Globals.RED_COW_TALLAGHT_ID) {
+        else if (originIndex == Globals.RED_COW_SAGGART_ID &&
+                destinationIndex < Globals.RED_COW_SAGGART_ID) {
             return Globals.RED_3_ID;
-        } else if (destinationIndex == Globals.RED_COW_TALLAGHT_ID &&
-                originIndex > Globals.RED_COW_TALLAGHT_ID) {
+        } else if (originIndex == Globals.RED_COW_SAGGART_ID &&
+                destinationIndex > Globals.RED_COW_SAGGART_ID) {
             return Globals.RED_4_ID;
         }
-        System.out.println("reached non-destination ID");
-        return 0;
-    }
-
-    public int getSaggartOriginZoneId(int originIndex, int destinationIndex) {
-        if (originIndex >= Globals.THE_POINT_TALLAGHT_ID && originIndex < Globals.GEORGES_DOCK_TALLAGHT_ID) {
-            return Globals.DOCKLANDS_ID;
-        } else if (originIndex >= Globals.BUSARAS_TALLAGHT_ID && originIndex < Globals.HEUSTON_TALLAGHT_ID) {
-            return Globals.CENTRAL_1_ID;
-        } else if (originIndex > Globals.HEUSTON_TALLAGHT_ID && originIndex < Globals.SUIR_ROAD_TALLAGHT_ID) {
-            return Globals.RED_2_ID;
-        } else if (originIndex > Globals.SUIR_ROAD_TALLAGHT_ID && originIndex < Globals.RED_COW_TALLAGHT_ID) {
-            return Globals.RED_3_ID;
-        } else if (originIndex > Globals.RED_COW_TALLAGHT_ID) {
-            return Globals.RED_4_ID;
-        }
-        //george's dock transition station
-        else if (originIndex == Globals.GEORGES_DOCK_TALLAGHT_ID &&
-                destinationIndex < Globals.GEORGES_DOCK_TALLAGHT_ID) {
-            return Globals.DOCKLANDS_ID;
-        } else if (originIndex == Globals.GEORGES_DOCK_TALLAGHT_ID &&
-                destinationIndex > Globals.GEORGES_DOCK_TALLAGHT_ID) {
-            return Globals.CENTRAL_1_ID;
-        }
-        //heuston transition station
-        else if (originIndex == Globals.HEUSTON_TALLAGHT_ID &&
-                destinationIndex < Globals.HEUSTON_TALLAGHT_ID) {
-            return Globals.CENTRAL_1_ID;
-        } else if (originIndex == Globals.HEUSTON_TALLAGHT_ID &&
-                destinationIndex > Globals.HEUSTON_TALLAGHT_ID) {
-            return Globals.RED_2_ID;
-        }
-        //suir road transition station
-        else if (originIndex == Globals.SUIR_ROAD_TALLAGHT_ID &&
-                destinationIndex < Globals.SUIR_ROAD_TALLAGHT_ID) {
-            return Globals.RED_2_ID;
-        } else if (originIndex == Globals.SUIR_ROAD_TALLAGHT_ID &&
-                destinationIndex > Globals.SUIR_ROAD_TALLAGHT_ID) {
-            return Globals.RED_3_ID;
-        }
-        //red cow transition station
-        else if (originIndex == Globals.RED_COW_TALLAGHT_ID &&
-                destinationIndex < Globals.RED_COW_TALLAGHT_ID) {
-            return Globals.RED_3_ID;
-        } else if (originIndex == Globals.RED_COW_TALLAGHT_ID &&
-                destinationIndex > Globals.RED_COW_TALLAGHT_ID) {
-            return Globals.RED_4_ID;
-        }
-        return 0;
-    }
-
-    public int getSaggartDestinationZoneId(int originIndex, int destinationIndex) {
-        if (destinationIndex >= Globals.CONNOLLY_SAGGART_ID && destinationIndex < Globals.HEUSTON_SAGGART_ID) {
-            return Globals.CENTRAL_1_ID;
-        } else if (destinationIndex > Globals.HEUSTON_SAGGART_ID && destinationIndex < Globals.SUIR_ROAD_SAGGART_ID) {
-            return Globals.RED_2_ID;
-        } else if (destinationIndex > Globals.SUIR_ROAD_SAGGART_ID && destinationIndex < Globals.RED_COW_SAGGART_ID) {
-            return Globals.RED_3_ID;
-        } else if (destinationIndex > Globals.RED_COW_SAGGART_ID) {
-            return Globals.RED_4_ID;
-        }
-        //george's dock transition station
-        else if (destinationIndex == Globals.CONNOLLY_SAGGART_ID &&
-                originIndex < Globals.GEORGES_DOCK_TALLAGHT_ID) {
-            return Globals.DOCKLANDS_ID;
-        } else if (destinationIndex == Globals.GEORGES_DOCK_TALLAGHT_ID &&
-                originIndex > Globals.GEORGES_DOCK_TALLAGHT_ID) {
-            return Globals.CENTRAL_1_ID;
-        }
-        //heuston transition station
-        else if (destinationIndex == Globals.HEUSTON_TALLAGHT_ID &&
-                originIndex < Globals.HEUSTON_TALLAGHT_ID) {
-            return Globals.CENTRAL_1_ID;
-        } else if (destinationIndex == Globals.HEUSTON_TALLAGHT_ID &&
-                originIndex > Globals.HEUSTON_TALLAGHT_ID) {
-            return Globals.RED_2_ID;
-        }
-        //suir road transition station
-        else if (destinationIndex == Globals.SUIR_ROAD_TALLAGHT_ID &&
-                originIndex < Globals.SUIR_ROAD_TALLAGHT_ID) {
-            return Globals.RED_2_ID;
-        } else if (destinationIndex == Globals.SUIR_ROAD_TALLAGHT_ID &&
-                originIndex > Globals.SUIR_ROAD_TALLAGHT_ID) {
-            return Globals.RED_3_ID;
-        }
-        //red cow transition station
-        else if (destinationIndex == Globals.RED_COW_TALLAGHT_ID &&
-                originIndex < Globals.RED_COW_TALLAGHT_ID) {
-            return Globals.RED_3_ID;
-        } else if (destinationIndex == Globals.RED_COW_TALLAGHT_ID &&
-                originIndex > Globals.RED_COW_TALLAGHT_ID) {
-            return Globals.RED_4_ID;
-        }
-        System.out.println("reached non-destination ID");
         return 0;
     }
 
@@ -428,15 +349,43 @@ public class Fares extends Fragment {
         }
     }
 
-    public int getStationIndex(String station) {
+    public int getStationIndex(Realtime.LuasDirections line, String station) {
+        System.out.println("LINE: " + line);
         int index = 0;
-        for (String searchStation : Globals.redLineStationsTallaghtPoint) {
-            index++;
-            if (searchStation.contains(station)) {
-                return index;
-            }
+        switch (line) {
+            case TALLAGHT:
+                for (String searchStation : Globals.redLineStationsTallaghtPoint) {
+                    index++;
+                    if (searchStation.contains(station)) {
+                        return index;
+                    }
+                }
+                break;
+            case SAGGART:
+            case CONNOLLY:
+                for (String searchStation : Globals.redLineStationsSaggartConnolly) {
+                    index++;
+                    if (searchStation.contains(station)) {
+                        return index;
+                    }
+                }
+                break;
+            case POINT:
+                for (String searchStation : Globals.redLineStationsTallaghtPoint) {
+                    index++;
+                    if (searchStation.contains(station)) {
+                        return index;
+                    }
+                }
+                break;
+            case STEPHENS_GREEN:
+                break;
+            case SANDYFORD:
+                break;
+            case BRIDES_GLEN:
+                break;
         }
-        return 0;
+        return -1;
     }
 
     public LuasZones returnStationZone(String station, int zoneId) {

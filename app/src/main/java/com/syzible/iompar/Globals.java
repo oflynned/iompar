@@ -5,13 +5,6 @@ package com.syzible.iompar;
  */
 public class Globals {
 
-    public String tag = "";
-
-    //profile
-    String navName = "";
-    String navLeapNumber = "";
-    boolean loggedIn;
-
     //http querying
     public static String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
     public static String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
@@ -52,10 +45,11 @@ public class Globals {
 
     //saggart-connolly
     public static final int CONNOLLY_SAGGART_ID = 1;
-    public static final int HEUSTON_SAGGART_ID = 9;
-    public static final int SUIR_ROAD_SAGGART_ID = 13;
-    public static final int RED_COW_SAGGART_ID = 19;
-    public static final int SAGGART_ID = 26;
+    public static final int HEUSTON_SAGGART_ID = 8;
+    public static final int SUIR_ROAD_SAGGART_ID = 12;
+    public static final int RED_COW_SAGGART_ID = 18;
+    public static final int BELGARD_SAGGART_ID = 20;
+    public static final int SAGGART_ID = 25;
 
     //tallaght-point
     public static final int THE_POINT_TALLAGHT_ID = 1;
@@ -224,7 +218,7 @@ public class Globals {
             "Sandyford"
     };
 
-    public static String redLineStationsSaggartPoint[] = {
+    public static String redLineStationsSaggartConnolly[] = {
             "Connolly",
             "Busaras",
             "Abbey Street",
@@ -302,14 +296,15 @@ public class Globals {
 
         saggart_to_the_point,
         saggart_to_belgard,
-        saggart_to_connolly,
 
         belgard_to_the_point,
+        belgard_to_connolly,
         belgard_to_saggart,
         belgard_to_tallaght,
 
         heuston_to_connolly,
         connolly_to_heuston,
+        connolly_to_belgard,
         connolly_to_saggart,
 
         stephens_green_to_brides_glen,
@@ -491,32 +486,4 @@ public class Globals {
         }
         return RTPI;
     }
-
-    public void setNavName(String navName) {
-        this.navName = navName;
-    }
-
-    public String getNavName() {
-        return navName;
-    }
-
-    public void setNavLeapNumber(String navLeapNumber) {
-        this.navLeapNumber = navLeapNumber;
-    }
-
-    public String getNavLeapNumber() {
-        return navLeapNumber;
-    }
-
-    public void setLoggedIn(boolean loggedIn) {
-        this.loggedIn = loggedIn;
-    }
-
-    public boolean isLoggedIn() {
-        return loggedIn;
-    }
-
-    public void setTag(String tag){this.tag=tag;}
-
-    public String getTag(){return tag;}
 }

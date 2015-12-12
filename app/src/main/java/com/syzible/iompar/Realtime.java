@@ -45,17 +45,15 @@ public class Realtime extends Fragment {
     private BaseAdapter baseAdapter;
     private GridView gridView;
 
-    private enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
+    public enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
 
-    private enum LuasLines {GREEN, RED}
+    public enum LuasLines {GREEN, RED}
 
-    private enum LuasDirections {
+    public enum LuasDirections {
         TALLAGHT, SAGGART, POINT, BELGARD,
         BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
         CONNOLLY
     }
-
-    Globals.LineDirection lineDirection;
 
     private TransportationCategories currentCategory;
     private LuasLines currentLuasLine;
@@ -192,9 +190,9 @@ public class Realtime extends Fragment {
             redLuasStationsTallaght[i] = new Categories(Globals.redLineStationsTallaghtPoint[i]);
         }
 
-        redLuasStationsSaggart = new Categories[Globals.redLineStationsSaggartPoint.length];
-        for (int i = 0; i < Globals.redLineStationsSaggartPoint.length; i++) {
-            redLuasStationsSaggart[i] = new Categories(Globals.redLineStationsSaggartPoint[i]);
+        redLuasStationsSaggart = new Categories[Globals.redLineStationsSaggartConnolly.length];
+        for (int i = 0; i < Globals.redLineStationsSaggartConnolly.length; i++) {
+            redLuasStationsSaggart[i] = new Categories(Globals.redLineStationsSaggartConnolly[i]);
         }
 
         redLuasStationsConnolly = new Categories[Globals.redLineStationsHeustonConnolly.length];
@@ -205,8 +203,6 @@ public class Realtime extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        globals.setTag("Realtime");
 
         view = inflater.inflate(R.layout.fragment_realtime, container, false);
         gridView = (GridView) view.findViewById(R.id.gridview);
@@ -255,10 +251,6 @@ public class Realtime extends Fragment {
                     }
                     gridView.setAdapter(baseAdapter);
                 } else if (stage == 1) {
-                   /*
-                      Having chosen a transportation type, we need to show options within type
-                      ie for luas: green line, red line...
-                    */
                     if (getCurrentCategory() == TransportationCategories.LUAS) {
                         switch (position) {
                             case 0:
@@ -274,7 +266,6 @@ public class Realtime extends Fragment {
                         }
                     }
                 } else if (stage == 2) {
-                   /* Having chosen a type we we need to show line choosable, ie stations to tallaght, saggart... */
                     if (getCurrentCategory() == TransportationCategories.LUAS) {
                         if (currentLuasLine == LuasLines.GREEN) {
                             switch (position) {
@@ -309,7 +300,6 @@ public class Realtime extends Fragment {
                         }
                     }
                 } else if (stage == 3) {
-                   /* Having chosen a type we we need to show line choosable, ie stations to tallaght, saggart... */
                     if (currentCategory == TransportationCategories.LUAS) {
                         if (currentLuasLine == LuasLines.GREEN) {
                             if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
@@ -487,58 +477,58 @@ public class Realtime extends Fragment {
         } else if (currentLine == LuasLines.RED) {
             if (currentLuasDirection == LuasDirections.TALLAGHT) {
                 if (endPosition > startPosition) {
-                    if (endPosition <= Globals.BELGARD_ID &&
-                            startPosition < Globals.BELGARD_ID) {
+                    if (endPosition <= Globals.BELGARD_TALLAGHT_ID - 1 &&
+                            startPosition < Globals.BELGARD_TALLAGHT_ID - 1) {
                         return Globals.LineDirection.the_point_to_belgard;
-                    } else if (startPosition >= Globals.BELGARD_ID &&
-                            endPosition > Globals.BELGARD_ID &&
+                    } else if (startPosition >= Globals.BELGARD_TALLAGHT_ID - 1 &&
+                            endPosition > Globals.BELGARD_TALLAGHT_ID - 1 &&
                             endPosition <= Globals.TALLAGHT_ID) {
                         return Globals.LineDirection.belgard_to_tallaght;
-                    } else if (startPosition < Globals.BELGARD_ID &&
-                            endPosition > Globals.BELGARD_ID) {
+                    } else if (startPosition < Globals.BELGARD_TALLAGHT_ID - 1 &&
+                            endPosition > Globals.BELGARD_TALLAGHT_ID - 1) {
                         return Globals.LineDirection.the_point_to_tallaght;
                     }
                 } else {
-                    if (startPosition <= Globals.TALLAGHT_ID &&
-                            startPosition > Globals.BELGARD_ID &&
-                            endPosition >= Globals.BELGARD_ID) {
+                    if (startPosition <= Globals.TALLAGHT_ID - 1 &&
+                            startPosition > Globals.BELGARD_TALLAGHT_ID - 1 &&
+                            endPosition >= Globals.BELGARD_TALLAGHT_ID - 1) {
                         return Globals.LineDirection.tallaght_to_belgard;
-                    } else if (startPosition <= Globals.BELGARD_ID &&
-                            endPosition < Globals.BELGARD_ID &&
-                            endPosition >= Globals.THE_POINT_ID) {
+                    } else if (startPosition <= Globals.BELGARD_TALLAGHT_ID - 1 &&
+                            endPosition < Globals.BELGARD_TALLAGHT_ID - 1 &&
+                            endPosition >= Globals.THE_POINT_TALLAGHT_ID - 1) {
                         return Globals.LineDirection.belgard_to_the_point;
-                    } else if (startPosition > Globals.BELGARD_ID &&
-                            startPosition <= Globals.TALLAGHT_ID &&
-                            endPosition < Globals.BELGARD_ID) {
+                    } else if (startPosition > Globals.BELGARD_TALLAGHT_ID - 1 &&
+                            startPosition <= Globals.TALLAGHT_ID - 1 &&
+                            endPosition < Globals.BELGARD_TALLAGHT_ID - 1) {
                         return Globals.LineDirection.tallaght_to_the_point;
                     }
                 }
             } else if (currentLuasDirection == LuasDirections.SAGGART) {
                 if (endPosition > startPosition) {
-                    if (endPosition <= Globals.BELGARD_ID &&
-                            startPosition < Globals.BELGARD_ID) {
-                        return Globals.LineDirection.the_point_to_belgard;
-                    } else if (startPosition >= Globals.BELGARD_ID &&
-                            endPosition > Globals.BELGARD_ID &&
-                            endPosition <= Globals.SAGGART_ID) {
+                    if (endPosition <= Globals.BELGARD_SAGGART_ID - 1 &&
+                            startPosition < Globals.BELGARD_SAGGART_ID - 1) {
+                        return Globals.LineDirection.connolly_to_belgard;
+                    } else if (startPosition >= Globals.BELGARD_SAGGART_ID - 1 &&
+                            endPosition > Globals.BELGARD_SAGGART_ID - 1 &&
+                            endPosition <= Globals.SAGGART_ID - 1) {
                         return Globals.LineDirection.belgard_to_saggart;
-                    } else if (startPosition < Globals.BELGARD_ID &&
-                            endPosition > Globals.BELGARD_ID) {
-                        return Globals.LineDirection.the_point_to_saggart;
+                    } else if (startPosition < Globals.BELGARD_SAGGART_ID - 1 &&
+                            endPosition > Globals.BELGARD_SAGGART_ID - 1) {
+                        return Globals.LineDirection.connolly_to_saggart;
                     }
                 } else {
-                    if (startPosition <= Globals.SAGGART_ID &&
-                            startPosition > Globals.BELGARD_ID &&
-                            endPosition >= Globals.BELGARD_ID) {
+                    if (startPosition <= Globals.SAGGART_ID - 1 &&
+                            startPosition > Globals.BELGARD_SAGGART_ID - 1 &&
+                            endPosition >= Globals.BELGARD_SAGGART_ID - 1) {
                         return Globals.LineDirection.saggart_to_belgard;
-                    } else if (startPosition <= Globals.BELGARD_ID &&
-                            endPosition < Globals.BELGARD_ID &&
-                            endPosition >= Globals.THE_POINT_ID) {
-                        return Globals.LineDirection.belgard_to_the_point;
-                    } else if (startPosition > Globals.BELGARD_ID &&
-                            startPosition <= Globals.SAGGART_ID &&
-                            endPosition < Globals.BELGARD_ID) {
-                        return Globals.LineDirection.saggart_to_the_point;
+                    } else if (startPosition <= Globals.BELGARD_SAGGART_ID - 1 &&
+                            endPosition < Globals.BELGARD_SAGGART_ID - 1 &&
+                            endPosition >= Globals.CONNOLLY_SAGGART_ID - 1) {
+                        return Globals.LineDirection.belgard_to_connolly;
+                    } else if (startPosition > Globals.BELGARD_SAGGART_ID - 1 &&
+                            startPosition <= Globals.SAGGART_ID - 1 &&
+                            endPosition < Globals.BELGARD_SAGGART_ID - 1) {
+                        return Globals.LineDirection.saggart_to_belgard;
                     }
                 }
             } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
