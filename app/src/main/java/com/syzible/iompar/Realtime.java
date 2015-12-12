@@ -469,10 +469,18 @@ public class Realtime extends Fragment {
     public Globals.LineDirection getDirection(LuasLines currentLine, LuasDirections currentLuasDirection,
                                               int startPosition, int endPosition) {
         if (currentLine == LuasLines.GREEN) {
-            if (endPosition > startPosition) {
-                return Globals.LineDirection.stephens_green_to_brides_glen;
-            } else if (endPosition < startPosition) {
-                return Globals.LineDirection.brides_glen_to_stephens_green;
+            if(startPosition < endPosition) {
+                if (startPosition <= Globals.SANDYFORD_ID && endPosition <= Globals.SANDYFORD_ID) {
+                    return Globals.LineDirection.stephens_green_to_sandyford;
+                } else if (endPosition > Globals.SANDYFORD_ID) {
+                    return Globals.LineDirection.stephens_green_to_brides_glen;
+                }
+            } else {
+                if(startPosition > Globals.SANDYFORD_ID) {
+                    return Globals.LineDirection.brides_glen_to_stephens_green;
+                } else {
+                    return Globals.LineDirection.sandyford_to_stephens_green;
+                }
             }
         } else if (currentLine == LuasLines.RED) {
             if (currentLuasDirection == LuasDirections.TALLAGHT) {

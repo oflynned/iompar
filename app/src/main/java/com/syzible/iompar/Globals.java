@@ -29,10 +29,10 @@ public class Globals {
     public static final int RED_2_ID = 3;
     public static final int RED_3_ID = 4;
     public static final int RED_4_ID = 5;
-    public static final int GREEN_2_ID = 6;
-    public static final int GREEN_3_ID = 7;
-    public static final int GREEN_4_ID = 8;
-    public static final int GREEN_5_ID = 9;
+    public static final int GREEN_2_ID = 3;
+    public static final int GREEN_3_ID = 4;
+    public static final int GREEN_4_ID = 5;
+    public static final int GREEN_5_ID = 6;
 
     //green line
     public static final int STEPHENS_GREEN_ID = 1;
@@ -60,94 +60,6 @@ public class Globals {
     public static final int RED_COW_TALLAGHT_ID = 21;
     public static final int BELGARD_TALLAGHT_ID = 23;
     public static final int TALLAGHT_ID = 26;
-
-    public static String docklands[] = {
-            "The Point",
-            "Spencer Dock",
-            "Mayor Square - NCI",
-            "George's Dock",
-            "Connolly"
-    };
-
-    public static String central_1[] = {
-            "St. Stephen's Green",
-            "Harcourt Street",
-            "Charlemont",
-            "Connolly",
-            "George's Dock",
-            "Busaras",
-            "Abbey Street",
-            "Jervis",
-            "Four Courts",
-            "Smithfield",
-            "Museum",
-            "Heuston"
-    };
-
-    public static String red_2[] = {
-            "Heuston",
-            "James's",
-            "Fatima",
-            "Rialto",
-            "Suir Road"
-    };
-
-    public static String red_3[] = {
-            "Suir Road",
-            "Goldenbridge",
-            "Drimnagh",
-            "Blackhorse",
-            "Bluebell",
-            "Kylemore",
-            "Red Cow"
-    };
-
-    public static String red_4[] = {
-            "Red Cow",
-            "Belgard",
-            "Cookstown",
-            "Hospital",
-            "Tallaght",
-            "Fettercairn",
-            "Cheeverstown",
-            "Citywest Campus",
-            "Fortunestown",
-            "Saggart"
-    };
-
-    public static String green_2[] = {
-            "Charlemont",
-            "Ranelagh",
-            "Beechwood",
-            "Cowper",
-            "Milltown",
-            "Windy Arbour",
-            "Dundrum"
-    };
-
-    public static String green_3[] = {
-            "Dundrum",
-            "Balally",
-            "Kilmacud",
-            "Stillorgan",
-            "Sandyford"
-    };
-
-    public static String green_4[] = {
-            "Sandyford",
-            "Central Park",
-            "Glencairn",
-            "The Gallops",
-            "Leopardstown Valley",
-            "Ballyogan Wood"
-    };
-
-    public static String green_5[] = {
-            "Carrickmines",
-            "Laughanstown",
-            "Cherrywood",
-            "Bride's Glen"
-    };
 
     public static String greenLineBeforeSandyford[] = {
             "St. Stephen's Green",

@@ -176,6 +176,7 @@ public class Fares extends Fragment {
 
         switch(line){
             //tallaght-point
+            case POINT:
             case TALLAGHT:
                 System.out.println("Origin zone: " + getTallaghtZoneId(getOriginId(), getDestinationId()));
                 System.out.println("Destination zone: " + getTallaghtZoneId(getOriginId(), getDestinationId()));
@@ -190,13 +191,13 @@ public class Fares extends Fragment {
                 setLuasFareCost(getZoneDifference(getSaggartZoneId(getOriginId(), getDestinationId()),
                         getSaggartZoneId(getDestinationId(), getOriginId())));
                 break;
-            case POINT:
-                setLuasFareCost(getZoneDifference(getTallaghtZoneId(getOriginId(), getDestinationId()),
-                        getTallaghtZoneId(getDestinationId(), getOriginId())));
-                break;
+            case STEPHENS_GREEN:
             case SANDYFORD:
-                break;
             case BRIDES_GLEN:
+                System.out.println("Origin zone: " + getGreenLineZoneId(getOriginId(), getDestinationId()));
+                System.out.println("Destination zone: " + getGreenLineZoneId(getOriginId(), getDestinationId()));
+                setLuasFareCost(getZoneDifference(getGreenLineZoneId(getOriginId(), getDestinationId()),
+                        getGreenLineZoneId(getDestinationId(), getOriginId())));
                 break;
             default:
                 System.out.println("no zone line parsed?");
@@ -208,7 +209,6 @@ public class Fares extends Fragment {
         return getFare();
     }
 
-    //red line - tallaght-point
     public int getTallaghtZoneId(int originIndex, int destinationIndex) {
         System.out.println("called tallaght zone id calc");
         if (originIndex >= Globals.THE_POINT_TALLAGHT_ID && originIndex < Globals.GEORGES_DOCK_TALLAGHT_ID) {
@@ -291,6 +291,46 @@ public class Fares extends Fragment {
         } else if (originIndex == Globals.RED_COW_SAGGART_ID &&
                 destinationIndex > Globals.RED_COW_SAGGART_ID) {
             return Globals.RED_4_ID;
+        }
+        return 0;
+    }
+
+    public int getGreenLineZoneId(int originIndex, int destinationIndex) {
+        System.out.println("called sandyford zone id calc");
+        if (originIndex >= Globals.STEPHENS_GREEN_ID && originIndex < Globals.CHARLEMONT_ID) {
+            return Globals.CENTRAL_1_ID;
+        } else if (originIndex > Globals.CHARLEMONT_ID && originIndex < Globals.DUNDRUM_ID) {
+            return Globals.GREEN_2_ID;
+        } else if (originIndex > Globals.DUNDRUM_ID && originIndex < Globals.SANDYFORD_ID) {
+            return Globals.GREEN_3_ID;
+        } else if (originIndex > Globals.SANDYFORD_ID && originIndex <= Globals.BALLYOGAN_WOOD_ID){
+            return Globals.GREEN_4_ID;
+        } else if (originIndex >= Globals.CARRICKMINES_ID){
+            return Globals.GREEN_5_ID;
+        }
+        //charlemont transition station
+        else if (originIndex == Globals.CHARLEMONT_ID &&
+                destinationIndex < Globals.CHARLEMONT_ID) {
+            return Globals.CENTRAL_1_ID;
+        } else if (originIndex == Globals.CHARLEMONT_ID &&
+                destinationIndex > Globals.CHARLEMONT_ID) {
+            return Globals.GREEN_2_ID;
+        }
+        //dundrum transition station
+        else if (originIndex == Globals.DUNDRUM_ID &&
+                destinationIndex < Globals.DUNDRUM_ID) {
+            return Globals.GREEN_2_ID;
+        } else if (originIndex == Globals.DUNDRUM_ID &&
+                destinationIndex > Globals.DUNDRUM_ID) {
+            return Globals.GREEN_3_ID;
+        }
+        //sandyford transition station
+        else if (originIndex == Globals.SANDYFORD_ID &&
+                destinationIndex < Globals.SANDYFORD_ID) {
+            return Globals.GREEN_3_ID;
+        } else if (originIndex == Globals.SANDYFORD_ID &&
+                destinationIndex > Globals.SANDYFORD_ID) {
+            return Globals.GREEN_4_ID;
         }
         return 0;
     }
@@ -378,147 +418,18 @@ public class Fares extends Fragment {
                     }
                 }
                 break;
-            case STEPHENS_GREEN:
-                break;
-            case SANDYFORD:
-                break;
             case BRIDES_GLEN:
+            case SANDYFORD:
+            case STEPHENS_GREEN:
+                for (String searchStation : Globals.greenLineStationsBridesGlenStephensGreen) {
+                    index++;
+                    if (searchStation.contains(station)) {
+                        return index;
+                    }
+                }
                 break;
         }
         return -1;
-    }
-
-    public LuasZones returnStationZone(String station, int zoneId) {
-        switch (zoneId) {
-            case 1:
-                for (String searchStation : Globals.docklands) {
-                    setIndex(getIndex() + 1);
-                    if (searchStation.contains(station)) {
-                        return LuasZones.DOCKLANDS;
-                    }
-                }
-                break;
-            case 2:
-                for (String searchStation : Globals.central_1) {
-                    setIndex(getIndex() + 1);
-                    if (searchStation.contains(station)) {
-                        return LuasZones.CENTRAL_1;
-                    }
-                }
-                break;
-            case 3:
-                for (String searchStation : Globals.red_2) {
-                    setIndex(getIndex() + 1);
-                    if (searchStation.contains(station)) {
-                        return LuasZones.RED_2;
-                    }
-                }
-                break;
-            case 4:
-                for (String searchStation : Globals.red_3) {
-                    setIndex(getIndex() + 1);
-                    if (searchStation.contains(station)) {
-                        return LuasZones.RED_3;
-                    }
-                }
-                break;
-            case 5:
-                for (String searchStation : Globals.red_4) {
-                    setIndex(getIndex() + 1);
-                    if (searchStation.contains(station)) {
-                        return LuasZones.RED_4;
-                    }
-                }
-                break;
-            case 6:
-                for (String searchStation : Globals.green_2) {
-                    setIndex(getIndex() + 1);
-                    if (searchStation.contains(station)) {
-                        return LuasZones.GREEN_2;
-                    }
-                }
-                break;
-            case 7:
-                for (String searchStation : Globals.green_3) {
-                    setIndex(getIndex() + 1);
-                    if (searchStation.contains(station)) {
-                        return LuasZones.GREEN_3;
-                    }
-                }
-                break;
-            case 8:
-                for (String searchStation : Globals.green_4) {
-                    setIndex(getIndex() + 1);
-                    if (searchStation.contains(station)) {
-                        return LuasZones.GREEN_4;
-                    }
-                }
-                break;
-            case 9:
-                for (String searchStation : Globals.green_5) {
-                    setIndex(getIndex() + 1);
-                    if (searchStation.contains(station)) {
-                        return LuasZones.GREEN_5;
-                    }
-                }
-                break;
-        }
-        return null;
-    }
-
-    public boolean isInZone(String startStation, LuasZones line) {
-        setIndex(0);
-        switch (line) {
-            case DOCKLANDS:
-                for (String station : Globals.docklands) {
-                    setIndex(getIndex() + 1);
-                    if (station.contains(startStation)) {
-                        return true;
-                    }
-                }
-                break;
-            case CENTRAL_1:
-                for (String station : Globals.central_1) {
-                    setIndex(getIndex() + 1);
-                    if (station.contains(startStation)) {
-                        return true;
-                    }
-                }
-                break;
-            case RED_2:
-                for (String station : Globals.red_2) {
-                    setIndex(getIndex() + 1);
-                    if (station.contains(startStation)) {
-                        return true;
-                    }
-                }
-                break;
-            case RED_3:
-                for (String station : Globals.red_3) {
-                    setIndex(getIndex() + 1);
-                    if (station.contains(startStation)) {
-                        return true;
-                    }
-                }
-                break;
-            case RED_4:
-                for (String station : Globals.red_4) {
-                    setIndex(getIndex() + 1);
-                    if (station.contains(startStation)) {
-                        return true;
-                    }
-                }
-                break;
-        }
-        return false;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public int getIndex() {
-        return index;
     }
 
     public void calculateFare() {
@@ -991,10 +902,6 @@ public class Fares extends Fragment {
         return String.format("%.2f", fare);
     }
 
-    public LuasFareCost getNumberOfZones() {
-        return LuasFareCost.THREE_ZONES;
-    }
-
     public void setFare(String fare) {
         this.fare = fare;
     }
@@ -1017,22 +924,6 @@ public class Fares extends Fragment {
 
     public FareType getFareType() {
         return fareType;
-    }
-
-    public void setLuasZonesStart(LuasZones luasZonesStart) {
-        this.luasZonesStart = luasZonesStart;
-    }
-
-    public LuasZones getLuasZonesStart() {
-        return luasZonesStart;
-    }
-
-    public void setLuasZonesEnd(LuasZones luasZonesEnd) {
-        this.luasZonesEnd = luasZonesEnd;
-    }
-
-    public LuasZones setLuasZonesEnd() {
-        return luasZonesEnd;
     }
 
     public void setFareCaps(FareCaps fareCaps) {
