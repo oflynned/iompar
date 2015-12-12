@@ -41,41 +41,31 @@ public class Globals {
     public static final int GREEN_4_ID = 8;
     public static final int GREEN_5_ID = 9;
 
-    //green
-    public static final int STEPHENS_GREEN_ID = 0;
-    public static final int SANDYFORD_ID = 12;
-    public static final int BRIDES_GLEN_ID = 21;
+    //green line
+    public static final int STEPHENS_GREEN_ID = 1;
+    public static final int CHARLEMONT_ID = 3;
+    public static final int DUNDRUM_ID = 9;
+    public static final int SANDYFORD_ID = 13;
+    public static final int BALLYOGAN_WOOD_ID = 18;
+    public static final int CARRICKMINES_ID = 19;
+    public static final int BRIDES_GLEN_ID = 22;
 
-    //interstation red
-    public static final int CONNOLLY_ID = 0;
-    public static final int HEUSTON_ID = 8;
+    //saggart-connolly
+    public static final int CONNOLLY_SAGGART_ID = 1;
+    public static final int HEUSTON_SAGGART_ID = 9;
+    public static final int SUIR_ROAD_SAGGART_ID = 13;
+    public static final int RED_COW_SAGGART_ID = 19;
+    public static final int SAGGART_ID = 26;
 
-    //red
-    public static final int THE_POINT_ID = 0;
-    public static final int BUSARAS_TALLAGHT_ID = 4;
-    public static final int HEUSTON_TALLAGHT_ID = 10;
-    public static final int SUIT_ROAD_TALLAGHT_ID = 14;
-    public static final int RED_COW_TALLAGHT_ID = 20;
-    public static final int BELGARD_ID = 22;
-    public static final int TALLAGHT_ID = 25;
-    public static final int SAGGART_ID = 27;
-
-    //transition zones - red line TALLAGHT
-    public static final int GEORGES_DOCK_TRANSITION_TALLAGHT = 3;
-    public static final int HEUSTON_TRANSITION_TALLAGHT = 9;
-    public static final int SUIR_ROADTRANSITION_TALLAGHT = 13;
-    public static final int RED_COW_TRANSITION_TALLAGHT = 19;
-
-    //transition zones - red line SAGGART
-    public static final int CONNOLLY_TRANSITION_SAGGART = 0; //haven't accounted in saggart
-    public static final int HEUSTON_TRANSITION_SAGGART = 7;
-    public static final int SUIR_ROADTRANSITION_SAGGART = 11;
-    public static final int RED_COW_TRANSITION_SAGGART = 17;
-
-    //transition zones - green line
-    public static final int CHARLEMONT_TRANSITION = 2;
-    public static final int DUNDRUM_TRANSITION = 8;
-    public static final int SANDYFORD_TRANSITION = 12;
+    //tallaght-point
+    public static final int THE_POINT_TALLAGHT_ID = 1;
+    public static final int GEORGES_DOCK_TALLAGHT_ID = 4;
+    public static final int BUSARAS_TALLAGHT_ID = 5;
+    public static final int HEUSTON_TALLAGHT_ID = 11;
+    public static final int SUIR_ROAD_TALLAGHT_ID = 15;
+    public static final int RED_COW_TALLAGHT_ID = 21;
+    public static final int BELGARD_TALLAGHT_ID = 23;
+    public static final int TALLAGHT_ID = 26;
 
     public static String docklands[] = {
             "The Point",

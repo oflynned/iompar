@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/secondView"
                 android:orientation="vertical"
-                android:padding="5dp">
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/rightpanel"
