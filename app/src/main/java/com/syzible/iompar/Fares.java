@@ -1,25 +1,17 @@
 package com.syzible.iompar;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.games.internal.GamesLog;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import static com.syzible.iompar.Fares.FareType.ADULT;
 
 /**
  * Created by ed on 29/10/15.
@@ -27,9 +19,8 @@ import static com.syzible.iompar.Fares.FareType.ADULT;
 public class Fares extends Fragment {
 
     View view;
-    Globals globals = new Globals();
 
-    int index, originId, destinationId;
+    int originId, destinationId;
     String direction;
 
     public enum FareType {ADULT, STUDENT, CHILD, OTHER}
@@ -42,14 +33,11 @@ public class Fares extends Fragment {
 
     public enum LuasFareCost {ONE_ZONE, TWO_ZONES, THREE_ZONES, FOUR_ZONES, FIVE_EIGHT_ZONES}
 
-    public enum LuasZones {DOCKLANDS, CENTRAL_1, RED_2, RED_3, RED_4, GREEN_2, GREEN_3, GREEN_4, GREEN_5}
-
     FareType fareType;
     FareCaps fareCaps;
     FarePayment farePayment;
     FareJourney fareJourney;
     LuasFareCost luasFareCost;
-    LuasZones luasZonesStart, luasZonesEnd;
 
     private String fare;
 
@@ -141,6 +129,7 @@ public class Fares extends Fragment {
             "0.96"
     };
 
+    @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fare, null);
@@ -150,6 +139,13 @@ public class Fares extends Fragment {
         return view;
     }
 
+    /**
+     * takes the parameters of type of fare for the user, and returns the appropriate costs
+     * @param line the Luas line being traversed
+     * @param origin departing station
+     * @param destination destination station
+     * @return the cost of given transit route in Euro
+     */
     public String getZoneTraversal(Realtime.LuasDirections line, String origin, String destination) {
         //payment type
         setFareType(FareType.ADULT);
@@ -209,6 +205,13 @@ public class Fares extends Fragment {
         return getFare();
     }
 
+    /**
+     * takes the given stations and returns their zones with respect to the user's direction on
+     * the tram when traversing the Luas line
+     * @param originIndex the station from which the user departs
+     * @param destinationIndex the station to which the user travels
+     * @return returns the ID from Globals.class
+     */
     public int getTallaghtZoneId(int originIndex, int destinationIndex) {
         System.out.println("called tallaght zone id calc");
         if (originIndex >= Globals.THE_POINT_TALLAGHT_ID && originIndex < Globals.GEORGES_DOCK_TALLAGHT_ID) {
@@ -363,6 +366,12 @@ public class Fares extends Fragment {
         return direction;
     }
 
+    /**
+     * Returns the difference in zone index to calculate the amount of zones being traversed
+     * @param origin the origin station index from the array
+     * @param destination the destination station as an index of the array
+     * @return the absolute value of zone difference
+     */
     public LuasFareCost getZoneDifference(int origin, int destination) {
         int difference = origin - destination;
         if (difference < 0) {
@@ -389,6 +398,12 @@ public class Fares extends Fragment {
         }
     }
 
+    /**
+     * takes the station and searches the given array to find the index of the station
+     * @param line line to be searched
+     * @param station station index to be found
+     * @return the index of the station of the whole array
+     */
     public int getStationIndex(Realtime.LuasDirections line, String station) {
         System.out.println("LINE: " + line);
         int index = 0;
@@ -432,6 +447,9 @@ public class Fares extends Fragment {
         return -1;
     }
 
+    /**
+     * given all the appropriate properties, the correct fare should be returned to the user
+     */
     public void calculateFare() {
         switch (getFareType()) {
             case ADULT:
@@ -859,11 +877,15 @@ public class Fares extends Fragment {
         }
     }
 
+    /**
+     * gets current time and checks whether or not it's peak time
+     * @return a boolean for if it's peak or not
+     */
     public boolean isPeak() {
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
         Date currentLocalTime = cal.getTime();
 
-        DateFormat date = new SimpleDateFormat("HH:mm");
+        @SuppressLint("SimpleDateFormat") DateFormat date = new SimpleDateFormat("HH:mm");
         date.setTimeZone(TimeZone.getDefault());
 
         String localTime = date.format(currentLocalTime);

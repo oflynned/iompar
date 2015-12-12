@@ -4,24 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Layout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import java.util.Arrays;
 
@@ -36,8 +30,8 @@ public class Realtime extends Fragment {
     TextView leftPanel, rightPanel;
 
     private boolean start, end, pair = false;
-    String startPosition, endPosition, direction = "";
-    int startPositionComp, endPositionComp, choice;
+    String startPosition, endPosition = "";
+    int startPositionComp, endPositionComp;
 
     View view;
     int stage = 0;
@@ -89,7 +83,6 @@ public class Realtime extends Fragment {
     Categories[] beStations;
 
     Sync sync = new Sync();
-    Globals globals = new Globals();
 
     /**
      * Overrides the onBackPress() and returns to previous stage without closing fragment
@@ -441,14 +434,6 @@ public class Realtime extends Fragment {
         baseAdapter.notifyDataSetInvalidated();
     }
 
-    public void setCurrentChoice(int choice) {
-        this.choice = choice;
-    }
-
-    public int getCurrentChoice() {
-        return choice;
-    }
-
     public void setHasPair(boolean pair) {
         this.pair = pair;
     }
@@ -589,7 +574,6 @@ public class Realtime extends Fragment {
 
     /**
      * Fetches the appropriate RTPI data given the parameters from RTPI.ie
-     *
      * @param lineDirection the direction in which the user is travelling
      */
     private void fetchRTPI(String depart, String arrive, Globals.LineDirection lineDirection) {
