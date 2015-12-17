@@ -1,6 +1,7 @@
 package com.syzible.iompar;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -43,19 +44,22 @@ public class Fares extends Fragment {
 
     DatabaseHelper databaseHelper;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+    }
+
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fare, null);
-
-        databaseHelper = new DatabaseHelper(getActivity());
 
         setFareType(FareType.ADULT);
         setFareJourney(FareJourney.SINGLE);
         setFarePayment(FarePayment.CASH);
         setFareCaps(FareCaps.ON_PEAK);
         setLuasFareCost(LuasFareCost.FIVE_EIGHT_ZONES);
-        calculateFare();
+        calculateFare(getContext());
 
         System.out.println("Fare cost: €" + getFare());
 
@@ -70,7 +74,7 @@ public class Fares extends Fragment {
      * @param destination destination station
      * @return the cost of given transit route in Euro
      */
-    public String getZoneTraversal(Realtime.LuasDirections line, String origin, String destination) {
+    public String getZoneTraversal(Realtime.LuasDirections line, String origin, String destination, Context context) {
         //payment type
         setFareType(FareType.ADULT);
         setFareJourney(FareJourney.SINGLE);
@@ -124,7 +128,7 @@ public class Fares extends Fragment {
                 System.out.println("no zone line parsed?");
                 return "error";
         }
-        calculateFare();
+        calculateFare(context);
 
         System.out.println("Fare cost: €" + getFare());
         return getFare();
@@ -380,7 +384,8 @@ public class Fares extends Fragment {
     /**
      * given all the appropriate properties, the correct fare should be returned to the user
      */
-    public void calculateFare() {
+    public void calculateFare(Context context) {
+        databaseHelper = new DatabaseHelper(context);
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
         Cursor cursor = null;
         switch (getFareType()) {

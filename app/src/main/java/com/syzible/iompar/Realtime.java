@@ -82,7 +82,7 @@ public class Realtime extends Fragment {
     Categories[] beDirection;
     Categories[] beStations;
 
-    Sync sync = new Sync();
+    Sync sync;
 
     /**
      * Overrides the onBackPress() and returns to previous stage without closing fragment
@@ -126,6 +126,7 @@ public class Realtime extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        sync = new Sync(this.getActivity().getApplicationContext());
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(this.getContext())
                 .registerReceiver(onBackPressedBroadcastReceiver,
@@ -613,7 +614,6 @@ public class Realtime extends Fragment {
     /**
      * Causes the current thread to sleep for duration n if and only if the data has not been
      * fully loaded into the string
-     *
      * @fixes issues associated with null toasts
      */
     private void ensureDataArrival() {
@@ -629,6 +629,7 @@ public class Realtime extends Fragment {
                 e.printStackTrace();
             }
         }
+        sync.setLoaded(false);
     }
 
     class TransportationAdapter extends BaseAdapter {

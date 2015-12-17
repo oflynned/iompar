@@ -1,5 +1,7 @@
 package com.syzible.iompar;
 
+import android.content.Context;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,6 +15,8 @@ import java.util.ArrayList;
  * Created by ed on 28/10/15.
  */
 public class Sync {
+
+    Context context;
     boolean loaded;
     String title, nextDue, arrivalInfo, chosenEndStation;
 
@@ -21,6 +25,10 @@ public class Sync {
 
     Globals globals = new Globals();
     Fares fares = new Fares();
+
+    public Sync(Context context){
+        this.context = context;
+    }
 
     public String requestUpdate(Globals.LineDirection direction,
                                 String depart,
@@ -161,7 +169,7 @@ public class Sync {
                 setArrivalInfo(
                         "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                                "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive));
+                                "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
             }
         }
     }
@@ -210,7 +218,7 @@ public class Sync {
                 setArrivalInfo(
                         "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                                "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive));
+                                "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
             }
         }
     }
@@ -265,7 +273,7 @@ public class Sync {
                 setArrivalInfo(
                         "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                                "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive));
+                                "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
             }
         }
     }
