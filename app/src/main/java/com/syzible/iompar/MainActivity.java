@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
@@ -71,7 +72,9 @@ public class MainActivity extends AppCompatActivity
         StrictMode.setThreadPolicy(policy);
 
         setFragment();
-        setFares();
+
+        AsynchronousFareRetrieval asynchronousFareRetrieval = new AsynchronousFareRetrieval();
+        asynchronousFareRetrieval.execute();
     }
 
     @Override
@@ -222,7 +225,7 @@ public class MainActivity extends AppCompatActivity
                     databaseHelper.printTableContents(Database.LuasSingleFares.TABLE_NAME);
                     databaseHelper.printTableContents(Database.LuasReturnFares.TABLE_NAME);
                     databaseHelper.printTableContents(Database.LeapCaps.TABLE_NAME);
-                    Toast.makeText(getBaseContext(), "Fares same as online", Toast.LENGTH_SHORT).show();
+                    System.out.println("Fares same as online");
                 }
             } catch (IOException e){
                 e.printStackTrace();
@@ -304,7 +307,6 @@ public class MainActivity extends AppCompatActivity
                                     + fares.formatDecimals(splitFares[4]));
                     System.out.println("------------------------------------");
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -317,4 +319,19 @@ public class MainActivity extends AppCompatActivity
         cursor.close();
         sqLiteDatabase.close();
     }
+
+    class AsynchronousFareRetrieval extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            setFares();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(getApplicationContext(), "Completed async task", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
+

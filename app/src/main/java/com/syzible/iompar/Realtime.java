@@ -590,7 +590,8 @@ public class Realtime extends Fragment {
      */
     private void fetchRTPI(String depart, String arrive, Globals.LineDirection lineDirection) {
         //RTPI Luas station parsing & syncing
-        AsynchronousActivity asynchronousActivity = new AsynchronousActivity(depart, arrive, lineDirection);
+        AsynchronousActivity asynchronousActivity =
+                new AsynchronousActivity(depart, arrive, lineDirection);
         asynchronousActivity.execute();
     }
 
@@ -622,17 +623,9 @@ public class Realtime extends Fragment {
      * Causes the current thread to sleep for duration n if and only if the data has not been
      * fully loaded into the string
      */
-    private void ensureDataArrival() {
-        leftPanel.setText(sync.getNextDue());
-        rightPanel.setText(sync.getArrivalInfo());
-    }
-
-    /**
-     * is called when the asynchronous task is started and before the retrieval of rtpi
-     */
-    private void warnLoading(){
-        leftPanel.setText("Loading...");
-        rightPanel.setText("Loading...");
+    private void displayRTPI(String leftPanelText, String rightPanelText) {
+        leftPanel.setText(leftPanelText);
+        rightPanel.setText(rightPanelText);
     }
 
     class TransportationAdapter extends BaseAdapter {
@@ -709,7 +702,6 @@ public class Realtime extends Fragment {
 
         /**
          * Returns the current stage advanced or returned as a set of arguments within enumeration states
-         *
          * @return view    returns the current contextual view
          */
         @Override
@@ -851,7 +843,7 @@ public class Realtime extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            warnLoading();
+            displayRTPI("Loading...", "Loading...");
             try {
                 sync.requestUpdate(lineDirection, depart, arrive);
                 while (!sync.isLoaded()) {
@@ -866,6 +858,7 @@ public class Realtime extends Fragment {
                 }
                 sync.setLoaded(false);
             } catch (Exception e) {
+                displayRTPI("Error in retrieving data!", "Please check your internet connection!");
                 e.printStackTrace();
             }
             return null;
@@ -873,7 +866,7 @@ public class Realtime extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            ensureDataArrival();
+            displayRTPI(sync.getNextDue(), sync.getArrivalInfo());
         }
     }
 }
