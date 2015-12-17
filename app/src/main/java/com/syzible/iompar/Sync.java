@@ -22,7 +22,6 @@ public class Sync {
     Globals globals = new Globals();
     Fares fares = new Fares();
 
-    //luas
     public String requestUpdate(Globals.LineDirection direction,
                                 String depart,
                                 String arrive) throws Exception {
@@ -287,6 +286,8 @@ public class Sync {
                 return Realtime.LuasDirections.SANDYFORD;
             case "Bride's Glen":
                 return Realtime.LuasDirections.BRIDES_GLEN;
+            case "Heuston":
+                return Realtime.LuasDirections.HEUSTON;
         }
         return null;
     }

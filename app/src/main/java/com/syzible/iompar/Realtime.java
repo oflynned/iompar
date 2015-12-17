@@ -46,7 +46,7 @@ public class Realtime extends Fragment {
     public enum LuasDirections {
         TALLAGHT, SAGGART, POINT, BELGARD,
         BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
-        CONNOLLY
+        CONNOLLY, HEUSTON
     }
 
     private TransportationCategories currentCategory;

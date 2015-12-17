@@ -134,7 +134,7 @@ public class Fares extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fare, null);
 
-        getZoneTraversal(Realtime.LuasDirections.TALLAGHT, "Heuston", "Tallaght");
+
 
         return view;
     }
@@ -182,6 +182,7 @@ public class Fares extends Fragment {
             //saggart-connolly or inter station
             case CONNOLLY:
             case SAGGART:
+            case HEUSTON:
                 System.out.println("Origin zone: " + getSaggartZoneId(getOriginId(), getDestinationId()));
                 System.out.println("Destination zone: " + getSaggartZoneId(getOriginId(), getDestinationId()));
                 setLuasFareCost(getZoneDifference(getSaggartZoneId(getOriginId(), getDestinationId()),
@@ -377,6 +378,8 @@ public class Fares extends Fragment {
         if (difference < 0) {
             difference = difference * -1;
         }
+        System.out.println("Zone origin: " + origin);
+        System.out.println("Zone destination: " + destination);
         System.out.println("Zone difference: " + difference);
 
         switch (difference) {
@@ -920,8 +923,9 @@ public class Fares extends Fragment {
         return false;
     }
 
-    public String formatDecimals(double fare) {
-        return String.format("%.2f", fare);
+    public String formatDecimals(String fare) {
+        double castFare = Double.parseDouble(fare);
+        return String.format("%.2f", castFare);
     }
 
     public void setFare(String fare) {

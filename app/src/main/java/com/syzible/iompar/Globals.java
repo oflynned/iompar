@@ -9,6 +9,7 @@ public class Globals {
     public static String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
     public static String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
     public static String LEAP_LOGIN_ACCOUNT_PAGE = "https://www.leapcard.ie/en/SelfServices/CardServices/CardOverView.aspx";
+    public static String LUAS_FARES = "https://www.luas.ie/single-and-return-tickets.html";
 
     public static String DUBLIN_BUS_SEARCH_BY_STOP_NUMBER = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
     public static String DUBLIN_BUS_SEARCH_BY_ROUTE = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=route&searchquery=";
@@ -22,6 +23,17 @@ public class Globals {
     public static final int TENTH_OF_SECOND = ONE_SECOND / 10;
     public static final int FIVE_SECONDS = ONE_SECOND * 5;
     public static final int TEN_SECONDS = ONE_SECOND * 10;
+
+    //IDs for fares in fares tables
+    public static final int ONE_ZONE = 1;
+    public static final int TWO_ZONES = 2;
+    public static final int THREE_ZONES = 3;
+    public static final int FOUR_ZONES = 4;
+    public static final int FIVE_EIGHT_ZONES = 5;
+
+    public static final int ADULT_CAP = 1;
+    public static final int CHILD_CAP = 2;
+    public static final int STUDENT_CAP = 3;
 
     //zone IDs
     public static final int DOCKLANDS_ID = 1;

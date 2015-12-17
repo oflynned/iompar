@@ -18,13 +18,5 @@
             android:id="@+id/nav_expenditures"
             android:icon="@drawable/ic_trending_up_white_48dp"
             android:title="Expenditures" />
-        <item
-            android:id="@+id/nav_remind_me"
-            android:icon="@drawable/ic_schedule_white_48dp"
-            android:title="Remind Me" />
-        <item
-            android:id="@+id/nav_around_me"
-            android:icon="@drawable/ic_visibility_white_48dp"
-            android:title="Around Me" />
     </group>
 </menu>

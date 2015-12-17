@@ -61,13 +61,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int COL_LEAP_LOGIN_PASSWORD = 4;
     public static final int COL_LEAP_LOGIN_IS_ACTIVE = 5;
 
+    public static final int COL_LUAS_SINGLE_FARES_ID = 0;
+    public static final int COL_LUAS_SINGLE_FARES_ADULT = 1;
+    public static final int COL_LUAS_SINGLE_FARES_CHILD = 2;
+    public static final int COL_LUAS_SINGLE_FARES_ADULT_STUDENT_OFF_PEAK = 3;
+    public static final int COL_LUAS_SINGLE_FARES_ADULT_STUDENT_PEAK = 4;
+    public static final int COL_LUAS_SINGLE_FARES_CHILD_OFF_PEAK = 5;
+    public static final int COL_LUAS_SINGLE_FARES_CHILD_PEAK = 6;
+
+    public static final int COL_LUAS_RETURN_FARES_ID = 0;
+    public static final int COL_LUAS_RETURN_FARES_ADULT = 1;
+    public static final int COL_LUAS_RETURN_FARES_CHILD = 2;
+
+    public static final int COL_LUAS_LEAP_CAPS_ID = 0;
+    public static final int COL_LUAS_LEAP_CAPS_LUAS_DAILY = 1;
+    public static final int COL_LUAS_LEAP_CAPS_LUAS_WEEKLY = 2;
+    public static final int COL_LUAS_LEAP_CAPS_DUBLIN_BUS_LUAS_DART_COMM_RAIL_DAILY_CAP = 3;
+    public static final int COL_LUAS_LEAP_CAPS_DUBLIN_BUS_LUAS_DART_COMM_RAIL_WEEKLY_CAP = 4;
+
     final static String[] TABLES = {
             Database.BusEireannFavourites.TABLE_NAME,
             Database.DartFavourites.TABLE_NAME,
             Database.DublinBusFavourites.TABLE_NAME,
             Database.LuasFavourites.TABLE_NAME,
             Database.LeapBalance.TABLE_NAME,
-            Database.LeapLogin.TABLE_NAME
+            Database.LeapLogin.TABLE_NAME,
+            Database.LuasSingleFares.TABLE_NAME,
+            Database.LuasReturnFares.TABLE_NAME,
+            Database.LeapCaps.TABLE_NAME
     };
 
     //QUERIES
@@ -138,6 +159,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.LeapLogin.USER_PASSWORD + " VARCHAR(320)," +
                     Database.LeapLogin.IS_ACTIVE + " BOOLEAN);";
 
+    public static final String CREATE_TABLE_LUAS_SINGLE_FARES =
+            "CREATE TABLE " +
+                    Database.LuasSingleFares.TABLE_NAME + "(" +
+                    Database.LuasSingleFares.ID + " INTEGER PRIMARY KEY," +
+                    Database.LuasSingleFares.ADULT + " REAL," +
+                    Database.LuasSingleFares.CHILD + " REAL," +
+                    Database.LuasSingleFares.ADULT_STUDENT_OFF_PEAK + " REAL," +
+                    Database.LuasSingleFares.ADULT_STUDENT_PEAK + " REAL," +
+                    Database.LuasSingleFares.CHILD_OFF_PEAK + " REAL," +
+                    Database.LuasSingleFares.CHILD_PEAK + " REAL);";
+
+    public static final String CREATE_TABLE_LUAS_RETURN_FARES =
+            "CREATE TABLE " +
+                    Database.LuasReturnFares.TABLE_NAME + "(" +
+                    Database.LuasReturnFares.ID + " INTEGER PRIMARY KEY," +
+                    Database.LuasReturnFares.ADULT + " REAL," +
+                    Database.LuasReturnFares.CHILD + " REAL);";
+
+    public static final String CREATE_TABLE_LEAP_CAPS =
+            "CREATE TABLE " +
+                    Database.LeapCaps.TABLE_NAME + "(" +
+                    Database.LeapCaps.ID + " INTEGER PRIMARY KEY," +
+                    Database.LeapCaps.LUAS_DAILY_CAP + " REAL," +
+                    Database.LeapCaps.LUAS_WEEKLY_CAP + " REAL," +
+                    Database.LeapCaps.DUBLIN_BUS_LUAS_DART_COMM_RAIL_DAILY_CAP + " REAL," +
+                    Database.LeapCaps.DUBLIN_BUS_LUAS_DART_COMM_RAIL_WEEKLY_CAP + " REAL);";
+
+    public static final String DELETE_TABLE_SINGLE_FARES =
+            "DROP TABLE IF EXISTS " + Database.LuasSingleFares.TABLE_NAME + ";";
+
+    public static final String DELETE_TABLE_RETURN_FARES =
+            "DROP TABLE IF EXISTS " + Database.LuasReturnFares.TABLE_NAME + ";";
+
+    public static final String DELETE_TABLE_LEAP_CAPS =
+            "DROP TABLE IF EXISTS " + Database.LeapCaps.TABLE_NAME + ";";
+
     public static final String DELETE_TABLE_DUBLIN_BUS =
             "DROP TABLE IF EXISTS " + Database.DublinBusFavourites.TABLE_NAME + ";";
 
@@ -158,6 +215,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DELETE_TABLE_LEAP_LOGIN =
             "DROP TABLE IF EXISTS " + Database.LeapLogin.TABLE_NAME + ";";
+
+    public static final String SELECT_ALL_LUAS_SINGLE_FARES =
+            "SELECT * FROM " + Database.LuasSingleFares.TABLE_NAME + ";";
+
+    public static final String SELECT_ALL_LUAS_RETURN_FARES =
+            "SELECT * FROM " + Database.LuasReturnFares.TABLE_NAME + ";";
+
+    public static final String SELECT_ALL_LEAP_CAPS =
+            "SELECT * FROM " + Database.LeapCaps.TABLE_NAME + ";";
 
     public static final String SELECT_ALL_DUBLIN_BUS =
             "SELECT * FROM " + Database.DublinBusFavourites.TABLE_NAME + ";";
@@ -204,6 +270,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_TRAIN_FAVOURITES);
         db.execSQL(CREATE_TABLE_LEAP_BALANCE);
         db.execSQL(CREATE_TABLE_LEAP_LOGIN);
+        db.execSQL(CREATE_TABLE_LUAS_SINGLE_FARES);
+        db.execSQL(CREATE_TABLE_LUAS_RETURN_FARES);
+        db.execSQL(CREATE_TABLE_LEAP_CAPS);
     }
 
     @Override
@@ -215,6 +284,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.execSQL(UPGRADE_TABLE);
             }
         }
+    }
+
+    public void insertFares(String tableName,
+                            //single cash/leap
+                            String adultCashSingle, String childCashSingle, String adultStudentOffPeakLeapSingle,
+                            String adultStudentPeakLeapSingle, String childOffPeakLeapSingle, String childPeakLeapSingle,
+                            //return cash
+                            String adultCashReturn, String childCashReturn,
+                            //leap caps
+                            String luasDailyCap, String luasWeeklyCap, String dbLuasDartCommDailyCap,
+                            String dbLuasDartCommWeeklyCap){
+        SQLiteDatabase writeDb = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        switch (tableName){
+            case Database.LuasSingleFares.TABLE_NAME:
+                contentValues.put(Database.LuasSingleFares.ADULT, adultCashSingle);
+                contentValues.put(Database.LuasSingleFares.CHILD, childCashSingle);
+                contentValues.put(Database.LuasSingleFares.ADULT_STUDENT_OFF_PEAK, adultStudentOffPeakLeapSingle);
+                contentValues.put(Database.LuasSingleFares.ADULT_STUDENT_PEAK, adultStudentPeakLeapSingle);
+                contentValues.put(Database.LuasSingleFares.CHILD_OFF_PEAK, childOffPeakLeapSingle);
+                contentValues.put(Database.LuasSingleFares.CHILD_PEAK, childPeakLeapSingle);
+                break;
+            case Database.LuasReturnFares.TABLE_NAME:
+                contentValues.put(Database.LuasReturnFares.ADULT, adultCashReturn);
+                contentValues.put(Database.LuasReturnFares.CHILD, childCashReturn);
+                break;
+            case Database.LeapCaps.TABLE_NAME:
+                contentValues.put(Database.LeapCaps.LUAS_DAILY_CAP, luasDailyCap);
+                contentValues.put(Database.LeapCaps.LUAS_WEEKLY_CAP, luasWeeklyCap);
+                contentValues.put(Database.LeapCaps.DUBLIN_BUS_LUAS_DART_COMM_RAIL_DAILY_CAP, dbLuasDartCommDailyCap);
+                contentValues.put(Database.LeapCaps.DUBLIN_BUS_LUAS_DART_COMM_RAIL_WEEKLY_CAP, dbLuasDartCommWeeklyCap);
+                break;
+            default:
+                System.out.println("Incorrect table name parametrised");
+                break;
+        }
+        writeDb.insert(tableName, null, contentValues);
+        writeDb.close();
     }
 
     public void insertRecord(String tableName,

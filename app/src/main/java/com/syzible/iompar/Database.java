@@ -77,4 +77,31 @@ public class Database {
         public static final String USER_PASSWORD = "password";
         public static final String IS_ACTIVE = "is_active";
     }
+
+    public static abstract class LuasSingleFares implements BaseColumns {
+        public static final String TABLE_NAME = "luas_single_fares";
+        public static final String ID = "id";
+        public static final String ADULT = "adult";
+        public static final String CHILD = "child";
+        public static final String ADULT_STUDENT_OFF_PEAK = "adult_student_off_peak";
+        public static final String ADULT_STUDENT_PEAK = "adult_student_peak";
+        public static final String CHILD_OFF_PEAK = "child_off_peak";
+        public static final String CHILD_PEAK = "child_peak";
+    }
+
+    public static abstract class LuasReturnFares implements BaseColumns {
+        public static final String TABLE_NAME = "luas_return_fares";
+        public static final String ID = "id";
+        public static final String ADULT = "adult";
+        public static final String CHILD = "child";
+    }
+
+    public static abstract class LeapCaps implements BaseColumns {
+        public static final String TABLE_NAME = "leap_caps";
+        public static final String ID = "id";
+        public static final String LUAS_DAILY_CAP = "luas_daily_cap";
+        public static final String LUAS_WEEKLY_CAP = "luas_weekly_cap";
+        public static final String DUBLIN_BUS_LUAS_DART_COMM_RAIL_DAILY_CAP = "dublin_bus_luas_dart_comm_rail_daily_cap";
+        public static final String DUBLIN_BUS_LUAS_DART_COMM_RAIL_WEEKLY_CAP = "dublin_bus_luas_dart_comm_rail_weekly_cap";
+    }
 }

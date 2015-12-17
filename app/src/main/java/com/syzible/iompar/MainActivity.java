@@ -1,6 +1,8 @@
 package com.syzible.iompar;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
@@ -14,6 +16,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,10 +37,12 @@ public class MainActivity extends AppCompatActivity
     //fragment classes
     Realtime realtime = new Realtime();
     Fares fares = new Fares();
+    Globals globals = new Globals();
     Remind remind = new Remind();
     Around around = new Around();
     ManageLeapCards manageLeapCards = new ManageLeapCards();
     Expenditures expenditures = new Expenditures();
+    DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
     TextView barName, barLeapCardNumber;
     DrawerLayout drawer;
@@ -54,22 +70,7 @@ public class MainActivity extends AppCompatActivity
         StrictMode.setThreadPolicy(policy);
 
         setFragment();
-
-        /* @bug barName and barLeapCardNumber are null and cannot have text instantiated?
-        barName = (TextView) findViewById(R.id.bar_name);
-        barLeapCardNumber = (TextView) findViewById(R.id.bar_leapcard_number);
-
-        System.out.println(barName.getText().toString());
-        System.out.println(barLeapCardNumber.getText().toString());
-
-        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LEAP_LOGIN, null);
-        cursor.moveToFirst();
-        System.out.println(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_EMAIL));
-        barName.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_EMAIL));
-        barLeapCardNumber.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER));
-        cursor.close();
-        sqLiteDatabase.close();*/
+        setFares();
     }
 
     @Override
@@ -114,10 +115,6 @@ public class MainActivity extends AppCompatActivity
             changeFragment(this.realtime);
         } else if (id == R.id.nav_fare_calculator) {
             changeFragment(this.fares);
-        } else if (id == R.id.nav_remind_me) {
-            changeFragment(this.remind);
-        } else if (id == R.id.nav_around_me) {
-            changeFragment(this.around);
         } else if (id == R.id.nav_manage_leap_cards) {
             changeFragment(this.manageLeapCards);
         } else if (id == R.id.nav_expenditures) {
@@ -141,5 +138,178 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.content_frame, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void setFares(){
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+        cursor.moveToFirst();
+        int count = cursor.getCount();
+
+        //single fares table
+        if(count > 0){
+            try {
+                URL url = new URL(Globals.LUAS_FARES);
+                Document doc = Jsoup.connect(url.toString()).get();
+
+                Elements elements = doc.select("table");
+                Elements tableRowElements = elements.select("tr");
+                String[] splitFaresCheck = new String[7];
+
+                //check if first row has changed
+                for (int j = 2; j < 3; j++) {
+                    String fare = tableRowElements.get(j).text();
+                    splitFaresCheck = fare.split("€");
+                }
+
+                //check if fares have changed from last sync
+                if (!cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT)
+                        .equals(String.valueOf(Double.parseDouble(splitFaresCheck[1])))) {
+                    //obliterate and repopulate
+                    databaseHelper.clearTable(Database.LuasSingleFares.TABLE_NAME);
+                    databaseHelper.clearTable(Database.LuasReturnFares.TABLE_NAME);
+                    databaseHelper.clearTable(Database.LeapCaps.TABLE_NAME);
+
+                    //single ticket
+                    for (int j = 2; j <= 6; j++) {
+                        String fare = tableRowElements.get(j).text();
+                        String[] splitFares = fare.split("€");
+
+                        databaseHelper.insertFares(Database.LuasSingleFares.TABLE_NAME,
+                                fares.formatDecimals(splitFares[1]),
+                                fares.formatDecimals(splitFares[2]),
+                                fares.formatDecimals(splitFares[3]),
+                                fares.formatDecimals(splitFares[4]),
+                                fares.formatDecimals(splitFares[5]),
+                                fares.formatDecimals(splitFares[6]),
+                                null, null, null, null, null, null);
+                    }
+
+                    //return ticket
+                    for (int j = 8; j <= 12; j++) {
+                        String fare = tableRowElements.get(j).text();
+                        String[] splitFares = fare.split("€");
+
+                        databaseHelper.insertFares(Database.LuasReturnFares.TABLE_NAME,
+                                null, null, null, null, null, null,
+                                fares.formatDecimals(splitFares[1]),
+                                fares.formatDecimals(splitFares[2]),
+                                null, null, null, null);
+                    }
+
+                    //caps
+                    for (int j = 15; j <= 17; j++) {
+                        String fare = tableRowElements.get(j).text();
+                        String[] splitFares = fare.split("€");
+
+                        databaseHelper.insertFares(Database.LeapCaps.TABLE_NAME,
+                                null, null, null, null, null, null, null, null,
+                                fares.formatDecimals(splitFares[1]),
+                                fares.formatDecimals(splitFares[2]),
+                                fares.formatDecimals(splitFares[3]),
+                                fares.formatDecimals(splitFares[4]));
+                    }
+
+                    databaseHelper.printTableContents(Database.LuasSingleFares.TABLE_NAME);
+                    databaseHelper.printTableContents(Database.LuasReturnFares.TABLE_NAME);
+                    databaseHelper.printTableContents(Database.LeapCaps.TABLE_NAME);
+                } else {
+                    databaseHelper.printTableContents(Database.LuasSingleFares.TABLE_NAME);
+                    databaseHelper.printTableContents(Database.LuasReturnFares.TABLE_NAME);
+                    databaseHelper.printTableContents(Database.LeapCaps.TABLE_NAME);
+                    Toast.makeText(getBaseContext(), "Fares same as online", Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        } else {
+            //clear as a safety measure
+            databaseHelper.clearTable(Database.LuasSingleFares.TABLE_NAME);
+            databaseHelper.clearTable(Database.LuasReturnFares.TABLE_NAME);
+            databaseHelper.clearTable(Database.LeapCaps.TABLE_NAME);
+
+            //not populated, proceed to populate table
+            URL url;
+            Document doc;
+            try {
+                url = new URL(Globals.LUAS_FARES);
+                doc = Jsoup.connect(url.toString()).get();
+
+                Elements elements = doc.select("table");
+                Elements tableRowElements = elements.select("tr");
+
+                //single ticket
+                for (int j = 2; j <= 6; j++) {
+                    String fare = tableRowElements.get(j).text();
+                    String[] splitFares = fare.split("€");
+
+                    databaseHelper.insertFares(Database.LuasSingleFares.TABLE_NAME,
+                            fares.formatDecimals(splitFares[1]),
+                            fares.formatDecimals(splitFares[2]),
+                            fares.formatDecimals(splitFares[3]),
+                            fares.formatDecimals(splitFares[4]),
+                            fares.formatDecimals(splitFares[5]),
+                            fares.formatDecimals(splitFares[6]),
+                            null, null, null, null, null, null);
+
+                    System.out.println("Single Zone " + (j-1) + ": "
+                                    + fares.formatDecimals(splitFares[1]) + ", "
+                                    + fares.formatDecimals(splitFares[2]) + ", "
+                                    + fares.formatDecimals(splitFares[3]) + ", "
+                                    + fares.formatDecimals(splitFares[4]) + ", "
+                                    + fares.formatDecimals(splitFares[5]) + ", "
+                                    + fares.formatDecimals(splitFares[6])
+                    );
+                    System.out.println("------------------------------------");
+                }
+
+                //return ticket
+                for (int j = 8; j <= 12; j++) {
+                    String fare = tableRowElements.get(j).text();
+                    String[] splitFares = fare.split("€");
+
+                    databaseHelper.insertFares(Database.LuasReturnFares.TABLE_NAME,
+                            null, null, null, null, null, null,
+                            fares.formatDecimals(splitFares[1]),
+                            fares.formatDecimals(splitFares[2]),
+                            null, null, null, null);
+
+                    System.out.println("Return Zone " + (j-7) + ": "
+                            + fares.formatDecimals(splitFares[1]) + ", "
+                            + fares.formatDecimals(splitFares[2]));
+                    System.out.println("------------------------------------");
+                }
+
+                //caps
+                for (int j = 15; j <= 17; j++) {
+                    String fare = tableRowElements.get(j).text();
+                    String[] splitFares = fare.split("€");
+
+                    databaseHelper.insertFares(Database.LeapCaps.TABLE_NAME,
+                            null, null, null, null, null, null, null, null,
+                            fares.formatDecimals(splitFares[1]),
+                            fares.formatDecimals(splitFares[2]),
+                            fares.formatDecimals(splitFares[3]),
+                            fares.formatDecimals(splitFares[4]));
+
+                            System.out.println("Caps type #" + (j - 14) + ": "
+                                    + fares.formatDecimals(splitFares[1]) + ", "
+                                    + fares.formatDecimals(splitFares[2]) + ", "
+                                    + fares.formatDecimals(splitFares[3]) + ", "
+                                    + fares.formatDecimals(splitFares[4]));
+                    System.out.println("------------------------------------");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        databaseHelper.printTableContents(Database.LuasSingleFares.TABLE_NAME);
+        databaseHelper.printTableContents(Database.LuasReturnFares.TABLE_NAME);
+        databaseHelper.printTableContents(Database.LeapCaps.TABLE_NAME);
+
+        cursor.close();
+        sqLiteDatabase.close();
     }
 }
