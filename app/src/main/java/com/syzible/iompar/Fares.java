@@ -1,6 +1,8 @@
 package com.syzible.iompar;
 
 import android.annotation.SuppressLint;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,7 +23,7 @@ public class Fares extends Fragment {
     View view;
 
     int originId, destinationId;
-    String direction;
+    String direction, fare;
 
     public enum FareType {ADULT, STUDENT, CHILD, OTHER}
 
@@ -39,110 +41,32 @@ public class Fares extends Fragment {
     FareJourney fareJourney;
     LuasFareCost luasFareCost;
 
-    private String fare;
-
-    String[] faresSingleEuroAdult = {
-            "1.90",
-            "2.30",
-            "2.70",
-            "2.80",
-            "3.10"
-    };
-
-    String[] faresSingleEuroChild = {
-            "1.00",
-            "1.00",
-            "1.00",
-            "1.20",
-            "1.20"
-    };
-
-    String[] faresReturnAdult = {
-            "3.50",
-            "4.10",
-            "4.90",
-            "5.30",
-            "5.60"
-    };
-
-    String[] faresReturnChild = {
-            "1.70",
-            "1.70",
-            "1.70",
-            "2.10",
-            "2.10"
-    };
-
-    String[] luasDailyCap = {
-            "6.40",
-            "2.50",
-            "5.00"
-    };
-
-    String[] luasWeeklyCap = {
-            "23.50",
-            "8.20",
-            "18.00"
-    };
-
-    String[] dublinBusLuasDARTCommuterDailyCap = {
-            "10.00",
-            "3.50",
-            "7.50"
-    };
-
-    String[] dublinBusLuasDARTCommuterWeeklyCap = {
-            "40.00",
-            "14.00",
-            "30.00"
-    };
-
-    String[] faresLeapOffPeakAdultStudent = {
-            "1.39",
-            "1.70",
-            "2.03",
-            "2.19",
-            "2.35"
-    };
-
-    String[] faresLeapPeakAdultStudent = {
-            "1.44",
-            "1.70",
-            "2.05",
-            "2.19",
-            "2.35"
-    };
-
-    String[] faresLeapOffPeakChild = {
-            "0.80",
-            "0.80",
-            "0.80",
-            "0.96",
-            "0.96"
-    };
-
-    String[] faresLeapPeakChild = {
-            "0.80",
-            "0.80",
-            "0.80",
-            "0.96",
-            "0.96"
-    };
+    DatabaseHelper databaseHelper;
 
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fare, null);
 
+        databaseHelper = new DatabaseHelper(getActivity());
 
+        setFareType(FareType.ADULT);
+        setFareJourney(FareJourney.SINGLE);
+        setFarePayment(FarePayment.CASH);
+        setFareCaps(FareCaps.ON_PEAK);
+        setLuasFareCost(LuasFareCost.FIVE_EIGHT_ZONES);
+        calculateFare();
+
+        System.out.println("Fare cost: €" + getFare());
 
         return view;
     }
 
     /**
      * takes the parameters of type of fare for the user, and returns the appropriate costs
-     * @param line the Luas line being traversed
-     * @param origin departing station
+     *
+     * @param line        the Luas line being traversed
+     * @param origin      departing station
      * @param destination destination station
      * @return the cost of given transit route in Euro
      */
@@ -150,7 +74,7 @@ public class Fares extends Fragment {
         //payment type
         setFareType(FareType.ADULT);
         setFareJourney(FareJourney.SINGLE);
-        setFarePayment(FarePayment.LEAP);
+        setFarePayment(FarePayment.CASH);
 
         //peak?
         if (isPeak()) {
@@ -170,7 +94,7 @@ public class Fares extends Fragment {
         System.out.println("Direction set: " + getDirection());
         System.out.println("Line parameter: " + line);
 
-        switch(line){
+        switch (line) {
             //tallaght-point
             case POINT:
             case TALLAGHT:
@@ -209,7 +133,8 @@ public class Fares extends Fragment {
     /**
      * takes the given stations and returns their zones with respect to the user's direction on
      * the tram when traversing the Luas line
-     * @param originIndex the station from which the user departs
+     *
+     * @param originIndex      the station from which the user departs
      * @param destinationIndex the station to which the user travels
      * @return returns the ID from Globals.class
      */
@@ -269,7 +194,7 @@ public class Fares extends Fragment {
             return Globals.RED_2_ID;
         } else if (originIndex > Globals.SUIR_ROAD_SAGGART_ID && originIndex < Globals.RED_COW_SAGGART_ID) {
             return Globals.RED_3_ID;
-        }  else if (originIndex > Globals.RED_COW_SAGGART_ID) {
+        } else if (originIndex > Globals.RED_COW_SAGGART_ID) {
             return Globals.RED_4_ID;
         }
         //heuston transition station
@@ -307,9 +232,9 @@ public class Fares extends Fragment {
             return Globals.GREEN_2_ID;
         } else if (originIndex > Globals.DUNDRUM_ID && originIndex < Globals.SANDYFORD_ID) {
             return Globals.GREEN_3_ID;
-        } else if (originIndex > Globals.SANDYFORD_ID && originIndex <= Globals.BALLYOGAN_WOOD_ID){
+        } else if (originIndex > Globals.SANDYFORD_ID && originIndex <= Globals.BALLYOGAN_WOOD_ID) {
             return Globals.GREEN_4_ID;
-        } else if (originIndex >= Globals.CARRICKMINES_ID){
+        } else if (originIndex >= Globals.CARRICKMINES_ID) {
             return Globals.GREEN_5_ID;
         }
         //charlemont transition station
@@ -369,7 +294,8 @@ public class Fares extends Fragment {
 
     /**
      * Returns the difference in zone index to calculate the amount of zones being traversed
-     * @param origin the origin station index from the array
+     *
+     * @param origin      the origin station index from the array
      * @param destination the destination station as an index of the array
      * @return the absolute value of zone difference
      */
@@ -403,7 +329,8 @@ public class Fares extends Fragment {
 
     /**
      * takes the station and searches the given array to find the index of the station
-     * @param line line to be searched
+     *
+     * @param line    line to be searched
      * @param station station index to be found
      * @return the index of the station of the whole array
      */
@@ -454,6 +381,8 @@ public class Fares extends Fragment {
      * given all the appropriate properties, the correct fare should be returned to the user
      */
     public void calculateFare() {
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = null;
         switch (getFareType()) {
             case ADULT:
                 switch (getFareCaps()) {
@@ -462,137 +391,163 @@ public class Fares extends Fragment {
                             case SINGLE:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresSingleEuroAdult[0]);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresSingleEuroAdult[1]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresSingleEuroAdult[2]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresSingleEuroAdult[3]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresSingleEuroAdult[4]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
                                         break;
                                     case LEAP:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresLeapPeakAdultStudent[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresLeapPeakAdultStudent[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresLeapPeakAdultStudent[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresLeapPeakAdultStudent[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresLeapPeakAdultStudent[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_PEAK));
                                         break;
                                 }
                                 break;
                             case RETURN:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_RETURN_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresReturnAdult[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresReturnAdult[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresReturnAdult[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresReturnAdult[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresReturnAdult[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
                                         break;
                                 }
                                 break;
                         }
+                        break;
                     case OFF_PEAK:
                         switch (getFareJourney()) {
                             case SINGLE:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresSingleEuroAdult[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresSingleEuroAdult[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresSingleEuroAdult[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresSingleEuroAdult[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresSingleEuroAdult[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
                                         break;
                                     case LEAP:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresLeapOffPeakAdultStudent[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresLeapOffPeakAdultStudent[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresLeapOffPeakAdultStudent[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresLeapOffPeakAdultStudent[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresLeapOffPeakAdultStudent[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_OFF_PEAK));
                                         break;
                                 }
                                 break;
                             case RETURN:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_RETURN_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresReturnAdult[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresReturnAdult[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresReturnAdult[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresReturnAdult[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresReturnAdult[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
                                         break;
                                 }
                                 break;
                         }
+                        break;
                 }
                 break;
             case STUDENT:
@@ -602,137 +557,163 @@ public class Fares extends Fragment {
                             case SINGLE:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresSingleEuroAdult[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresSingleEuroAdult[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresSingleEuroAdult[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresSingleEuroAdult[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresSingleEuroAdult[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
                                         break;
                                     case LEAP:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresLeapPeakAdultStudent[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresLeapPeakAdultStudent[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresLeapPeakAdultStudent[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresLeapPeakAdultStudent[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresLeapPeakAdultStudent[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_PEAK));
                                         break;
                                 }
                                 break;
                             case RETURN:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_RETURN_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresReturnAdult[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresReturnAdult[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresReturnAdult[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresReturnAdult[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresReturnAdult[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
                                         break;
                                 }
                                 break;
                         }
+                        break;
                     case OFF_PEAK:
                         switch (getFareJourney()) {
                             case SINGLE:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresSingleEuroAdult[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresSingleEuroAdult[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresSingleEuroAdult[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresSingleEuroAdult[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresSingleEuroAdult[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
                                         break;
                                     case LEAP:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresLeapOffPeakAdultStudent[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresLeapOffPeakAdultStudent[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresLeapOffPeakAdultStudent[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresLeapOffPeakAdultStudent[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresLeapOffPeakAdultStudent[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_OFF_PEAK));
                                         break;
                                 }
                                 break;
                             case RETURN:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_RETURN_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresReturnAdult[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresReturnAdult[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresReturnAdult[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresReturnAdult[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresReturnAdult[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
                                         break;
                                 }
                                 break;
                         }
+                        break;
                 }
                 break;
             case CHILD:
@@ -742,153 +723,184 @@ public class Fares extends Fragment {
                             case SINGLE:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresSingleEuroChild[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresSingleEuroChild[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresSingleEuroChild[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresSingleEuroChild[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresSingleEuroChild[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD));
                                         break;
                                     case LEAP:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresLeapPeakChild[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresLeapPeakChild[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresLeapPeakChild[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresLeapPeakChild[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresLeapPeakChild[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD_PEAK));
                                         break;
                                 }
                                 break;
                             case RETURN:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_RETURN_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresReturnChild[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresReturnChild[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresReturnChild[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresReturnChild[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresReturnChild[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_CHILD));
                                         break;
                                 }
                                 break;
                         }
+                        break;
                     case OFF_PEAK:
                         switch (getFareJourney()) {
                             case SINGLE:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresSingleEuroChild[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresSingleEuroChild[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresSingleEuroChild[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresSingleEuroChild[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresSingleEuroChild[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD));
                                         break;
                                     case LEAP:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresLeapOffPeakChild[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresLeapOffPeakChild[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresLeapOffPeakChild[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresLeapOffPeakChild[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresLeapOffPeakChild[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD_OFF_PEAK));
                                         break;
                                 }
                                 break;
                             case RETURN:
                                 switch (getFarePayment()) {
                                     case CASH:
+                                        cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_RETURN_FARES, null);
+                                        cursor.moveToFirst();
+
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                setFare(faresReturnChild[0]);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case TWO_ZONES:
-                                                setFare(faresReturnChild[1]);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case THREE_ZONES:
-                                                setFare(faresReturnChild[2]);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FOUR_ZONES:
-                                                setFare(faresReturnChild[3]);
+                                                cursor.moveToPosition(4);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                setFare(faresReturnChild[4]);
+                                                cursor.moveToPosition(5);
                                                 break;
                                         }
+                                        setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_CHILD));
                                         break;
                                 }
                                 break;
                         }
+                        break;
                 }
                 break;
             case OTHER:
                 break;
         }
+
+        sqLiteDatabase.close();
+        cursor.close();
     }
 
     /**
      * gets current time and checks whether or not it's peak time
+     *
      * @return a boolean for if it's peak or not
      */
     public boolean isPeak() {
         Calendar cal = Calendar.getInstance(TimeZone.getDefault());
         Date currentLocalTime = cal.getTime();
 
-        @SuppressLint("SimpleDateFormat") DateFormat date = new SimpleDateFormat("HH:mm");
+        @SuppressLint("SimpleDateFormat")
+        DateFormat date = new SimpleDateFormat("HH:mm");
         date.setTimeZone(TimeZone.getDefault());
 
         String localTime = date.format(currentLocalTime);
@@ -933,7 +945,7 @@ public class Fares extends Fragment {
     }
 
     public String getFare() {
-        return fare;
+        return formatDecimals(fare);
     }
 
     public void setLuasFareCost(LuasFareCost luasFareCost) {
