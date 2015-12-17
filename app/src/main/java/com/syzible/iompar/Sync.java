@@ -1,6 +1,7 @@
 package com.syzible.iompar;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

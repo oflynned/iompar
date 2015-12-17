@@ -3,6 +3,7 @@ package com.syzible.iompar;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
@@ -100,7 +101,11 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+
+        } else if(id == R.id.action_about){
+            startActivity(new Intent(this, AboutUs.class));
+        } else if(id == R.id.visit_us){
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.glassbyte.com")));
         }
 
         return super.onOptionsItemSelected(item);

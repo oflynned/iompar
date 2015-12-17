@@ -4,4 +4,11 @@
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="navigationBarColor">#388E3C</color>
     <color name="colorAccent">#FF9800</color>
+
+    <color name="lightblue300">#4FC3F7</color>
+    <color name="lightblue700">#0288D1</color>
+
+    <color name="blue900">#1A237E</color>
+
+    <color name="red900">#B71C1C</color>
 </resources>

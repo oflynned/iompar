@@ -12,7 +12,7 @@
             android:title="Manage Leap Cards" />
         <item
             android:id="@+id/nav_fare_calculator"
-            android:icon="@drawable/ic_perm_scan_wifi_white_48dp"
+            android:icon="@drawable/ic_attach_money_white_48dp"
             android:title="Fare Calculator" />
         <item
             android:id="@+id/nav_expenditures"

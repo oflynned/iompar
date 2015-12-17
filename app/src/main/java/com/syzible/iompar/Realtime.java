@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -133,6 +134,10 @@ public class Realtime extends Fragment {
                         new IntentFilter(MainActivity.ON_BACK_PRESSED_EVENT));
 
         //assign transportation types to adapter
+        categories = new Categories[1];
+        categories[0] = new Categories("Luas", "local");
+
+        /* rest will be implemented soon as fares and tracking get finished
         categories = new Categories[5];
         categories[0] =
                 new Categories("Bus Éireann", "regional");
@@ -143,7 +148,7 @@ public class Realtime extends Fragment {
         categories[3] =
                 new Categories("Luas", "local");
         categories[4] =
-                new Categories("Train", "regional");
+                new Categories("Train", "regional");*/
 
         //luas line types
         luasCategories = new Categories[2];
@@ -222,7 +227,7 @@ public class Realtime extends Fragment {
                     stage++;
 
                     switch (position) {
-                        case 0:
+                        /*case 0:
                             //bus eireann
                             setCurrentCategory(TransportationCategories.BUS_EIREANN);
                             break;
@@ -241,6 +246,11 @@ public class Realtime extends Fragment {
                         case 4:
                             //train
                             setCurrentCategory(TransportationCategories.TRAIN);
+                            break;
+                            */
+                        case 0:
+                            //luas
+                            setCurrentCategory(TransportationCategories.LUAS);
                             break;
                     }
                     gridView.setAdapter(baseAdapter);
@@ -455,14 +465,14 @@ public class Realtime extends Fragment {
     public Globals.LineDirection getDirection(LuasLines currentLine, LuasDirections currentLuasDirection,
                                               int startPosition, int endPosition) {
         if (currentLine == LuasLines.GREEN) {
-            if(startPosition < endPosition) {
+            if (startPosition < endPosition) {
                 if (startPosition <= Globals.SANDYFORD_ID && endPosition <= Globals.SANDYFORD_ID) {
                     return Globals.LineDirection.stephens_green_to_sandyford;
                 } else if (endPosition > Globals.SANDYFORD_ID) {
                     return Globals.LineDirection.stephens_green_to_brides_glen;
                 }
             } else {
-                if(startPosition > Globals.SANDYFORD_ID) {
+                if (startPosition > Globals.SANDYFORD_ID) {
                     return Globals.LineDirection.brides_glen_to_stephens_green;
                 } else {
                     return Globals.LineDirection.sandyford_to_stephens_green;
@@ -575,16 +585,13 @@ public class Realtime extends Fragment {
 
     /**
      * Fetches the appropriate RTPI data given the parameters from RTPI.ie
+     *
      * @param lineDirection the direction in which the user is travelling
      */
     private void fetchRTPI(String depart, String arrive, Globals.LineDirection lineDirection) {
         //RTPI Luas station parsing & syncing
-        try {
-            sync.requestUpdate(lineDirection, depart, arrive);
-            ensureDataArrival();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        AsynchronousActivity asynchronousActivity = new AsynchronousActivity(depart, arrive, lineDirection);
+        asynchronousActivity.execute();
     }
 
     public void setCurrentCategory(TransportationCategories currentCategory) {
@@ -614,22 +621,18 @@ public class Realtime extends Fragment {
     /**
      * Causes the current thread to sleep for duration n if and only if the data has not been
      * fully loaded into the string
-     * @fixes issues associated with null toasts
      */
     private void ensureDataArrival() {
-        while (!sync.isLoaded()) {
-            try {
-                Thread.sleep(1);
-                if (sync.isLoaded()) {
-                    sync.setLoaded(true);
-                    leftPanel.setText(sync.getNextDue());
-                    rightPanel.setText(sync.getArrivalInfo());
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        sync.setLoaded(false);
+        leftPanel.setText(sync.getNextDue());
+        rightPanel.setText(sync.getArrivalInfo());
+    }
+
+    /**
+     * is called when the asynchronous task is started and before the retrieval of rtpi
+     */
+    private void warnLoading(){
+        leftPanel.setText("Loading...");
+        rightPanel.setText("Loading...");
     }
 
     class TransportationAdapter extends BaseAdapter {
@@ -832,6 +835,45 @@ public class Realtime extends Fragment {
 
         public void setType(String type) {
             this.type = type;
+        }
+    }
+
+    class AsynchronousActivity extends AsyncTask<String, Void, String> {
+
+        Globals.LineDirection lineDirection;
+        String depart, arrive;
+
+        public AsynchronousActivity(String depart, String arrive, Globals.LineDirection lineDirection){
+            this.lineDirection = lineDirection;
+            this.depart = depart;
+            this.arrive = arrive;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            warnLoading();
+            try {
+                sync.requestUpdate(lineDirection, depart, arrive);
+                while (!sync.isLoaded()) {
+                    try {
+                        Thread.sleep(1);
+                        if (sync.isLoaded()) {
+                            sync.setLoaded(true);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                sync.setLoaded(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            ensureDataArrival();
         }
     }
 }
