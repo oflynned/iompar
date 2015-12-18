@@ -31,6 +31,8 @@ public class Settings extends PreferenceActivity {
             @Override
             public void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
+                setTheme(R.style.AppTheme);
+
                 sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 preferenceScreen = getPreferenceManager().createPreferenceScreen(getActivity());
 
@@ -40,7 +42,7 @@ public class Settings extends PreferenceActivity {
                 moreCategory.setKey(getString(R.string.pref_key_contact));
 
                 PreferenceCategory appSettings = new PreferenceCategory(getActivity());
-                appSettings.setTitle("Payment Settings");
+                appSettings.setTitle("Personal");
                 appSettings.setKey(getString(R.string.pref_key_app_settings));
 
                 PreferenceCategory languageSettings = new PreferenceCategory(getActivity());

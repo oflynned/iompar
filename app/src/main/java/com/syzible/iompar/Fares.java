@@ -424,19 +424,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_PEAK));
@@ -451,19 +451,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
@@ -482,19 +482,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
@@ -505,19 +505,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_OFF_PEAK));
@@ -532,19 +532,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
@@ -567,19 +567,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
@@ -590,19 +590,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_PEAK));
@@ -617,19 +617,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
@@ -648,19 +648,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
@@ -671,19 +671,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_OFF_PEAK));
@@ -698,19 +698,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
@@ -733,19 +733,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD));
@@ -756,19 +756,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD_PEAK));
@@ -783,19 +783,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_CHILD));
@@ -814,19 +814,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD));
@@ -837,19 +837,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD_OFF_PEAK));
@@ -864,19 +864,19 @@ public class Fares extends Fragment {
 
                                         switch (getLuasFareCost()) {
                                             case ONE_ZONE:
-                                                cursor.moveToPosition(1);
+                                                cursor.moveToPosition(0);
                                                 break;
                                             case TWO_ZONES:
-                                                cursor.moveToPosition(2);
+                                                cursor.moveToPosition(1);
                                                 break;
                                             case THREE_ZONES:
-                                                cursor.moveToPosition(3);
+                                                cursor.moveToPosition(2);
                                                 break;
                                             case FOUR_ZONES:
-                                                cursor.moveToPosition(4);
+                                                cursor.moveToPosition(3);
                                                 break;
                                             case FIVE_EIGHT_ZONES:
-                                                cursor.moveToPosition(5);
+                                                cursor.moveToPosition(4);
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_CHILD));
@@ -897,7 +897,6 @@ public class Fares extends Fragment {
 
     /**
      * gets current time and checks whether or not it's peak time
-     *
      * @return a boolean for if it's peak or not
      */
     public boolean isPeak() {
