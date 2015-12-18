@@ -889,7 +889,7 @@ public class Realtime extends Fragment {
             infoPanel.invalidate();
             displayRTPI(sync.getNextDue(), sync.getArrivalInfo());
 
-            if(swipeRefreshLayout.isRefreshing()){g
+            if(swipeRefreshLayout.isRefreshing()){
                 swipeRefreshLayout.setRefreshing(false);
             }
         }
