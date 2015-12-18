@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
@@ -27,6 +29,9 @@ public class Realtime extends Fragment {
 
     RelativeLayout infoPanel;
     RelativeLayout.LayoutParams infoPanelParams;
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    AsynchronousActivity asynchronousActivity;
 
     TextView leftPanel, rightPanel;
 
@@ -210,6 +215,15 @@ public class Realtime extends Fragment {
 
         infoPanel = (RelativeLayout) view.findViewById(R.id.infopanel);
         infoPanelParams = (RelativeLayout.LayoutParams) infoPanel.getLayoutParams();
+
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchRTPI(getStartPosition(), getEndPosition(),
+                        getDirection(currentLuasLine, currentLuasDirection, getStartPositionComp(), getEndPositionComp()));
+            }
+        });
 
         infoPanelParams.height = 0;
         infoPanel.requestLayout();
@@ -590,8 +604,7 @@ public class Realtime extends Fragment {
      */
     private void fetchRTPI(String depart, String arrive, Globals.LineDirection lineDirection) {
         //RTPI Luas station parsing & syncing
-        AsynchronousActivity asynchronousActivity =
-                new AsynchronousActivity(depart, arrive, lineDirection);
+        asynchronousActivity = new AsynchronousActivity(depart, arrive, lineDirection);
         asynchronousActivity.execute();
     }
 
@@ -621,6 +634,7 @@ public class Realtime extends Fragment {
 
     /**
      * displays appropriate data polled asynchronously to the upper panel of the realtime fragment
+     * @error during thread switching outside of asynchronously
      */
     private void displayRTPI(String leftPanelText, String rightPanelText) {
         leftPanel.setText(leftPanelText);
@@ -839,21 +853,29 @@ public class Realtime extends Fragment {
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected  void onPreExecute() {
+            baseAdapter.notifyDataSetChanged();
+            infoPanel.invalidate();
             displayRTPI("Loading...", "Loading...");
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
             try {
                 sync.requestUpdate(lineDirection, depart, arrive);
+                sync.setLoaded(false);
                 while (!sync.isLoaded()) {
                     try {
-                        Thread.sleep(1);
-                        if (sync.isLoaded()) {
-                            sync.setLoaded(true);
+                        synchronized (this) {
+                            Thread.sleep(1);
+                            if (sync.isLoaded()) {
+                                sync.setLoaded(true);
+                            }
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                sync.setLoaded(false);
             } catch (Exception e) {
                 displayRTPI("Error in retrieving data!", "Please check your internet connection!");
                 e.printStackTrace();
@@ -863,7 +885,13 @@ public class Realtime extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
+            baseAdapter.notifyDataSetChanged();
+            infoPanel.invalidate();
             displayRTPI(sync.getNextDue(), sync.getArrivalInfo());
+
+            if(swipeRefreshLayout.isRefreshing()){g
+                swipeRefreshLayout.setRefreshing(false);
+            }
         }
     }
 }

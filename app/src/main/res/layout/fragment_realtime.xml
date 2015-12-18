@@ -1,58 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_below="@id/toolbar"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_below="@id/toolbar"
     android:layout_marginTop="?attr/actionBarSize">
 
-        <RelativeLayout
-            android:id="@+id/infopanel"
+    <RelativeLayout
+        android:id="@+id/infopanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+
+        <LinearLayout
+            android:id="@+id/firstLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/secondView"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/leftpanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/secondView"
+            android:layout_width="1dp"
+            android:layout_height="90dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:background="@color/colorPrimary" />
 
-            <LinearLayout
-                android:id="@+id/firstLayout"
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/thirdLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/secondView"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/rightpanel"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/secondView"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_gravity="center_horizontal"
+                android:gravity="center" />
+        </LinearLayout>
+    </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/leftpanel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center" />
-            </LinearLayout>
-
-            <View
-                android:id="@+id/secondView"
-                android:layout_width="1dp"
-                android:layout_height="90dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorPrimary" />
-
-            <LinearLayout
-                android:id="@+id/thirdLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/secondView"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/rightpanel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center" />
-            </LinearLayout>
-        </RelativeLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/infopanel">
 
         <GridView
             android:id="@+id/gridview"
@@ -66,4 +72,5 @@
             android:padding="10sp"
             android:stretchMode="columnWidth"
             android:verticalSpacing="10dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

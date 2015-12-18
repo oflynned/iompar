@@ -34,6 +34,7 @@ public class Sync {
     public String requestUpdate(Globals.LineDirection direction,
                                 String depart,
                                 String arrive) throws Exception {
+        setLoaded(false);
         threadConnect(direction, depart, arrive);
         return getDepartures();
     }
