@@ -1,5 +1,7 @@
 package com.syzible.iompar;
 
+import android.content.SharedPreferences;
+
 /**
  * Created by ed on 28/10/15.
  */
@@ -212,13 +214,11 @@ public class Globals {
 
     public enum LineDirection {
         the_point_to_tallaght,
-        the_point_to_saggart,
         the_point_to_belgard,
 
         tallaght_to_the_point,
         tallaght_to_belgard,
 
-        saggart_to_the_point,
         saggart_to_belgard,
 
         belgard_to_the_point,
@@ -234,9 +234,7 @@ public class Globals {
         stephens_green_to_brides_glen,
         stephens_green_to_sandyford,
 
-        sandyford_to_brides_glen,
         sandyford_to_stephens_green,
-        brides_glen_to_sandyford,
         brides_glen_to_stephens_green
     }
 

@@ -620,8 +620,7 @@ public class Realtime extends Fragment {
     }
 
     /**
-     * Causes the current thread to sleep for duration n if and only if the data has not been
-     * fully loaded into the string
+     * displays appropriate data polled asynchronously to the upper panel of the realtime fragment
      */
     private void displayRTPI(String leftPanelText, String rightPanelText) {
         leftPanel.setText(leftPanelText);
@@ -636,7 +635,6 @@ public class Realtime extends Fragment {
         /**
          * Default constructor for the transportation adapter which passes the current context
          * and instantiates an appropriate layout contextually
-         *
          * @param context the current application context
          */
         public TransportationAdapter(Context context) {
@@ -647,7 +645,6 @@ public class Realtime extends Fragment {
         /**
          * Counts the number of static elements within the enumeration's state array and adds it
          * to the count for the current state which the view returns
-         *
          * @return the count of items within the array to be displayed
          */
         @Override

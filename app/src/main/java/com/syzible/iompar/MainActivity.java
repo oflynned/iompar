@@ -39,9 +39,6 @@ public class MainActivity extends AppCompatActivity
     //fragment classes
     Realtime realtime = new Realtime();
     Fares fares = new Fares();
-    Globals globals = new Globals();
-    Remind remind = new Remind();
-    Around around = new Around();
     ManageLeapCards manageLeapCards = new ManageLeapCards();
     Expenditures expenditures = new Expenditures();
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
@@ -104,11 +101,11 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-
+            startActivity(new Intent(this, Settings.class));
         } else if(id == R.id.action_about){
             startActivity(new Intent(this, AboutUs.class));
         } else if(id == R.id.visit_us){
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.glassbyte.com")));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.glassbyte.com/")));
         }
 
         return super.onOptionsItemSelected(item);
@@ -330,7 +327,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getApplicationContext(), "Completed async task", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Fares synced", Toast.LENGTH_SHORT).show();
         }
     }
 }

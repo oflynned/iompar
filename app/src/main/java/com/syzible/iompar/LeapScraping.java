@@ -19,14 +19,6 @@ public class LeapScraping extends WebViewClient{
     }
 
     public void scrape(){
-        WebView webView = new WebView(context);
-        webView.getSettings().setLoadsImagesAutomatically(false);
-        webView.getSettings().setJavaScriptEnabled(true);
 
-        /*HashMap<String, String> map = new HashMap<>();
-        String token = loadTokenFromPreference(this);
-        String sessionCookie = "staging=" + token;
-        map.put("Cookie", sessionCookie);
-        webView.loadUrl(Globals.LEAP_LOGIN, map);*/
     }
 }
