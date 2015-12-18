@@ -11,6 +11,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
@@ -39,10 +40,14 @@ public class Settings extends PreferenceActivity {
                 moreCategory.setKey(getString(R.string.pref_key_contact));
 
                 PreferenceCategory appSettings = new PreferenceCategory(getActivity());
-                appSettings.setTitle("App Settings");
+                appSettings.setTitle("Payment Settings");
                 appSettings.setKey(getString(R.string.pref_key_app_settings));
 
-                //individual settings
+                PreferenceCategory languageSettings = new PreferenceCategory(getActivity());
+                languageSettings.setTitle("Language Options");
+                languageSettings.setKey(getString(R.string.pref_key_language));
+
+                //individual settings for more from glassbyte
                 Preference moreFromGlassByte = new Preference(getActivity());
                 Preference librariesUsed = new Preference(getActivity());
                 Preference apacheLicence = new Preference(getActivity());
@@ -62,7 +67,7 @@ public class Settings extends PreferenceActivity {
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(getActivity(), "lol you didn't read this", Toast.LENGTH_SHORT).show();
+
                                     }
                                 })
                                 .show();
@@ -81,7 +86,7 @@ public class Settings extends PreferenceActivity {
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-
+                                        Toast.makeText(getActivity(), "lol you didn't read this", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .show();
@@ -89,12 +94,33 @@ public class Settings extends PreferenceActivity {
                     }
                 });
 
+                //app settings for payment choice
+                SwitchPreference preferLeap = new SwitchPreference(getActivity());
+                preferLeap.setTitle("Prefer Leap");
+                preferLeap.setSummary("Select this if you pay with a Leap card frequently.");
+                preferLeap.setKey(getString(R.string.pref_key_prefer_leap));
+                preferLeap.setDefaultValue(false);
+
+                //language settings
+                SwitchPreference irishLanguage = new SwitchPreference(getActivity());
+                irishLanguage.setTitle("Irish Language");
+                irishLanguage.setSummary("Select this to use this app in Irish Gaelic.");
+                irishLanguage.setKey(getString(R.string.pref_key_irish));
+                irishLanguage.setDefaultValue(false);
+
+                //parent categories
                 preferenceScreen.addPreference(moreCategory);
                 preferenceScreen.addPreference(appSettings);
+                preferenceScreen.addPreference(languageSettings);
 
+                //child preferences
                 moreCategory.addPreference(moreFromGlassByte);
                 moreCategory.addPreference(librariesUsed);
                 moreCategory.addPreference(apacheLicence);
+
+                appSettings.addPreference(preferLeap);
+
+                languageSettings.addPreference(irishLanguage);
 
                 setPreferenceScreen(preferenceScreen);
             }
