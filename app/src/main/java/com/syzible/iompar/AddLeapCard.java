@@ -45,7 +45,7 @@ public class AddLeapCard extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add a Leap Card")
-                .setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (addLeapDialogListener != null) {
                             addLeapDialogListener.onDoneClick(AddLeapCard.this);

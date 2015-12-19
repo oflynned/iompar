@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="navigationBarColor">#388E3C</color>
     <color name="colorAccent">#FF9800</color>
+    <color name="fabRipple">#F57C00</color>
+    <color name="fabTint">#FFB74D</color>
 
     <!--> Google Palette Theme <-->
     <color name="lightblue300">#4FC3F7</color>

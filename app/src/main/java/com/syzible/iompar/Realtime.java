@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,6 +32,9 @@ public class Realtime extends Fragment {
     RelativeLayout infoPanel;
     RelativeLayout.LayoutParams infoPanelParams;
     SwipeRefreshLayout swipeRefreshLayout;
+    FloatingActionButton addExpenditureFab;
+
+    DatabaseHelper databaseHelper;
 
     AsynchronousActivity asynchronousActivity;
 
@@ -227,6 +232,23 @@ public class Realtime extends Fragment {
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+            }
+        });
+
+        databaseHelper = new DatabaseHelper(getContext());
+
+        addExpenditureFab = (FloatingActionButton) view.findViewById(R.id.add_expenditure_fab);
+        addExpenditureFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AddExpenditure addExpenditure = new AddExpenditure();
+                addExpenditure.show(Realtime.this.getFragmentManager(), "addExpenditure");
+                addExpenditure.setAddExpenditureDialogListener(new AddExpenditure.setAddExpenditureListener() {
+                    @Override
+                    public void onDoneClick(DialogFragment dialogFragment) {
+                        Toast.makeText(getContext(), "Expenditure added successfully", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
