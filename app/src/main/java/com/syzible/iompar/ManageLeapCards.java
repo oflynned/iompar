@@ -40,6 +40,8 @@ public class ManageLeapCards extends Fragment {
     FilterMenuLayout filterMenuLayout;
     DatabaseHelper databaseHelper;
 
+    MainActivity mainActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class ManageLeapCards extends Fragment {
         checkBoxes = new ArrayList<>();
 
         databaseHelper = new DatabaseHelper(getContext());
+        mainActivity = new MainActivity();
 
         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
         populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
@@ -230,6 +233,7 @@ public class ManageLeapCards extends Fragment {
             tableRow.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    //create a dialog here to modify leap details for given row
                     Toast.makeText(getContext(), "id: " + row, Toast.LENGTH_SHORT).show();
                     return true;
                 }

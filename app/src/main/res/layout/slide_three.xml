@@ -32,7 +32,7 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:paddingBottom="16dp"
-                android:text="Payment Preference"
+                android:text="@string/slide_three_title_one"
                 android:textSize="28sp" />
         </RelativeLayout>
 
@@ -50,7 +50,7 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:paddingEnd="64dp"
-                android:text="I pay using cash" />
+                android:text="@string/slide_three_pay_cash" />
 
             <Switch
                 android:id="@+id/switch_pref_cash"
@@ -74,7 +74,7 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:paddingEnd="64dp"
-                android:text="I pay using Leap" />
+                android:text="@string/slide_three_pay_leap" />
 
             <Switch
                 android:id="@+id/switch_pref_leap"
@@ -94,7 +94,7 @@
             android:gravity="center"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
-            android:text="Leap Information"
+            android:text="@string/slide_three_title_two"
             android:textSize="28sp" />
 
         <RelativeLayout
@@ -110,7 +110,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="Username"
+                android:hint="@string/username"
                 android:inputType="textPersonName"
                 android:maxLines="1" />
 
@@ -120,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/leap_username"
                 android:gravity="center"
-                android:hint="Leap Card Number"
+                android:hint="@string/leap_card_number"
                 android:paddingTop="12dp"
                 android:inputType="number"
                 android:maxLines="1" />
@@ -131,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/leap_number"
                 android:gravity="center"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:paddingTop="12dp" />
@@ -142,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/leap_email"
                 android:gravity="center"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:paddingTop="12dp" />
@@ -159,7 +159,7 @@
         android:gravity="center"
         android:paddingLeft="64dp"
         android:paddingRight="64dp"
-        android:text="Leap cards make transport quicker, easier, and cheaper.\n\nMake sure to register it online so you can access your balance here."
+        android:text="@string/slide_three_desc"
         android:textColor="#ffffff"
         android:textSize="16sp" />
 

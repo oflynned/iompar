@@ -24,25 +24,25 @@
     <string name="pref_key_irish" translatable="false">pref_key_irish</string>
 
     <!-- Miscellaneous -->
-    <string name="OK">OK</string>
-    <string name="username">Username</string>
-    <string name="leap_card_number">Leap Card Number</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
+    <string name="OK">Tá go maith</string>
+    <string name="username">Ainm an Úsáideora</string>
+    <string name="leap_card_number">Uimhir an Chárta Leap</string>
+    <string name="email">Ríomhphost</string>
+    <string name="password">Pasfhocal</string>
 
-    <!-- intro slides -->
-    <string name="slide_one_welcome">Welcome to iompar</string>
-    <string name="slide_one_description">The all-round transportation app for Ireland.</string>
-    <string name="slide_one_irish_option">Use app in Irish Gaelic</string>
-    <string name="slide_two_title">What\'s your name?</string>
-    <string name="slide_two_hint">Your name</string>
-    <string name="slide_two_description">This can be changed later under settings</string>
-    <string name="slide_three_title_one">Payment Preference</string>
-    <string name="slide_three_pay_cash">I pay using cash</string>
-    <string name="slide_three_pay_leap">I pay using Leap</string>
-    <string name="slide_three_title_two">Leap Information</string>
-    <string name="slide_three_desc">Leap cards make transport quicker, easier, and cheaper.\n\nMake sure to register it online so you can access your balance here.</string>
-    <string name="slide_four_title">What now?</string>
-    <string name="slide_four_desc">iompar helps you track your public transport and expenditures intelligently.\n\nMonitor your spending and never miss that journey again.</string>
+    <!-- slide one intro -->
+    <string name="slide_one_welcome">Fáilte chuig iompar</string>
+    <string name="slide_one_description">An aip il-chumasach as iompar in Éirinn.</string>
+    <string name="slide_one_irish_option">Úsáid an aip as Gaeilge</string>
+    <string name="slide_two_title">Cén t-ainm atá ort?</string>
+    <string name="slide_two_hint">D\'ainm anseo</string>
+    <string name="slide_two_description">Is féidir leat é seo a athrú sna socruithe ar ball</string>
+    <string name="slide_three_title_one">Do Rogha Íocaíochta</string>
+    <string name="slide_three_pay_cash">Úsáidim airgead tirim</string>
+    <string name="slide_three_pay_leap">Úsáidim cárta Leap&#160;&#160;&#160;</string>
+    <string name="slide_three_title_two">Eolas faoi Do Chárta Leap</string>
+    <string name="slide_three_desc">Déanann cartaí Leap iompar níos tapúla, níos éasca, agus níos saoire.\n\nBíodh cinnte é a chlárú ar líne ionas go mbeidh tú in ann d\'iarmhéid a rochtain anseo.</string>
+    <string name="slide_four_title">Céard anois?</string>
+    <string name="slide_four_desc">Cabhraíonn iompar leat d\'iompar poiblí agus chaiteachas a bhainistiú go cliste.\n\nFair amach ar do chaitheamh, agus ní chaillfear an t-aistear sin arís.</string>
 
 </resources>

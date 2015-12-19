@@ -2,6 +2,8 @@ package com.syzible.iompar;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -17,6 +19,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +39,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     Expenditures expenditures = new Expenditures();
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
-    TextView barName, barLeapCardNumber;
+    TextView barName, barLeapCardNumber, currentState;
     DrawerLayout drawer;
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
@@ -72,10 +77,12 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //fixes problems associated with bug in tools v23 not allowing text overriding
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
         barName = (TextView) headerView.findViewById(R.id.bar_name);
         barLeapCardNumber = (TextView) headerView.findViewById(R.id.bar_leapcard_number);
+        currentState = (TextView) headerView.findViewById(R.id.current_state);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity
 
         AsynchronousFareRetrieval asynchronousFareRetrieval = new AsynchronousFareRetrieval();
         asynchronousFareRetrieval.execute();
+
     }
 
     @Override
@@ -99,7 +107,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart(){
         super.onStart();
-        //retrieve data
+        setNavigationBarProfile();
+
+    }
+
+    public void setNavigationBarProfile(){
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -115,9 +127,16 @@ public class MainActivity extends AppCompatActivity
 
         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
 
+        barName.invalidate();
         barName.setText(sharedPreferences.getString(getString(R.string.pref_key_name), ""));
+        barLeapCardNumber.invalidate();
         barLeapCardNumber.setText(leapNumber);
 
+        //set appropriate state if leap is positive, if cash is being used or anything else
+        currentState.invalidate();
+        currentState.setText("This profile has a positive Leap balance");
+
+        sqLiteDatabase.close();
         cursor.close();
     }
 

@@ -1,6 +1,12 @@
 package com.syzible.iompar;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
+import android.view.View;
+
+import java.util.Locale;
 
 /**
  * Created by ed on 28/10/15.
@@ -74,6 +80,27 @@ public class Globals {
     public static final int RED_COW_TALLAGHT_ID = 21;
     public static final int BELGARD_TALLAGHT_ID = 23;
     public static final int TALLAGHT_ID = 26;
+
+    Locale locale;
+    String language;
+
+    //language support
+    public void setIrish(boolean isIrishChosen, Resources res){
+        if(isIrishChosen){
+            setLocale("ga", res);
+        } else {
+            setLocale(Locale.getDefault().getDisplayLanguage(), res);
+        }
+    }
+
+    public void setLocale(String language, Resources res){
+        this.language = language;
+        locale = new Locale(language);
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = locale;
+        res.updateConfiguration(conf, dm);
+    }
 
     public static String greenLineBeforeSandyford[] = {
             "St. Stephen's Green",

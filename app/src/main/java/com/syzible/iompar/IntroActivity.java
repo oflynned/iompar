@@ -12,6 +12,11 @@ import com.github.paolorotolo.appintro.AppIntro2;
  */
 public class IntroActivity extends AppIntro2 {
 
+    Slide_One slide_one;
+    Slide_Two slide_two;
+    Slide_Three slide_three;
+    Slide_Four slide_four;
+
     @Override
     public void init(Bundle bundle) {
         //set fullscreen effect
@@ -32,10 +37,10 @@ public class IntroActivity extends AppIntro2 {
         }
 
         //fragment objects
-        Slide_One slide_one = new Slide_One();
-        Slide_Two slide_two = new Slide_Two();
-        Slide_Three slide_three = new Slide_Three();
-        Slide_Four slide_four = new Slide_Four();
+        slide_one = new Slide_One();
+        slide_two = new Slide_Two();
+        slide_three = new Slide_Three();
+        slide_four = new Slide_Four();
 
         //add slides
         addSlide(slide_one);
