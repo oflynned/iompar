@@ -14,6 +14,7 @@ public class IntroActivity extends AppIntro2 {
 
     @Override
     public void init(Bundle bundle) {
+        //set fullscreen effect
         View decorView = getWindow().getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -30,12 +31,20 @@ public class IntroActivity extends AppIntro2 {
                     | View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
 
-        addSlide(Slides.newInstance(R.layout.slide_one));
-        addSlide(Slides.newInstance(R.layout.slide_two));
-        addSlide(Slides.newInstance(R.layout.slide_three));
-        addSlide(Slides.newInstance(R.layout.slide_four));
+        //fragment objects
+        Slide_One slide_one = new Slide_One();
+        Slide_Two slide_two = new Slide_Two();
+        Slide_Three slide_three = new Slide_Three();
+        Slide_Four slide_four = new Slide_Four();
 
-        setFadeAnimation();
+        //add slides
+        addSlide(slide_one);
+        addSlide(slide_two);
+        addSlide(slide_three);
+        addSlide(slide_four);
+
+        //transition animation
+        setFlowAnimation();
     }
 
     @Override

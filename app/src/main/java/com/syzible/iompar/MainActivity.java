@@ -1,12 +1,14 @@
 package com.syzible.iompar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -15,8 +17,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +54,8 @@ public class MainActivity extends AppCompatActivity
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +72,11 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        barName = (TextView) headerView.findViewById(R.id.bar_name);
+        barLeapCardNumber = (TextView) headerView.findViewById(R.id.bar_leapcard_number);
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -76,13 +88,37 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             Intent broadcastIntent = new Intent(ON_BACK_PRESSED_EVENT);
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
         }
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        //retrieve data
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        String leapNumber;
+
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            leapNumber = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER);
+        } else {
+            leapNumber = "Using cash";
+        }
+
+        databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
+
+        barName.setText(sharedPreferences.getString(getString(R.string.pref_key_name), ""));
+        barLeapCardNumber.setText(leapNumber);
+
+        cursor.close();
     }
 
     @Override

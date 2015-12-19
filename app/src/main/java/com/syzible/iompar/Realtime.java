@@ -220,8 +220,13 @@ public class Realtime extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchRTPI(getStartPosition(), getEndPosition(),
-                        getDirection(currentLuasLine, currentLuasDirection, getStartPositionComp(), getEndPositionComp()));
+                if(getStartPosition() != null && getEndPosition() != null){
+                    fetchRTPI(getStartPosition(), getEndPosition(),
+                            getDirection(currentLuasLine, currentLuasDirection,
+                                    getStartPositionComp(), getEndPositionComp()));
+                } else {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
 
@@ -599,7 +604,6 @@ public class Realtime extends Fragment {
 
     /**
      * Fetches the appropriate RTPI data given the parameters from RTPI.ie
-     *
      * @param lineDirection the direction in which the user is travelling
      */
     private void fetchRTPI(String depart, String arrive, Globals.LineDirection lineDirection) {
@@ -713,7 +717,7 @@ public class Realtime extends Fragment {
 
         /**
          * Returns the current stage advanced or returned as a set of arguments within enumeration states
-         * @return view    returns the current contextual view
+         * @return view returns the current contextual view
          */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -853,10 +857,10 @@ public class Realtime extends Fragment {
         }
 
         @Override
-        protected  void onPreExecute() {
+        protected void onPreExecute() {
             baseAdapter.notifyDataSetChanged();
             infoPanel.invalidate();
-            displayRTPI("Loading...", "Loading...");
+            displayRTPI("Loading stations...", "Loading times...");
         }
 
         @Override

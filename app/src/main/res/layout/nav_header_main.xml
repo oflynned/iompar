@@ -28,4 +28,9 @@
         android:text="12345 12345 1234"
         android:id="@+id/bar_leapcard_number" />
 
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current state"
+        android:id="@+id/current_state" />
+
 </LinearLayout>

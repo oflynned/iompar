@@ -16,7 +16,7 @@
         android:gravity="center"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="Welcome to iompar!"
+        android:text="Welcome to iompar"
         android:textColor="#ffffff"
         android:textSize="28sp" />
 
