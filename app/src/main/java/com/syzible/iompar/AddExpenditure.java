@@ -89,9 +89,9 @@ public class AddExpenditure extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!leapSwitch.isChecked()) {
-                    Toast.makeText(getContext(), "!checked", Toast.LENGTH_SHORT).show();
+                    cashSwitch.setChecked(true);
                 } else {
-                    Toast.makeText(getContext(), "checked", Toast.LENGTH_SHORT).show();
+                    cashSwitch.setChecked(false);
                 }
             }
         });
@@ -119,9 +119,9 @@ public class AddExpenditure extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!cashSwitch.isChecked()) {
-                    Toast.makeText(getContext(), "!checked", Toast.LENGTH_SHORT).show();
+                    leapSwitch.setChecked(true);
                 } else {
-                    Toast.makeText(getContext(), "checked", Toast.LENGTH_SHORT).show();
+                    leapSwitch.setChecked(false);
                 }
             }
         });

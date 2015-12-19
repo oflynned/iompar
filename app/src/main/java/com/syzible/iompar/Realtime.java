@@ -238,6 +238,7 @@ public class Realtime extends Fragment {
         databaseHelper = new DatabaseHelper(getContext());
 
         addExpenditureFab = (FloatingActionButton) view.findViewById(R.id.add_expenditure_fab);
+        addExpenditureFab.hide();
         addExpenditureFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -373,6 +374,7 @@ public class Realtime extends Fragment {
     }
 
     private void handleChoices(Categories[] currentChoice, int position) {
+        addExpenditureFab.hide();
         //check loop
         if (gridView.isItemChecked(position)) {
             if (!isStart() && !isEnd()) {
@@ -456,6 +458,7 @@ public class Realtime extends Fragment {
                 if (position != getStartPositionComp()
                         && position != getEndPositionComp()) {
                     gridView.setItemChecked(position, false);
+                    addExpenditureFab.hide();
                     System.out.println("trying to check item not already checked");
                 } else {
                     System.out.println("start true, end true!");
@@ -466,11 +469,15 @@ public class Realtime extends Fragment {
 
                     fetchRTPI(getStartPosition(), getEndPosition(),
                             getDirection(currentLuasLine, currentLuasDirection, getStartPositionComp(), getEndPositionComp()));
+                    //animate in fab only now
+                    addExpenditureFab.show();
+
                     infoPanelParams.height = getDp(90);
                     infoPanel.invalidate();
                     infoPanel.requestLayout();
                 }
             } else {
+                addExpenditureFab.hide();
                 if (position == getEndPositionComp()) {
                     setEnd(false);
                     System.out.println("start true, end true, unselected end so end is false!");
