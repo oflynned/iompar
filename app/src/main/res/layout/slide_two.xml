@@ -31,6 +31,10 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:inputType="textPersonName"
+            android:hint="Your name"
             android:layout_gravity="center"/>
     </LinearLayout>
     <TextView
