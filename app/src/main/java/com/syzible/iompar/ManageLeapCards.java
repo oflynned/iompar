@@ -57,7 +57,6 @@ public class ManageLeapCards extends Fragment {
         filterMenu = new FilterMenu.Builder(getActivity())
                 .addItem(R.drawable.ic_add_white_18dp)
                 .addItem(R.drawable.ic_clear_white_18dp)
-                .addItem(R.drawable.ic_content_paste_white_18dp)
                 .addItem(R.drawable.ic_input_white_18dp)
                 .attach(filterMenuLayout)
                 .withListener(new FilterMenu.OnMenuChangeListener() {
@@ -104,24 +103,13 @@ public class ManageLeapCards extends Fragment {
                                 break;
                             //breakdown of costs
                             case 2:
-                                new AlertDialog.Builder(getContext())
-                                        .setTitle("Active Leap Card History")
-                                        .setMessage("Expenditures here")
-                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-
-                                            }
-                                        })
-                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-
-                                            }
-                                        })
-                                        .show();
-                                break;
-                            case 3:
-                                LeapScraping leapScraping = new LeapScraping(getContext());
-                                leapScraping.scrape();
+                                DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+                                databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
+                                databaseHelper.insertRecord(
+                                        Database.LeapLogin.TABLE_NAME,
+                                        null, null, null, null, null, null, 0, null, null, 0, 0, 0, false,
+                                        Globals.USER_LEAP_NUMBER, Globals.USER_NAME, Globals.USER_EMAIL, Globals.USER_PASS, true);
+                                populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                             }
                         }
 

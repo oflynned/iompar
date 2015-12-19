@@ -7,4 +7,6 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/visit_us" android:title="Visit Our Website!"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/intro" android:title="Intro Activity"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

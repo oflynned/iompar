@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, AboutUs.class));
         } else if(id == R.id.visit_us){
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.glassbyte.com/")));
+        } else if(id == R.id.intro){
+            startActivity(new Intent(this, IntroActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
