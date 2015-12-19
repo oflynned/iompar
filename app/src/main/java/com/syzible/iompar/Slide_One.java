@@ -26,9 +26,17 @@ public class Slide_One extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.slide_one, container, false);
+        Switch irishSwitch = (Switch) view.findViewById(R.id.switch_pref_irish);
 
         globals = new Globals();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean isIrish = sharedPreferences.getBoolean(getResources()
+                .getString(R.string.pref_key_irish), false);
+        if(isIrish){
+            irishSwitch.setChecked(true);
+        } else {
+            irishSwitch.setChecked(false);
+        }
 
         title = (TextView) view.findViewById(R.id.slide_one_title);
         description = (TextView) view.findViewById(R.id.slide_one_desc);
@@ -40,7 +48,6 @@ public class Slide_One extends Fragment {
         description.invalidate();
         languageOption.invalidate();
 
-        Switch irishSwitch = (Switch) view.findViewById(R.id.switch_pref_irish);
         irishSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -52,11 +59,11 @@ public class Slide_One extends Fragment {
                         .getString(R.string.pref_key_irish), false), getResources());
 
                 title.invalidate();
-                title.getText();
+                title.setText(getString(R.string.slide_one_welcome));
                 description.invalidate();
-                description.getText();
+                description.setText(getString(R.string.slide_one_description));
                 languageOption.invalidate();
-                languageOption.getText();
+                languageOption.setText(getString(R.string.slide_one_irish_option));
             }
         });
 

@@ -59,7 +59,13 @@ public class IntroActivity extends AppIntro2 {
 
     @Override
     public void onNextPressed() {
+        slide_two.title.setText(getString(R.string.slide_two_title));
+        slide_two.desc.setText(getString(R.string.slide_two_description));
+        slide_two.nameField.setHint(getString(R.string.slide_two_hint));
 
+        slide_two.title.invalidate();
+        slide_two.desc.invalidate();
+        slide_two.nameField.invalidate();
     }
 
     @Override
