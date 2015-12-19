@@ -1,11 +1,15 @@
 package com.syzible.iompar;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
@@ -89,12 +93,12 @@ public class Settings extends PreferenceActivity {
                                 .setMessage(getResources().getString(R.string.apache_body))
                                 .setPositiveButton(getResources().getString(R.string.OK),
                                         new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(getActivity(), "lol you didn't read this",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                })
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(getActivity(), "lol you didn't read this",
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
                                 .show();
                         return true;
                     }
@@ -122,14 +126,22 @@ public class Settings extends PreferenceActivity {
                     }
                 });
 
-                SwitchPreference preferLeap = new SwitchPreference(getActivity());
-                preferLeap.setTitle("Prefer Leap Payment");
-                preferLeap.setSummary("Select this if you pay with a Leap card frequently when you have a positive balance.");
-                preferLeap.setKey(getString(R.string.pref_key_prefer_leap));
-                preferLeap.setDefaultValue(false);
+                Preference farePreference = new ListPreference(getActivity());
+                farePreference.setTitle("Modify Fare Type");
+                farePreference.setSummary(sharedPreferences.getString(getString(R.string.pref_key_fare), ""));
+                farePreference.setKey(getString(R.string.pref_key_fare));
+                ((ListPreference) farePreference).setEntries(R.array.fare_types);
+                ((ListPreference) farePreference).setEntryValues(R.array.fare_types);
+                farePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        preference.setSummary(String.valueOf(newValue));
+                        return true;
+                    }
+                });
 
                 //language settings
-                SwitchPreference irishLanguage = new SwitchPreference(getActivity());
+                final SwitchPreference irishLanguage = new SwitchPreference(getActivity());
                 irishLanguage.setTitle("Irish Language");
                 irishLanguage.setSummary("Choose this option to use this app with an Irish Gaelic interface.");
                 irishLanguage.setKey(getString(R.string.pref_key_irish));
@@ -146,7 +158,7 @@ public class Settings extends PreferenceActivity {
                 moreCategory.addPreference(apacheLicence);
 
                 appSettings.addPreference(namePreference);
-                appSettings.addPreference(preferLeap);
+                appSettings.addPreference(farePreference);
 
                 languageSettings.addPreference(irishLanguage);
 

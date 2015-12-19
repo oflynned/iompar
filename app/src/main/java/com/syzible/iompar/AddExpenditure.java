@@ -2,6 +2,8 @@ package com.syzible.iompar;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -26,8 +28,13 @@ import android.widget.Toast;
 public class AddExpenditure extends DialogFragment {
 
     private TextView leapText, cashText, currentBalanceText, currentBalance, costText, cost;
+    private boolean hasLeapActive;
     private Switch leapSwitch, cashSwitch;
     private setAddExpenditureListener addExpenditureDialogListener = null;
+
+    private int rowHeight;
+
+    DatabaseHelper databaseHelper;
 
     //listener that the corresponding button implements
     public interface setAddExpenditureListener {
@@ -47,6 +54,19 @@ public class AddExpenditure extends DialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        //move to active row
+        databaseHelper = new DatabaseHelper(getContext());
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        if(cursor.getCount() > 0) {
+            setLeapActive(true);
+        } else {
+            setLeapActive(false);
+        }
+        cursor.close();
+        sqLiteDatabase.close();
+
         builder.setTitle("Add Expenditure")
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -179,6 +199,14 @@ public class AddExpenditure extends DialogFragment {
 
         builder.setView(propertiesEntry);
 
+        if(isLeapActive()){
+            leapSwitch.setChecked(true);
+            cashSwitch.setChecked(false);
+        } else {
+            leapSwitch.setChecked(false);
+            cashSwitch.setChecked(true);
+        }
+
         return builder.create();
     }
 
@@ -186,4 +214,7 @@ public class AddExpenditure extends DialogFragment {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 pixels, getContext().getResources().getDisplayMetrics());
     }
+
+    public void setLeapActive(boolean hasLeapActive){this.hasLeapActive = hasLeapActive;}
+    public boolean isLeapActive(){return hasLeapActive;}
 }

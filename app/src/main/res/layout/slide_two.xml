@@ -25,7 +25,7 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_weight="5"
+        android:layout_weight="1"
         android:paddingLeft="64dp"
         android:paddingRight="64dp">
 
@@ -39,6 +39,38 @@
             android:hint="@string/slide_two_hint"
             android:layout_gravity="center"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/slide_two_title_fare"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingLeft="32dp"
+        android:layout_weight="3"
+        android:fontFamily="sans-serif-thin"
+        android:textColor="#ffffff"
+        android:paddingRight="32dp"
+        android:textSize="28sp"
+        android:text="What's Your Fare Type?"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:paddingLeft="64dp"
+        android:paddingRight="64dp">
+
+        <Spinner
+            android:id="@+id/fare_selection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+        </Spinner>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/slide_two_desc"
         android:layout_width="wrap_content"

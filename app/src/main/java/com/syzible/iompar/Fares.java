@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -68,7 +69,6 @@ public class Fares extends Fragment {
 
     /**
      * takes the parameters of type of fare for the user, and returns the appropriate costs
-     *
      * @param line        the Luas line being traversed
      * @param origin      departing station
      * @param destination destination station
@@ -78,7 +78,18 @@ public class Fares extends Fragment {
         //payment type
         setFareType(FareType.ADULT);
         setFareJourney(FareJourney.SINGLE);
-        setFarePayment(FarePayment.CASH);
+
+        //retrieve if set payment method is cash or leap
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        if(cursor.getCount()>0){
+            setFarePayment(FarePayment.LEAP);
+        } else {
+            setFarePayment(FarePayment.CASH);
+        }
+        sqLiteDatabase.close();
+        cursor.close();
 
         //peak?
         if (isPeak()) {

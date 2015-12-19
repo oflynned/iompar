@@ -94,6 +94,7 @@ public class Realtime extends Fragment {
     Categories[] beStations;
 
     Sync sync;
+    Fares fares;
 
     /**
      * Overrides the onBackPress() and returns to previous stage without closing fragment
@@ -138,6 +139,7 @@ public class Realtime extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         sync = new Sync(this.getActivity().getApplicationContext());
+        fares = new Fares();
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(this.getContext())
                 .registerReceiver(onBackPressedBroadcastReceiver,
@@ -225,7 +227,7 @@ public class Realtime extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(getStartPosition() != null && getEndPosition() != null){
+                if(!getStartPosition().equals("") && !getEndPosition().equals("")){
                     fetchRTPI(getStartPosition(), getEndPosition(),
                             getDirection(currentLuasLine, currentLuasDirection,
                                     getStartPositionComp(), getEndPositionComp()));
@@ -247,6 +249,7 @@ public class Realtime extends Fragment {
                 addExpenditure.setAddExpenditureDialogListener(new AddExpenditure.setAddExpenditureListener() {
                     @Override
                     public void onDoneClick(DialogFragment dialogFragment) {
+                        //add expenditure to appropriate database
                         Toast.makeText(getContext(), "Expenditure added successfully", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -921,6 +924,7 @@ public class Realtime extends Fragment {
             baseAdapter.notifyDataSetChanged();
             infoPanel.invalidate();
             displayRTPI(sync.getNextDue(), sync.getArrivalInfo());
+            Toast.makeText(getContext(), "You are using " + fares.getFarePayment() + " payment type", Toast.LENGTH_SHORT).show();
 
             if(swipeRefreshLayout.isRefreshing()){
                 swipeRefreshLayout.setRefreshing(false);
