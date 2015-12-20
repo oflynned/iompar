@@ -2,9 +2,11 @@ package com.syzible.iompar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,9 +77,22 @@ public class Fares extends Fragment {
      * @return the cost of given transit route in Euro
      */
     public String getZoneTraversal(Realtime.LuasDirections line, String origin, String destination, Context context) {
-        //payment type
-        setFareType(FareType.ADULT);
+        //always single for individual journeys chosen INSIDE realtime frag
         setFareJourney(FareJourney.SINGLE);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String fareType = sharedPreferences.getString(context.getResources().getString(R.string.pref_key_fare), "");
+
+        //retrieve fare type from intro/settings class under key pref
+        if(fareType.equals(context.getResources().getString(R.string.adult))){
+            setFareType(FareType.ADULT);
+        } else if(fareType.equals(context.getResources().getString(R.string.student))){
+            setFareType(FareType.STUDENT);
+        } else if(fareType.equals(context.getResources().getString(R.string.child))){
+            setFareType(FareType.CHILD);
+        } else if(fareType.equals(context.getResources().getString(R.string.elderly))){
+            setFareType(FareType.OTHER);
+        }
 
         //retrieve if set payment method is cash or leap
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
@@ -90,6 +105,8 @@ public class Fares extends Fragment {
         }
         sqLiteDatabase.close();
         cursor.close();
+
+        System.out.println("Using payment method: " + getFarePayment());
 
         //peak?
         if (isPeak()) {
@@ -919,17 +936,13 @@ public class Fares extends Fragment {
         date.setTimeZone(TimeZone.getDefault());
 
         String localTime = date.format(currentLocalTime);
-        System.out.println(localTime);
-
         int day = cal.get(Calendar.DAY_OF_WEEK);
         //xx:00
         String hour = localTime.substring(0, Math.min(localTime.length(), 2));
         //00:xx
         String minutes = localTime.substring(3, Math.min(localTime.length(), 5));
         int currentHour = Integer.parseInt(hour);
-        System.out.println(currentHour);
         int currentMinutes = Integer.parseInt(minutes);
-        System.out.println(currentMinutes);
 
         //monday through friday
         //7.45am to 9.30am peak

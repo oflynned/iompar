@@ -27,6 +27,9 @@ public class Sync {
     Globals globals = new Globals();
     Fares fares = new Fares();
 
+    Fares.FareType fareClass;
+    Fares.FarePayment farePayment;
+
     public Sync(Context context){
         this.context = context;
     }
@@ -46,7 +49,8 @@ public class Sync {
      * @param depart    departure station in string format where the user is leaving from
      * @param arrive    name of station at which the user is arriving
      */
-    public void threadConnect(final Globals.LineDirection direction, final String depart, final String arrive) {
+    public void threadConnect(final Globals.LineDirection direction, final String depart,
+                              final String arrive) {
         Thread downloadThread = new Thread() {
             public void run() {
                 setLoaded(false);
@@ -172,6 +176,8 @@ public class Sync {
                         "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                                 "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
+                setFareClass(fares.getFareType());
+                setFarePayment(fares.getFarePayment());
             }
         }
     }
@@ -221,6 +227,8 @@ public class Sync {
                         "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                                 "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
+                setFareClass(fares.getFareType());
+                setFarePayment(fares.getFarePayment());
             }
         }
     }
@@ -276,6 +284,8 @@ public class Sync {
                         "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                                 "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
+                setFareClass(fares.getFareType());
+                setFarePayment(fares.getFarePayment());
             }
         }
     }
@@ -359,4 +369,9 @@ public class Sync {
     public String getChosenEndStation() {
         return chosenEndStation;
     }
+
+    public void setFareClass(Fares.FareType fareType){this.fareClass = fareType;}
+    public Fares.FareType getFareClass(){return fareClass;}
+    public void setFarePayment(Fares.FarePayment farePayment){this.farePayment = farePayment;}
+    public Fares.FarePayment getFarePayment(){return farePayment;}
 }
