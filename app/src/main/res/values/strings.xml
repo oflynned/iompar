@@ -16,13 +16,13 @@
     <string name="adult">Adult</string>
     <string name="student">Student</string>
     <string name="child">Child</string>
-    <string name="elderly">Elderly</string>
+    <string name="other">Other</string>
 
     <string-array name="fare_types">
         <item>@string/adult</item>
         <item>@string/student</item>
         <item>@string/child</item>
-        <item>@string/elderly</item>
+        <item>@string/other</item>
     </string-array>
 
     <!-- untranslatable pref keys -->

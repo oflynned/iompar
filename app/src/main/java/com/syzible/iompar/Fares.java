@@ -90,7 +90,7 @@ public class Fares extends Fragment {
             setFareType(FareType.STUDENT);
         } else if(fareType.equals(context.getResources().getString(R.string.child))){
             setFareType(FareType.CHILD);
-        } else if(fareType.equals(context.getResources().getString(R.string.elderly))){
+        } else if(fareType.equals(context.getResources().getString(R.string.other))){
             setFareType(FareType.OTHER);
         }
 
@@ -916,11 +916,14 @@ public class Fares extends Fragment {
                 }
                 break;
             case OTHER:
+                //assuming elderly & disabled get free transport?
+                setFare(String.valueOf(0));
                 break;
         }
 
         sqLiteDatabase.close();
-        cursor.close();
+        if(cursor!=null)
+            cursor.close();
     }
 
     /**
