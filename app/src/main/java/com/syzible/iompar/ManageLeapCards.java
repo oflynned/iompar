@@ -75,7 +75,7 @@ public class ManageLeapCards extends Fragment {
                                     public void onDoneClick(DialogFragment dialogFragment) {
                                         databaseHelper.insertRecord(
                                                 Database.LeapLogin.TABLE_NAME,
-                                                null, null, null, null, null, null, 0, null, null, 0, 0, 0, false,
+                                                null, null, null, null, null, null, 0, null, 0, 0, 0, false,
                                                 addLeapCard.getNumberField(), addLeapCard.getUsernameField(),
                                                 addLeapCard.getEmailField(), addLeapCard.getPasswordField(), false);
                                         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
@@ -110,7 +110,7 @@ public class ManageLeapCards extends Fragment {
                                 databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
                                 databaseHelper.insertRecord(
                                         Database.LeapLogin.TABLE_NAME,
-                                        null, null, null, null, null, null, 0, null, null, 0, 0, 0, false,
+                                        null, null, null, null, null, null, 0, null, 0, 0, 0, false,
                                         Globals.USER_LEAP_NUMBER, Globals.USER_NAME, Globals.USER_EMAIL, Globals.USER_PASS, true);
                                 populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                             }

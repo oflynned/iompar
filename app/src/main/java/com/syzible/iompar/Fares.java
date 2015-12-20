@@ -48,7 +48,7 @@ public class Fares extends Fragment {
     DatabaseHelper databaseHelper;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
@@ -71,42 +71,49 @@ public class Fares extends Fragment {
 
     /**
      * takes the parameters of type of fare for the user, and returns the appropriate costs
+     *
      * @param line        the Luas line being traversed
      * @param origin      departing station
      * @param destination destination station
      * @return the cost of given transit route in Euro
      */
-    public String getZoneTraversal(Realtime.LuasDirections line, String origin, String destination, Context context) {
+    public String getZoneTraversal(Realtime.LuasDirections line, String origin, String destination,
+                                   Context context, String paymentType) {
         //always single for individual journeys chosen INSIDE realtime frag
         setFareJourney(FareJourney.SINGLE);
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String fareType = sharedPreferences.getString(context.getResources().getString(R.string.pref_key_fare), "");
 
         //retrieve fare type from intro/settings class under key pref
-        if(fareType.equals(context.getResources().getString(R.string.adult))){
+        if (fareType.equals(context.getResources().getString(R.string.adult))) {
             setFareType(FareType.ADULT);
-        } else if(fareType.equals(context.getResources().getString(R.string.student))){
+        } else if (fareType.equals(context.getResources().getString(R.string.student))) {
             setFareType(FareType.STUDENT);
-        } else if(fareType.equals(context.getResources().getString(R.string.child))){
+        } else if (fareType.equals(context.getResources().getString(R.string.child))) {
             setFareType(FareType.CHILD);
-        } else if(fareType.equals(context.getResources().getString(R.string.other))){
+        } else if (fareType.equals(context.getResources().getString(R.string.other))) {
             setFareType(FareType.OTHER);
         } else {
             setFareType(FareType.ADULT);
         }
 
-        //retrieve if set payment method is cash or leap
-        DatabaseHelper databaseHelper = new DatabaseHelper(context);
-        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-        if(cursor.getCount()>0){
+        if (paymentType.equals("cash")) {
+            setFarePayment(FarePayment.CASH);
+        } else if (paymentType.equals("leap")) {
             setFarePayment(FarePayment.LEAP);
         } else {
-            setFarePayment(FarePayment.CASH);
+            //retrieve if set payment method is cash or leap
+            DatabaseHelper databaseHelper = new DatabaseHelper(context);
+            SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+            Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+            if (cursor.getCount() > 0) {
+                setFarePayment(FarePayment.LEAP);
+            } else {
+                setFarePayment(FarePayment.CASH);
+            }
+            sqLiteDatabase.close();
+            cursor.close();
         }
-        sqLiteDatabase.close();
-        cursor.close();
 
         System.out.println("Using payment method: " + getFarePayment());
 
@@ -942,12 +949,13 @@ public class Fares extends Fragment {
         }
 
         sqLiteDatabase.close();
-        if(cursor!=null)
+        if (cursor != null)
             cursor.close();
     }
 
     /**
      * gets current time and checks whether or not it's peak time
+     *
      * @return a boolean for if it's peak or not
      */
     public boolean isPeak() {

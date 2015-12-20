@@ -242,7 +242,8 @@ public class Realtime extends Fragment {
         addExpenditureFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AddExpenditure addExpenditure = new AddExpenditure(sync.getJourneyCost());
+                final AddExpenditure addExpenditure = new AddExpenditure(sync.getDepart(),
+                        sync.getArrive(), sync.getEnumDirection());
                 addExpenditure.show(Realtime.this.getFragmentManager(), "addExpenditure");
                 addExpenditure.setAddExpenditureDialogListener(new AddExpenditure.setAddExpenditureListener() {
                     @Override

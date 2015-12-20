@@ -362,7 +362,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                              String stopNumber, String station, String line,
                              String route, String direction,
                              String destination, int frequency, String balance,
-                             String date, double topUp, double expenditure,
+                             double topUp, double expenditure,
                              double balanceChange, boolean negative,
                              String userName, String cardNumber, String userEmail,
                              String userPassword, boolean isActive){
