@@ -19,7 +19,7 @@ public class Sync {
 
     Context context;
     boolean loaded;
-    String title, nextDue, arrivalInfo, chosenEndStation;
+    String title, nextDue, arrivalInfo, chosenEndStation, journeyCost;
 
     ArrayList<String> endDestinationList = new ArrayList<>();
     ArrayList<String> waitingTimeList = new ArrayList<>();
@@ -176,6 +176,7 @@ public class Sync {
                         "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                                 "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
+                setJourneyCost(fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
                 setFareClass(fares.getFareType());
                 setFarePayment(fares.getFarePayment());
             }
@@ -227,6 +228,7 @@ public class Sync {
                         "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                                 "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
+                setJourneyCost(fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
                 setFareClass(fares.getFareType());
                 setFarePayment(fares.getFarePayment());
             }
@@ -284,6 +286,7 @@ public class Sync {
                         "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
                                 "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                                 "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
+                setJourneyCost(fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context));
                 setFareClass(fares.getFareType());
                 setFarePayment(fares.getFarePayment());
             }
@@ -374,4 +377,6 @@ public class Sync {
     public Fares.FareType getFareClass(){return fareClass;}
     public void setFarePayment(Fares.FarePayment farePayment){this.farePayment = farePayment;}
     public Fares.FarePayment getFarePayment(){return farePayment;}
+    public void setJourneyCost(String journeyCost){this.journeyCost=journeyCost;}
+    public String getJourneyCost(){return journeyCost;}
 }

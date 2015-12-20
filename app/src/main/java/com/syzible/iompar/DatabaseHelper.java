@@ -47,12 +47,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int COL_LEAP_BALANCE_ID = 0;
     public static final int COL_LEAP_BALANCE_CARD_NUMBER = 1;
     public static final int COL_LEAP_BALANCE_TIME_ADDED = 2;
-    public static final int COL_LEAP_BALANCE_DATE = 3;
-    public static final int COL_LEAP_BALANCE_TOP_UPS = 4;
-    public static final int COL_LEAP_BALANCE_EXPENDITURE = 5;
-    public static final int COL_LEAP_BALANCE_BALANCE_CHANGE = 6;
-    public static final int COL_LEAP_BALANCE_BALANCE = 7;
-    public static final int COL_LEAP_BALANCE_IS_NEGATIVE = 8;
+    public static final int COL_LEAP_BALANCE_TOP_UPS = 3;
+    public static final int COL_LEAP_BALANCE_EXPENDITURE = 4;
+    public static final int COL_LEAP_BALANCE_BALANCE_CHANGE = 5;
+    public static final int COL_LEAP_BALANCE_BALANCE = 6;
+    public static final int COL_LEAP_BALANCE_IS_NEGATIVE = 7;
+
+    public static final int COL_EXPENDITURES_ID = 0;
+    public static final int COL_EXPENDITURES_IS_LEAP = 1;
+    public static final int COL_EXPENDITURES_CARD_NUMBER = 2;
+    public static final int COL_EXPENDITURES_TIME_ADDED = 3;
+    public static final int COL_EXPENDITURES_EXPENDITURE = 4;
 
     public static final int COL_LEAP_LOGIN_ID = 0;
     public static final int COL_LEAP_LOGIN_USER_NAME = 1;
@@ -85,6 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Database.DublinBusFavourites.TABLE_NAME,
             Database.LuasFavourites.TABLE_NAME,
             Database.LeapBalance.TABLE_NAME,
+            Database.Expenditures.TABLE_NAME,
             Database.LeapLogin.TABLE_NAME,
             Database.LuasSingleFares.TABLE_NAME,
             Database.LuasReturnFares.TABLE_NAME,
@@ -142,12 +148,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.LeapBalance.ID + " INTEGER PRIMARY KEY," +
                     Database.LeapBalance.CARD_NUMBER + " INTEGER," +
                     Database.LeapBalance.TIME_ADDED + " INTEGER," +
-                    Database.LeapBalance.DATE + " TEXT," +
                     Database.LeapBalance.TOP_UPS + " REAL," +
                     Database.LeapBalance.EXPENDITURE + "REAL," +
                     Database.LeapBalance.BALANCE_CHANGE + " REAL," +
                     Database.LeapBalance.BALANCE + " REAL," +
                     Database.LeapBalance.IS_NEGATIVE + " BOOLEAN);";
+
+    public static final String CREATE_TABLE_EXPENDITURES =
+            "CREATE TABLE " +
+                    Database.Expenditures.TABLE_NAME + "(" +
+                    Database.Expenditures.ID + " INTEGER PRIMARY KEY," +
+                    Database.Expenditures.IS_LEAP + " BOOLEAN," +
+                    Database.Expenditures.CARD_NUMBER + " INTEGER," +
+                    Database.Expenditures.TIME_ADDED + " INTEGER," +
+                    Database.Expenditures.EXPENDITURE + "REAL);";
 
     public static final String CREATE_TABLE_LEAP_LOGIN =
             "CREATE TABLE " +
@@ -213,6 +227,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DELETE_TABLE_LEAP_BALANCE =
             "DROP TABLE IF EXISTS " + Database.LeapBalance.TABLE_NAME + ";";
 
+    public static final String DELETE_TABLE_EXPENDITURES =
+            "DROP TABLE IF EXISTS " + Database.Expenditures.TABLE_NAME + ";";
+
     public static final String DELETE_TABLE_LEAP_LOGIN =
             "DROP TABLE IF EXISTS " + Database.LeapLogin.TABLE_NAME + ";";
 
@@ -243,6 +260,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SELECT_ALL_LEAP_BALANCE =
             "SELECT * FROM " + Database.LeapBalance.TABLE_NAME + ";";
 
+    public static final String SELECT_ALL_EXPENDITURES =
+            "SELECT * FROM " + Database.Expenditures.TABLE_NAME + ";";
+
     public static final String SELECT_ALL_LEAP_LOGIN =
             "SELECT * FROM " + Database.LeapLogin.TABLE_NAME + ";";
 
@@ -269,6 +289,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_LUAS_FAVOURITES);
         db.execSQL(CREATE_TABLE_TRAIN_FAVOURITES);
         db.execSQL(CREATE_TABLE_LEAP_BALANCE);
+        db.execSQL(CREATE_TABLE_EXPENDITURES);
         db.execSQL(CREATE_TABLE_LEAP_LOGIN);
         db.execSQL(CREATE_TABLE_LUAS_SINGLE_FARES);
         db.execSQL(CREATE_TABLE_LUAS_RETURN_FARES);
@@ -325,6 +346,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
+    public void insertExpenditure(boolean isLeap, String cardNumber, String expenditure){
+        SQLiteDatabase writeDb = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        Long time = System.currentTimeMillis();
+        contentValues.put(Database.Expenditures.IS_LEAP, isLeap);
+        contentValues.put(Database.Expenditures.CARD_NUMBER, cardNumber);
+        contentValues.put(Database.Expenditures.TIME_ADDED, time);
+        contentValues.put(Database.Expenditures.EXPENDITURE, expenditure);
+        writeDb.close();
+    }
+
     public void insertRecord(String tableName,
                              String stopNumber, String station, String line,
                              String route, String direction,
@@ -369,7 +402,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case Database.LeapBalance.TABLE_NAME:
                 contentValues.put(Database.LeapBalance.CARD_NUMBER, cardNumber);
                 contentValues.put(Database.LeapBalance.TIME_ADDED, System.currentTimeMillis());
-                contentValues.put(Database.LeapBalance.DATE, date);
                 contentValues.put(Database.LeapBalance.TOP_UPS, topUp);
                 contentValues.put(Database.LeapBalance.EXPENDITURE, expenditure);
                 contentValues.put(Database.LeapBalance.BALANCE_CHANGE, balanceChange);
@@ -439,7 +471,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case Database.LeapBalance.TABLE_NAME:
                 contentValues.put(Database.LeapBalance.CARD_NUMBER, cardNumber);
                 contentValues.put(Database.LeapBalance.TIME_ADDED, System.currentTimeMillis());
-                contentValues.put(Database.LeapBalance.DATE, date);
                 contentValues.put(Database.LeapBalance.TOP_UPS, topUp);
                 contentValues.put(Database.LeapBalance.EXPENDITURE, expenditure);
                 contentValues.put(Database.LeapBalance.BALANCE_CHANGE, balanceChange);

@@ -31,10 +31,15 @@ public class AddExpenditure extends DialogFragment {
     private boolean hasLeapActive;
     private Switch leapSwitch, cashSwitch;
     private setAddExpenditureListener addExpenditureDialogListener = null;
-
-    private int rowHeight;
+    private String fareCostAmount;
 
     DatabaseHelper databaseHelper;
+
+    public AddExpenditure(){}
+
+    public AddExpenditure(String fareCostAmount){
+        this.fareCostAmount = fareCostAmount;
+    }
 
     //listener that the corresponding button implements
     public interface setAddExpenditureListener {
@@ -184,7 +189,7 @@ public class AddExpenditure extends DialogFragment {
         costParams.addRule(RelativeLayout.BELOW, currentBalance.getId());
         costParams.addRule(RelativeLayout.ALIGN_PARENT_END, costText.getId());
         costParams.setMargins(0, getDp(8), getDp(24), 0);
-        cost.setText("€xx.xx");
+        cost.setText("€" + fareCostAmount);
         cost.setLayoutParams(costParams);
         cost.setId(View.generateViewId());
 

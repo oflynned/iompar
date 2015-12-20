@@ -92,6 +92,8 @@ public class Fares extends Fragment {
             setFareType(FareType.CHILD);
         } else if(fareType.equals(context.getResources().getString(R.string.other))){
             setFareType(FareType.OTHER);
+        } else {
+            setFareType(FareType.ADULT);
         }
 
         //retrieve if set payment method is cash or leap
@@ -445,6 +447,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
+                                        cursor.close();
                                         break;
                                     case LEAP:
                                         cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
@@ -468,6 +471,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_PEAK));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -495,6 +499,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -526,6 +531,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
+                                        cursor.close();
                                         break;
                                     case LEAP:
                                         cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
@@ -549,6 +555,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_OFF_PEAK));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -576,6 +583,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -611,6 +619,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
+                                        cursor.close();
                                         break;
                                     case LEAP:
                                         cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
@@ -634,6 +643,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_PEAK));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -661,6 +671,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -692,6 +703,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT));
+                                        cursor.close();
                                         break;
                                     case LEAP:
                                         cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
@@ -715,6 +727,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT_STUDENT_OFF_PEAK));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -742,6 +755,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_ADULT));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -777,6 +791,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD));
+                                        cursor.close();
                                         break;
                                     case LEAP:
                                         cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
@@ -800,6 +815,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD_PEAK));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -827,6 +843,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_CHILD));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -858,6 +875,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD));
+                                        cursor.close();
                                         break;
                                     case LEAP:
                                         cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LUAS_SINGLE_FARES, null);
@@ -881,6 +899,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_CHILD_OFF_PEAK));
+                                        cursor.close();
                                         break;
                                 }
                                 break;
@@ -908,6 +927,7 @@ public class Fares extends Fragment {
                                                 break;
                                         }
                                         setFare(cursor.getString(DatabaseHelper.COL_LUAS_RETURN_FARES_CHILD));
+                                        cursor.close();
                                         break;
                                 }
                                 break;

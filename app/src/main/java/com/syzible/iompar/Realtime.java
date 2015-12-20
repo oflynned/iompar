@@ -94,7 +94,6 @@ public class Realtime extends Fragment {
     Categories[] beStations;
 
     Sync sync;
-    Fares fares = new Fares();
 
     /**
      * Overrides the onBackPress() and returns to previous stage without closing fragment
@@ -243,7 +242,7 @@ public class Realtime extends Fragment {
         addExpenditureFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AddExpenditure addExpenditure = new AddExpenditure();
+                final AddExpenditure addExpenditure = new AddExpenditure(sync.getJourneyCost());
                 addExpenditure.show(Realtime.this.getFragmentManager(), "addExpenditure");
                 addExpenditure.setAddExpenditureDialogListener(new AddExpenditure.setAddExpenditureListener() {
                     @Override
