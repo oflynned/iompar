@@ -1,16 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:layout_below="@id/toolbar"
+    android:layout_marginTop="?attr/actionBarSize">
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Expenditures"/>
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <RelativeLayout
+            android:id="@+id/expenditures_panel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingEnd="32dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/weekly_expenditures_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="64dp"
+                android:text="Total expenditure this week:" />
+
+            <TextView
+                android:id="@+id/monthly_expenditures_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/weekly_expenditures_title"
+                android:paddingEnd="64dp"
+                android:text="Total expenditure this month:" />
+
+            <TextView
+                android:id="@+id/best_option_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/monthly_expenditures_title"
+                android:paddingEnd="64dp"
+                android:text="Best Option for You:" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_alignEnd="@+id/expenditures_panel"
+            android:id="@+id/expenditures_panel_costs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingEnd="32dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/weekly_expenditures"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:text="€xx.xx" />
+
+            <TextView
+                android:id="@+id/monthly_expenditures"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_below="@+id/weekly_expenditures"
+                android:text="€xx.xx" />
+
+            <TextView
+                android:id="@+id/best_option"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_below="@+id/monthly_expenditures"
+                android:text="Leap" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/expenditures_panel">
+
+            <include layout="@layout/row_handler_expenditures" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

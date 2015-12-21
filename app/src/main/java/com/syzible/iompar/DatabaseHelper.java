@@ -161,7 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.Expenditures.IS_LEAP + " BOOLEAN," +
                     Database.Expenditures.CARD_NUMBER + " INTEGER," +
                     Database.Expenditures.TIME_ADDED + " INTEGER," +
-                    Database.Expenditures.EXPENDITURE + "REAL);";
+                    Database.Expenditures.EXPENDITURE + " DECIMAL(5,2));";
 
     public static final String CREATE_TABLE_LEAP_LOGIN =
             "CREATE TABLE " +
@@ -261,7 +261,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "SELECT * FROM " + Database.LeapBalance.TABLE_NAME + ";";
 
     public static final String SELECT_ALL_EXPENDITURES =
-            "SELECT * FROM " + Database.Expenditures.TABLE_NAME + ";";
+            "SELECT * FROM " + Database.Expenditures.TABLE_NAME + " ORDER BY " + Database.Expenditures.ID + " DESC;";
 
     public static final String SELECT_ALL_LEAP_LOGIN =
             "SELECT * FROM " + Database.LeapLogin.TABLE_NAME + ";";
@@ -269,12 +269,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SELECT_ALL_ACTIVE_LEAP_CARDS =
             "SELECT * FROM " + Database.LeapLogin.TABLE_NAME +
                     " WHERE " + Database.LeapLogin.IS_ACTIVE + " = 1;";
-
-    public static final String SUM_EXPENDITURES_COLUMN =
-            "SELECT SUM " + Database.LeapBalance.EXPENDITURE + " FROM " + Database.LeapBalance.TABLE_NAME + ";";
-
-    public static final String SUM_TOP_UPS_COLUMN =
-            "SELECT SUM " + Database.LeapBalance.TOP_UPS + " FROM " + Database.LeapBalance.TABLE_NAME + ";";
 
     public DatabaseHelper(Context context){
         super(context, Database.DATABASE_NAME, null, DATABASE_VERSION);
@@ -355,6 +349,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(Database.Expenditures.CARD_NUMBER, cardNumber);
         contentValues.put(Database.Expenditures.TIME_ADDED, time);
         contentValues.put(Database.Expenditures.EXPENDITURE, expenditure);
+
+        writeDb.insert(Database.Expenditures.TABLE_NAME, null, contentValues);
         writeDb.close();
     }
 
@@ -528,20 +524,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void printTableContents(String tableName){
         SQLiteDatabase readDb = this.getReadableDatabase();
         Cursor cursor = readDb.rawQuery("SELECT * FROM " + tableName, null);
-        cursor.moveToFirst();
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
 
-        int rowNum = cursor.getCount();
-        int colNum = cursor.getColumnCount();
+            int rowNum = cursor.getCount();
+            int colNum = cursor.getColumnCount();
 
-        System.out.println("# of rows in " + tableName + " is " + rowNum);
-        System.out.println("# of columns in " + tableName + " is " + colNum);
+            System.out.println("# of rows in " + tableName + " is " + rowNum);
+            System.out.println("# of columns in " + tableName + " is " + colNum);
 
-        for (int r = 0; r < rowNum; r++){
-            for(int c = 0; c < colNum; c++){
-                System.out.println(c + ". " + cursor.getString(c) + "; ");
+            for (int r = 0; r < rowNum; r++) {
+                for (int c = 0; c < colNum; c++) {
+                    System.out.println(c + ". " + cursor.getString(c) + "; ");
+                }
+                System.out.println("\n------------");
+                cursor.moveToNext();
             }
-            System.out.println("\n------------");
-            cursor.moveToNext();
         }
         cursor.close();
         readDb.close();

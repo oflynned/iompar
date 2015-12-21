@@ -248,8 +248,7 @@ public class Realtime extends Fragment {
                 addExpenditure.setAddExpenditureDialogListener(new AddExpenditure.setAddExpenditureListener() {
                     @Override
                     public void onDoneClick(DialogFragment dialogFragment) {
-                        //add expenditure to appropriate database
-                        Toast.makeText(getContext(), "Expenditure added successfully", Toast.LENGTH_SHORT).show();
+                        //this is handled automatically in the interface in AddExpenditure.class
                     }
                 });
             }

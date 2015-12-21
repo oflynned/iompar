@@ -1,6 +1,7 @@
 package com.syzible.iompar;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,15 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.text.InputType;
-import android.text.method.PasswordTransformationMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -31,7 +28,9 @@ public class AddExpenditure extends DialogFragment {
     private boolean hasLeapActive;
     private Switch leapSwitch, cashSwitch;
     private setAddExpenditureListener addExpenditureDialogListener = null;
-    private String paymentType, costBalanceText;
+    private String costBalanceText;
+    
+    Context context;
 
     private String depart, arrive;
     private Realtime.LuasDirections enumDirection;
@@ -64,30 +63,18 @@ public class AddExpenditure extends DialogFragment {
      */
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        context = getActivity();
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        builder.setTitle("Add Expenditure")
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (addExpenditureDialogListener != null) {
-                            addExpenditureDialogListener.onDoneClick(AddExpenditure.this);
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                    }
-                });
-
-        RelativeLayout propertiesEntry = new RelativeLayout(this.getActivity());
+        RelativeLayout propertiesEntry = new RelativeLayout(context);
         propertiesEntry.setGravity(Gravity.CENTER);
         RelativeLayout.LayoutParams propertiesEntryParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
         propertiesEntry.setLayoutParams(propertiesEntryParams);
 
-        leapText = new TextView(this.getActivity());
+        leapText = new TextView(context);
         RelativeLayout.LayoutParams leapTextParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -96,7 +83,7 @@ public class AddExpenditure extends DialogFragment {
         leapText.setLayoutParams(leapTextParams);
         leapText.setId(View.generateViewId());
 
-        leapSwitch = new Switch(this.getActivity());
+        leapSwitch = new Switch(context);
         RelativeLayout.LayoutParams leapSwitchParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -106,7 +93,7 @@ public class AddExpenditure extends DialogFragment {
         leapSwitch.setLayoutParams(leapSwitchParams);
         leapSwitch.setId(View.generateViewId());
 
-        cashText = new TextView(this.getActivity());
+        cashText = new TextView(context);
         RelativeLayout.LayoutParams cashTextParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -116,7 +103,7 @@ public class AddExpenditure extends DialogFragment {
         cashText.setLayoutParams(cashTextParams);
         cashText.setId(View.generateViewId());
 
-        cashSwitch = new Switch(this.getActivity());
+        cashSwitch = new Switch(context);
         RelativeLayout.LayoutParams cashSwitchParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -127,7 +114,7 @@ public class AddExpenditure extends DialogFragment {
         cashSwitch.setLayoutParams(cashSwitchParams);
         cashSwitch.setId(View.generateViewId());
 
-        currentBalanceText = new TextView(this.getActivity());
+        currentBalanceText = new TextView(context);
         RelativeLayout.LayoutParams currentBalanceTextParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -137,7 +124,7 @@ public class AddExpenditure extends DialogFragment {
         currentBalanceText.setLayoutParams(currentBalanceTextParams);
         currentBalanceText.setId(View.generateViewId());
 
-        currentBalance = new TextView(this.getActivity());
+        currentBalance = new TextView(context);
         RelativeLayout.LayoutParams currentBalanceParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -148,7 +135,7 @@ public class AddExpenditure extends DialogFragment {
         currentBalance.setLayoutParams(currentBalanceParams);
         currentBalance.setId(View.generateViewId());
 
-        costText = new TextView(this.getActivity());
+        costText = new TextView(context);
         RelativeLayout.LayoutParams costTextParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -159,22 +146,22 @@ public class AddExpenditure extends DialogFragment {
         costText.setId(View.generateViewId());
 
         //move to active row
-        databaseHelper = new DatabaseHelper(getContext());
+        databaseHelper = new DatabaseHelper(context);
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
         if(cursor.getCount() > 0) {
             setLeapActive(true);
             costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
-                    getContext(), "leap");
+                    context, "leap");
         } else {
             setLeapActive(false);
             costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
-                    getContext(), "cash");
+                    context, "cash");
         }
         cursor.close();
         sqLiteDatabase.close();
 
-        cost = new TextView(this.getActivity());
+        cost = new TextView(context);
         RelativeLayout.LayoutParams costParams =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -191,13 +178,13 @@ public class AddExpenditure extends DialogFragment {
                 if (!cashSwitch.isChecked()) {
                     leapSwitch.setChecked(true);
                     costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
-                            getContext(), "leap");
+                            context, "leap");
                     cost.setText(costBalanceText);
                     cost.invalidate();
                 } else {
                     leapSwitch.setChecked(false);
                     costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
-                            getContext(), "cash");
+                            context, "cash");
                     cost.setText(costBalanceText);
                     cost.invalidate();
                 }
@@ -210,14 +197,14 @@ public class AddExpenditure extends DialogFragment {
                 if (!leapSwitch.isChecked()) {
                     cashSwitch.setChecked(true);
                     costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
-                            getContext(), "cash");
+                            context, "cash");
                     cost.setText(costBalanceText);
                     cost.invalidate();
 
                 } else {
                     cashSwitch.setChecked(false);
                     costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
-                            getContext(), "leap");
+                            context, "leap");
                     cost.setText(costBalanceText);
                     cost.invalidate();
                 }
@@ -232,6 +219,71 @@ public class AddExpenditure extends DialogFragment {
         propertiesEntry.addView(currentBalance);
         propertiesEntry.addView(costText);
         propertiesEntry.addView(cost);
+
+        builder.setTitle("Add Expenditure")
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        double cashCost = Double.parseDouble(fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
+                                context, "cash")));
+                        double leapCost = Double.parseDouble(fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
+                                context, "leap")));
+                        double difference = cashCost - leapCost;
+
+                        if (addExpenditureDialogListener != null) {
+                            addExpenditureDialogListener.onDoneClick(AddExpenditure.this);
+                            if (leapSwitch.isChecked()) {
+                                SQLiteDatabase readCardNumber = databaseHelper.getReadableDatabase();
+                                Cursor traverseCardNumber = readCardNumber.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                                if (traverseCardNumber.getCount() > 0) {
+                                    //insert leap expenditure
+                                    traverseCardNumber.moveToFirst();
+                                    databaseHelper.insertExpenditure(true,
+                                            traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
+                                            fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
+                                                    context, "leap")));
+                                    Toast.makeText(context, "Expenditure added successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    new AlertDialog.Builder(context)
+                                            .setTitle("No Active Leap Card")
+                                            .setMessage("No active Leap card was detected, please activate one under settings. Click add if you wish to add this expense as a cash expenditure.\n\nThis will cost €" +
+                                                    fares.formatDecimals(String.valueOf(difference)) + " more.")
+                                                            .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    //cash payment, no active leap
+                                                                    databaseHelper.insertExpenditure(false, "cash",
+                                                                            fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
+                                                                                    context, "cash")));
+                                                                    Toast.makeText(context, "Expenditure added successfully", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            })
+                                                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                                }
+                                                            })
+                                            .create()
+                                            .show();
+                                }
+                                readCardNumber.close();
+                                traverseCardNumber.close();
+                            } else {
+                                //cash payment
+                                databaseHelper.insertExpenditure(false, "cash",
+                                        fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
+                                                context, "cash")));
+                                Toast.makeText(context, "Expenditure added successfully", Toast.LENGTH_SHORT).show();
+                            }
+                            databaseHelper.printTableContents(Database.Expenditures.TABLE_NAME);
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
 
         builder.setView(propertiesEntry);
 
@@ -248,7 +300,7 @@ public class AddExpenditure extends DialogFragment {
 
     public int getDp(float pixels) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                pixels, getContext().getResources().getDisplayMetrics());
+                pixels, context.getResources().getDisplayMetrics());
     }
 
     public void setLeapActive(boolean hasLeapActive){this.hasLeapActive = hasLeapActive;}

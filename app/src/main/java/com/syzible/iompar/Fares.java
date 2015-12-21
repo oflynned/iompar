@@ -995,7 +995,7 @@ public class Fares extends Fragment {
     }
 
     public String formatDecimals(String fare) {
-        double castFare = Double.parseDouble(fare);
+        double castFare = Double.parseDouble(fare.replaceAll("[€]",""));
         return String.format("%.2f", castFare);
     }
 
