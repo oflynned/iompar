@@ -29,7 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="Leap" />
+                    android:text="@string/leap" />
 
                 <Switch
                     android:layout_marginBottom="8dp"
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="16dp"
-                    android:text="Cost:" />
+                    android:text="@string/cost_fares" />
 
                 <TextView
                     android:layout_centerHorizontal="true"
@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="16dp"
-                    android:text="Zones:" />
+                    android:text="@string/zones_fares" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -72,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="Cash" />
+                    android:text="@string/cash" />
 
                 <Switch
                     android:layout_marginBottom="8dp"

@@ -126,7 +126,11 @@
     <string name="balance">Balance</string>
 
     <!-- fare calculator -->
-
+    <string name="leap">Leap</string>
+    <string name="cash">Cash</string>
+    <string name="cash_lowercase">Cash</string>
+    <string name="zones_fares">Zones:</string>
+    <string name="cost_fares">Cost:</string>
 
     <!-- expenditures -->
     <string name="time_added">Time Added</string>
@@ -136,6 +140,11 @@
     <string name="expenditures_this_week">Total expenditure this week:</string>
     <string name="expenditures_this_month">Total expenditure this month:</string>
     <string name="best_option">Best Option for You:</string>
+    <string name="remove_expenditure">Remove Expenditure</string>
+    <string name="remove">Remove</string>
+    <string name="remove_expenditure_clause_one">The chosen expenditure (</string>
+    <string name="remove_expenditure_clause_two">") of "</string>
+    <string name="remove_expenditure_clause_three">" will be removed."</string>
 
     <!-- add expenditure -->
     <string name="leap_payment">Leap Payment</string>

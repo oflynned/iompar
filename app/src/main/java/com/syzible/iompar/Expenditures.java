@@ -159,9 +159,9 @@ public class Expenditures extends Fragment {
             final TextView type = new TextView(getContext());
             //set leap if number != cash, else set to cash
             if(cursor.getString(DatabaseHelper.COL_EXPENDITURES_CARD_NUMBER).equals("cash")){
-                type.setText("Cash");
+                type.setText(getString(R.string.cash));
             } else {
-                type.setText("Leap");
+                type.setText(getString(R.string.leap));
             }
             type.setGravity(Gravity.CENTER);
 
@@ -196,25 +196,29 @@ public class Expenditures extends Fragment {
                             new ContextThemeWrapper(getContext(), R.style.LongClickDialog));
 
                     String messagePaymentType;
-                    if(type.getText().toString().equals("Cash")){
-                        messagePaymentType = "cash";
+                    if(type.getText().toString().equals(getString(R.string.cash))){
+                        messagePaymentType = getString(R.string.cash_lowercase);
                     } else {
-                        messagePaymentType = "Leap";
+                        messagePaymentType = getString(R.string.leap);
                     }
 
-                    builder.setTitle("Remove Expenditure")
-                            .setMessage("The chosen " + messagePaymentType + " expenditure of " + costText + " will be removed.")
-                            .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    databaseHelper.removeRecord(Database.Expenditures.TABLE_NAME, Database.Expenditures.ID, row);
-                                    tableLayout.invalidate();
-                                    populateTable();
-                                    calculateTotalMonthlyExpenditure();
-                                    calculateTotalWeeklyExpenditure();
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    builder.setTitle(getString(R.string.remove_expenditure))
+                            //the chosen expenditure (cash) of €1.39 will be removed
+                            //bainfear an caiteachas roghnaithe (airgead) €1.39 de
+                            .setMessage(getString(R.string.remove_expenditure_clause_one) + messagePaymentType +
+                                    getString(R.string.remove_expenditure_clause_two) + costText +
+                                    getString(R.string.remove_expenditure_clause_three))
+                            .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            databaseHelper.removeRecord(Database.Expenditures.TABLE_NAME, Database.Expenditures.ID, row);
+                            tableLayout.invalidate();
+                            populateTable();
+                            calculateTotalMonthlyExpenditure();
+                            calculateTotalWeeklyExpenditure();
+                        }
+                    })
+                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 

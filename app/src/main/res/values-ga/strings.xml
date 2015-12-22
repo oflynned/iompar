@@ -26,7 +26,7 @@
     <string name="libraries_used">Ríomhleabharlanna Úsáidte</string>
     <string name="list_libraries_used">Seo liosta na ríomhleabharlanna a d\'úsáid na forbróirí.</string>
     <string name="modify_name">Athraigh an tAinm</string>
-    <string name="modify_fare">Athraight an Cineál Táille</string>
+    <string name="modify_fare">Athraigh an Cineál Táille</string>
     <string name="irish_language">An Ghaeilge</string>
     <string name="irish_language_summary">Roghnaigh an socrú seo má theastaíonn uait an aip seo a úsáid le comhéadan Ghaeilge.</string>
 
@@ -59,8 +59,8 @@
     <string name="slide_two_fare_type">Céard é an cineál táille?</string>
     <string name="slide_two_description">Is féidir leat iad seo a athrú sna socruithe ar ball</string>
     <string name="slide_three_title_one">Do Rogha Íocaíochta</string>
-    <string name="slide_three_pay_cash">Úsáidim airgead tirim</string>
-    <string name="slide_three_pay_leap">Úsáidim cárta Leap&#160;&#160;&#160;</string>
+    <string name="slide_three_pay_cash">Úsáidim airgead</string>
+    <string name="slide_three_pay_leap">Úsáidim cárta Leap</string>
     <string name="slide_three_title_two">Eolas faoi Do Chárta Leap</string>
     <string name="slide_three_desc">Déanann cartaí Leap iompar níos tapúla, níos éasca, agus níos saoire.\n\nBíodh cinnte é a chlárú ar líne ionas go mbeidh tú in ann d\'iarmhéid a rochtain anseo.</string>
     <string name="slide_four_title">Céard anois?</string>
@@ -68,7 +68,7 @@
 
     <!-- general -->
     <string name="fares_synced">Sioncronaíodh táillí</string>
-    <string name="using_cash">Airgead tirim á úsáid</string>
+    <string name="using_cash">Airgead á úsáid</string>
     <string name="positive_leapcard_drawer">Tá iarmhéid dearfach Leap ag an bpróifíl seo</string>
     <string name="relatime_info">Eolas Fíor-Ama</string>
     <string name="manage_leap">Bainistigh Cartaí Leap</string>
@@ -109,7 +109,11 @@
     <string name="confirm_remove_all_cards">An bhfuil tú cinnte go dteastaíonn uait na cartaí uilig a bhaint de?</string>
 
     <!-- fare calculator -->
-
+    <string name="leap">Leap</string>
+    <string name="cash">Airgead</string>
+    <string name="cash_lowercase">airgead</string>
+    <string name="zones_fares">Criosanna:</string>
+    <string name="cost_fares">Costas:</string>
 
     <!-- expenditures -->
     <string name="time_added">Am Curtha Leis</string>
@@ -124,16 +128,21 @@
 
     <!-- add expenditure -->
     <string name="leap_payment">Íocaíocht Leap</string>
-    <string name="cash_payment">Íocaíocht Airgid Tirime</string>
+    <string name="cash_payment">Íocaíocht Airgid</string>
     <string name="current_leap_balance">Iarmhéid Reatha Leap:</string>
     <string name="cost_of_journey">Costas an Aistir seo:</string>
     <string name="add_expenditure">Cuir Caitheamh Leis</string>
     <string name="add">Cuir Leis</string>
     <string name="expenditure_added_successfully">Cuiread caitheamh leis go rathúil</string>
     <string name="no_active_leap">Easpa Chárta Leap Gníomhaigh</string>
-    <string name="no_active_leap_body">Ní aimsíodh aon chárta Leap atá gníomhach, cuir cárta i ngníomh sna socruithe led\' thoil. Gliogáil cuir leis má theastaíonn uait é seo a chur leis mar chaitheamh airgid tirim.\n\nCosnóidh é seo €</string>
+    <string name="no_active_leap_body">Ní aimsíodh aon chárta Leap atá gníomhach, cuir cárta i ngníomh sna socruithe led\' thoil. Gliogáil cuir leis má theastaíonn uait é seo a chur leis mar chaitheamh airgid.\n\nCosnóidh é seo €</string>
     <string name="more">"sa bhreis."</string>
     <string name="cancel">Cealaigh</string>
+    <string name="remove_expenditure">Bain Caiteachas De</string>
+    <string name="remove">Bain De</string>
+    <string name="remove_expenditure_clause_one">Bainfear an caiteachas roghnaithe (</string>
+    <string name="remove_expenditure_clause_two">") "</string>
+    <string name="remove_expenditure_clause_three">" de."</string>
 
     <!-- add leap card -->
     <string name="add_leap">Cuir Cárta Leap Leis</string>
