@@ -89,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/cash_switch"
-                    android:text="€xx.xx" />
+                    android:text="" />
 
                 <TextView
                     android:layout_centerHorizontal="true"
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/figure_text"
-                    android:text="x" />
+                    android:text="" />
             </RelativeLayout>
 
         </RelativeLayout>

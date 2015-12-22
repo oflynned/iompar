@@ -24,7 +24,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/secondView"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:layout_centerInParent="true">
 
                 <TextView
                     android:id="@+id/leftpanel"
@@ -38,10 +39,10 @@
                 android:id="@+id/secondView"
                 android:layout_width="1dp"
                 android:layout_height="90dp"
-                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/colorPrimary" />
+                android:background="@color/colorPrimary"
+                android:layout_centerInParent="true" />
 
             <LinearLayout
                 android:id="@+id/thirdLayout"
@@ -49,7 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/secondView"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:layout_centerInParent="true">
 
                 <TextView
                     android:id="@+id/rightpanel"

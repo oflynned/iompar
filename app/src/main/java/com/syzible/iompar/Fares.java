@@ -18,7 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.GridView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +42,8 @@ import java.util.TimeZone;
 public class Fares extends Fragment {
 
     int originId, destinationId;
-    String direction, fare, endStation;
+    String direction, fare, endStation, type;
+    boolean isLeap = true;
 
     public enum FareType {ADULT, STUDENT, CHILD, OTHER}
 
@@ -71,6 +74,8 @@ public class Fares extends Fragment {
 
     private BaseAdapter baseAdapter;
     private GridView gridView;
+    Switch leapSwitch, cashSwitch;
+    TextView cost, zones;
 
     public enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
 
@@ -201,6 +206,11 @@ public class Fares extends Fragment {
         gridView.setAdapter(baseAdapter);
         gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
 
+        leapSwitch = (Switch) view.findViewById(R.id.leap_switch);
+        cashSwitch = (Switch) view.findViewById(R.id.cash_switch);
+        cost = (TextView) view.findViewById(R.id.figure_text);
+        zones = (TextView) view.findViewById(R.id.zones_text);
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -286,6 +296,53 @@ public class Fares extends Fragment {
                         }
                     }
                 }
+            }
+        });
+
+        leapSwitch.setChecked(true);
+        cashSwitch.setChecked(false);
+
+        leapSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (leapSwitch.isChecked()) {
+                    cashSwitch.setChecked(false);
+                    isLeap = true;
+                } else {
+                    cashSwitch.setChecked(true);
+                    isLeap = false;
+                }
+
+                if (isLeap)
+                    type = "leap";
+                else
+                    type = "cash";
+
+                cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
+                        getStartPosition(), getEndPosition(), getContext(), type));
+                cost.invalidate();
+            }
+        });
+
+        cashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (cashSwitch.isChecked()) {
+                    leapSwitch.setChecked(false);
+                    isLeap = false;
+                } else {
+                    leapSwitch.setChecked(true);
+                    isLeap = true;
+                }
+
+                if (isLeap)
+                    type = "leap";
+                else
+                    type = "cash";
+
+                cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
+                        getStartPosition(), getEndPosition(), getContext(), type));
+                cost.invalidate();
             }
         });
 
@@ -383,40 +440,77 @@ public class Fares extends Fragment {
                             "start station: " + getStartPosition() + "\n" +
                                     "end station: " + getEndPosition());
 
-                    if(currentLuasDirection == LuasDirections.SAGGART) {
-                        if(getStartPositionComp() < getEndPositionComp()){
+                    if (currentLuasDirection == LuasDirections.SAGGART) {
+                        if (getStartPositionComp() < getEndPositionComp()) {
                             setEndStation(Globals.LineDirection.connolly_to_saggart);
                         } else {
                             setEndStation(Globals.LineDirection.belgard_to_saggart);
                         }
-                    } else if(currentLuasDirection == LuasDirections.TALLAGHT) {
-                        if(getStartPositionComp() < getEndPositionComp()){
+                    } else if (currentLuasDirection == LuasDirections.TALLAGHT) {
+                        if (getStartPositionComp() < getEndPositionComp()) {
                             setEndStation(Globals.LineDirection.the_point_to_tallaght);
                         } else {
                             setEndStation(Globals.LineDirection.tallaght_to_the_point);
                         }
-                    } else if(currentLuasDirection == LuasDirections.CONNOLLY) {
-                        if(getStartPositionComp() < getEndPositionComp()){
+                    } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                        if (getStartPositionComp() < getEndPositionComp()) {
                             setEndStation(Globals.LineDirection.connolly_to_saggart);
                         } else {
                             setEndStation(Globals.LineDirection.belgard_to_saggart);
                         }
-                    } else if(currentLuasDirection == LuasDirections.SANDYFORD) {
-                        if(getStartPositionComp() < getEndPositionComp()){
+                    } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
+                        if (getStartPositionComp() < getEndPositionComp()) {
                             setEndStation(Globals.LineDirection.stephens_green_to_sandyford);
                         } else {
                             setEndStation(Globals.LineDirection.sandyford_to_stephens_green);
                         }
-                    } else if(currentLuasDirection == LuasDirections.BRIDES_GLEN){
-                        if(getStartPositionComp() < getEndPositionComp()){
+                    } else if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
+                        if (getStartPositionComp() < getEndPositionComp()) {
                             setEndStation(Globals.LineDirection.stephens_green_to_brides_glen);
                         } else {
                             setEndStation(Globals.LineDirection.brides_glen_to_stephens_green);
                         }
                     }
 
-                    getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
-                            getStartPosition(), getEndPosition(), getContext(), "default");
+                    if(isLeap)
+                        type = "leap";
+                    else
+                        type = "cash";
+
+                    cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
+                            getStartPosition(), getEndPosition(), getContext(), type));
+
+                    int difference;
+
+                    switch (getChosenEndStation()) {
+                        //tallaght-point
+                        case "The Point":
+                        case "Tallaght":
+                            difference = Math.abs(getTallaghtZoneId(getOriginId(), getDestinationId()) - getTallaghtZoneId(getDestinationId(), getOriginId())) + 1;
+                            zones.setText(String.valueOf(difference));
+                            zones.invalidate();
+                            break;
+                        //saggart-connolly or inter station
+                        case "Connolly":
+                        case "Saggart":
+                        case "Heuston":
+                            difference = Math.abs(getSaggartZoneId(getOriginId(), getDestinationId()) - getSaggartZoneId(getDestinationId(), getOriginId())) + 1;
+                            zones.setText(String.valueOf(difference));
+                            zones.invalidate();
+                            break;
+                        case "St. Stephen's Green":
+                        case "Sandyford":
+                        case "Bride's Glen":
+                            System.out.println("ORIGIN ID: " + getGreenLineZoneId(getOriginId(), getDestinationId()));
+                            System.out.println("DESTINATION ID: " + getGreenLineZoneId(getDestinationId(), getOriginId()));
+                            difference = Math.abs(getGreenLineZoneId(getOriginId(), getDestinationId()) - getGreenLineZoneId(getOriginId(), getDestinationId())) + 1;
+                            zones.setText(String.valueOf(difference));
+                            zones.invalidate();
+                            break;
+                        default:
+                            zones.setText("default?");
+                            break;
+                    }
                 }
             } else {
                 if (position == getEndPositionComp()) {
@@ -507,22 +601,26 @@ public class Fares extends Fragment {
             setFareType(FareType.ADULT);
         }
 
-        if (paymentType.equals("cash")) {
-            setFarePayment(FarePayment.CASH);
-        } else if (paymentType.equals("leap")) {
-            setFarePayment(FarePayment.LEAP);
-        } else {
-            //retrieve if set payment method is cash or leap
-            DatabaseHelper databaseHelper = new DatabaseHelper(context);
-            SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-            Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-            if (cursor.getCount() > 0) {
-                setFarePayment(FarePayment.LEAP);
-            } else {
+        switch (paymentType) {
+            case "cash":
                 setFarePayment(FarePayment.CASH);
-            }
-            sqLiteDatabase.close();
-            cursor.close();
+                break;
+            case "leap":
+                setFarePayment(FarePayment.LEAP);
+                break;
+            default:
+                //retrieve if set payment method is cash or leap
+                DatabaseHelper databaseHelper = new DatabaseHelper(context);
+                SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+                Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                if (cursor.getCount() > 0) {
+                    setFarePayment(FarePayment.LEAP);
+                } else {
+                    setFarePayment(FarePayment.CASH);
+                }
+                sqLiteDatabase.close();
+                cursor.close();
+                break;
         }
 
         System.out.println("Using payment method: " + getFarePayment());

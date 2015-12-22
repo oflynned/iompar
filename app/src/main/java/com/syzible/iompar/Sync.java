@@ -2,6 +2,8 @@ package com.syzible.iompar;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +21,7 @@ public class Sync {
 
     Context context;
     boolean loaded;
-    String title, nextDue, arrivalInfo, chosenEndStation, journeyCost, depart, arrive;
+    String title, nextDue, arrivalInfo, chosenEndStation, depart, arrive;
     Realtime.LuasDirections lineDirection;
 
     ArrayList<String> endDestinationList = new ArrayList<>();
@@ -50,8 +52,8 @@ public class Sync {
      * @param arrive    name of station at which the user is arriving
      */
     public void threadConnect(final Globals.LineDirection direction, final String depart,
-                              final String arrive, final Context context) {
-        final Globals globals = new Globals(context);
+                              final String arrive, final Context parametrisedContext) {
+        final Globals globals = new Globals(parametrisedContext);
         Thread downloadThread = new Thread() {
             public void run() {
                 setLoaded(false);
@@ -119,8 +121,8 @@ public class Sync {
 
                     System.out.println(nextDue);
                 } catch (IOException e) {
-                    setNextDue("Could not connect to realtime services!");
-                    setArrivalInfo("Check internet connection!");
+                    setNextDue("Could not connect to real-time services. Check your internet connection.");
+                    setArrivalInfo("Sometimes RTPI.ie is down - our app depends on it to report times :(");
                     e.printStackTrace();
                 }
                 setLoaded(true);
@@ -129,6 +131,7 @@ public class Sync {
         downloadThread.start();
         setLoaded(false);
     }
+
 
     /**
      * scrapes the data from the HTML RTPI website given the start and end stations
