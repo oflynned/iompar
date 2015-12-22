@@ -131,6 +131,7 @@ public class AddExpenditure extends DialogFragment {
         currentBalanceParams.addRule(RelativeLayout.BELOW, cashSwitch.getId());
         currentBalanceParams.addRule(RelativeLayout.ALIGN_PARENT_END, currentBalanceText.getId());
         currentBalanceParams.setMargins(0, getDp(8), getDp(24), 0);
+        //current leap card balance
         currentBalance.setText("€xx.xx");
         currentBalance.setLayoutParams(currentBalanceParams);
         currentBalance.setId(View.generateViewId());
@@ -246,7 +247,7 @@ public class AddExpenditure extends DialogFragment {
                                     new AlertDialog.Builder(context)
                                             .setTitle(context.getString(R.string.no_active_leap))
                                             .setMessage(context.getString(R.string.no_active_leap_body) +
-                                                    fares.formatDecimals(String.valueOf(difference)) + " more.")
+                                                    fares.formatDecimals(String.valueOf(difference)) + " " + context.getString(R.string.more))
                                             .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {

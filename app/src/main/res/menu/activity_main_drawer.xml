@@ -5,18 +5,18 @@
         <item
             android:id="@+id/nav_realtime"
             android:icon="@drawable/ic_autorenew_white_48dp"
-            android:title="Realtime Information" />
+            android:title="@string/relatime_info" />
         <item
             android:id="@+id/nav_manage_leap_cards"
             android:icon="@drawable/ic_payment_white_48dp"
-            android:title="Manage Leap Cards" />
+            android:title="@string/manage_leap" />
         <item
             android:id="@+id/nav_fare_calculator"
             android:icon="@drawable/ic_attach_money_white_48dp"
-            android:title="Fare Calculator" />
+            android:title="@string/fare_calc" />
         <item
             android:id="@+id/nav_expenditures"
             android:icon="@drawable/ic_trending_up_white_48dp"
-            android:title="Expenditures" />
+            android:title="@string/expenditures" />
     </group>
 </menu>

@@ -6,6 +6,8 @@
 
     <!--> Options <-->
     <string name="action_settings">Socruithe</string>
+    <string name="about_us_option">Fúinn</string>
+    <string name="visit_website">Tabhair Cuairt Dúinn!</string>
 
     <!--> About Us <-->
     <string name="about_us">GlassByte - is comhlacht bhogearraí sinn atá bunaithe i mBaile Átha Cliath, Éirinn. Déanann ár bhfoireann bheag uaillmhianach iarracht bogearraí nuálacha agus úsáideacha a fhorbairt as ríomhchéimeanna.</string>
@@ -16,6 +18,24 @@
     <string name="apache_summary">Seo duit roinnt eolais faoi dháileadh bogearraí</string>
     <string name="apache_body">Copyright 2016 GlassByte Limited. Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
 
+    <string name="more_from_glassbyte">Tuilleadh Ó GlassByte</string>
+    <string name="personal">Pearsantach</string>
+    <string name="language_options">Socruithe Teanga</string>
+    <string name="more_apps">Aimsigh Níos Mó Aipeanna</string>
+    <string name="click_here_for_more_apps">Gliogáil anseo chun níos mó d\'ár n-aipeanna a fheiceáil ar Google Play.</string>
+    <string name="libraries_used">Ríomhleabharlanna Úsáidte</string>
+    <string name="list_libraries_used">Seo liosta na ríomhleabharlanna a d\'úsáid na forbróirí.</string>
+    <string name="modify_name">Athraigh an tAinm</string>
+    <string name="modify_fare">Athraight an Cineál Táille</string>
+    <string name="irish_language">An Ghaeilge</string>
+    <string name="irish_language_summary">Roghnaigh an socrú seo má theastaíonn uait an aip seo a úsáid le comhéadan Ghaeilge.</string>
+
+    <string name="adult">Duine Fásta</string>
+    <string name="student">Scoláire</string>
+    <string name="child">Páiste</string>
+    <string name="other">Eile</string>
+
+    <!-- keys -->
     <string name="pref_key_contact" translatable="false">pref_key_contact</string>
     <string name="pref_key_app_settings" translatable="false">pref_key_settings</string>
     <string name="pref_key_language" translatable="false">pref_key_language</string>
@@ -37,7 +57,7 @@
     <string name="slide_two_title">Cén t-ainm atá ort?</string>
     <string name="slide_two_hint">D\'ainm anseo</string>
     <string name="slide_two_fare_type">Céard é an cineál táille?</string>
-    <string name="slide_two_description">Is féidir leat é seo a athrú sna socruithe ar ball</string>
+    <string name="slide_two_description">Is féidir leat iad seo a athrú sna socruithe ar ball</string>
     <string name="slide_three_title_one">Do Rogha Íocaíochta</string>
     <string name="slide_three_pay_cash">Úsáidim airgead tirim</string>
     <string name="slide_three_pay_leap">Úsáidim cárta Leap&#160;&#160;&#160;</string>
@@ -50,6 +70,10 @@
     <string name="fares_synced">Sioncronaíodh táillí</string>
     <string name="using_cash">Airgead tirim á úsáid</string>
     <string name="positive_leapcard_drawer">Tá iarmhéid dearfach Leap ag an bpróifíl seo</string>
+    <string name="relatime_info">Eolas Fíor-Ama</string>
+    <string name="manage_leap">Bainistigh Cartaí Leap</string>
+    <string name="fare_calc">Áireamhán Táíllí</string>
+    <string name="expenditures">Caiteachas</string>
 
     <!-- realtime fragment -->
     <string name="loading_stations">Stáisiúin á lódáil…</string>
@@ -64,6 +88,19 @@
     <string name="tallaght_point">Líne Thamhlachta-Iosta na Rinne</string>
     <string name="saggart_connolly">Líne Theach Sagard-Chonghaile</string>
     <string name="heuston_connolly">Líne Heuston-Chonghaile</string>
+    <string name="terminus">Críoch:</string>
+    <string name="eta">"Tuar: "</string>
+    <string name="origin">Ó:</string>
+    <string name="destination">Chuig:</string>
+    <string name="no_departures_found">Ní fuarthas imeachtaí</string>
+    <string name="no_times_found">Ní fuarthas amanna</string>
+    <string name="unavailable_try_other_line">Níl ar fáil, bain triail as líne eile</string>
+    <string name="unavailable">Níl ar fáil</string>
+    <string name="arriving_soon">Go luath</string>
+    <string name="one_min_away">1 nóim uaim</string>
+    <string name="mins_away">" nóim uaim"</string>
+    <string name="could_not_connect_real_time">Ní féidir nascadh le seirbhísí fíorama. Seiceáil do nasc idirlín led\' thoil.</string>
+    <string name="sometimes_rtpi_is_down">Scaití ní bhíonn RTPI.ie le fáil - tá ár n-aip ag braith air chun obair i gceart :(</string>
 
     <!-- manage leap fragment -->
     <string name="leap_added_successfully">Cuireadh cárta Leap leis go rathúil</string>
@@ -94,7 +131,8 @@
     <string name="add">Cuir Leis</string>
     <string name="expenditure_added_successfully">Cuiread caitheamh leis go rathúil</string>
     <string name="no_active_leap">Easpa Chárta Leap Gníomhaigh</string>
-    <string name="no_active_leap_body">No active Leap card was detected, please activate one under settings. Click add if you wish to add this expense as a cash expenditure.\n\nThis will cost €</string>
+    <string name="no_active_leap_body">Ní aimsíodh aon chárta Leap atá gníomhach, cuir cárta i ngníomh sna socruithe led\' thoil. Gliogáil cuir leis má theastaíonn uait é seo a chur leis mar chaitheamh airgid tirim.\n\nCosnóidh é seo €</string>
+    <string name="more">"sa bhreis."</string>
     <string name="cancel">Cealaigh</string>
 
     <!-- add leap card -->

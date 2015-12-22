@@ -40,15 +40,15 @@ public class Settings extends PreferenceActivity {
 
                 //categories
                 PreferenceCategory moreCategory = new PreferenceCategory(getActivity());
-                moreCategory.setTitle("More from GlassByte");
+                moreCategory.setTitle(R.string.more_from_glassbyte);
                 moreCategory.setKey(getString(R.string.pref_key_contact));
 
                 PreferenceCategory appSettings = new PreferenceCategory(getActivity());
-                appSettings.setTitle("Personal");
+                appSettings.setTitle(R.string.personal);
                 appSettings.setKey(getString(R.string.pref_key_app_settings));
 
                 PreferenceCategory languageSettings = new PreferenceCategory(getActivity());
-                languageSettings.setTitle("Language Options");
+                languageSettings.setTitle(R.string.language_options);
                 languageSettings.setKey(getString(R.string.pref_key_language));
 
                 //individual settings for more from glassbyte
@@ -56,20 +56,20 @@ public class Settings extends PreferenceActivity {
                 Preference librariesUsed = new Preference(getActivity());
                 Preference apacheLicence = new Preference(getActivity());
 
-                moreFromGlassByte.setTitle("Find More of Our Apps");
-                moreFromGlassByte.setSummary("Click here to see more of our apps on Google Play.");
+                moreFromGlassByte.setTitle(R.string.more_apps);
+                moreFromGlassByte.setSummary(R.string.click_here_for_more_apps);
                 moreFromGlassByte.setIntent(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://play.google.com/store/apps/developer?id=GlassByte")));
 
-                librariesUsed.setTitle("Libraries Used");
-                librariesUsed.setSummary("Here's a list of the libraries used by the developers.");
+                librariesUsed.setTitle(R.string.libraries_used);
+                librariesUsed.setSummary(R.string.list_libraries_used);
                 librariesUsed.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
                         new AlertDialog.Builder(getActivity())
-                                .setTitle("Title")
-                                .setMessage("Message")
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                .setTitle(getString(R.string.libraries_used))
+                                .setMessage(getString(R.string.list_libraries_used))
+                                .setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
@@ -81,7 +81,7 @@ public class Settings extends PreferenceActivity {
                 });
 
                 apacheLicence.setTitle(getResources().getString(R.string.apache_title));
-                apacheLicence.setSummary("Here's some information about software distribution.");
+                apacheLicence.setSummary(getString(R.string.apache_summary));
                 apacheLicence.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
@@ -92,8 +92,7 @@ public class Settings extends PreferenceActivity {
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                Toast.makeText(getActivity(), "lol you didn't read this",
-                                                        Toast.LENGTH_SHORT).show();
+
                                             }
                                         })
                                 .show();
@@ -105,7 +104,7 @@ public class Settings extends PreferenceActivity {
 
                 //app settings for payment choice
                 EditTextPreference namePreference = new EditTextPreference(getActivity());
-                namePreference.setTitle("Modify Name");
+                namePreference.setTitle(R.string.modify_name);
                 namePreference.setSummary(name);
                 namePreference.setKey(getString(R.string.pref_key_name));
                 namePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -124,7 +123,7 @@ public class Settings extends PreferenceActivity {
                 });
 
                 Preference farePreference = new ListPreference(getActivity());
-                farePreference.setTitle("Modify Fare Type");
+                farePreference.setTitle(R.string.modify_fare);
                 farePreference.setSummary(sharedPreferences.getString(getString(R.string.pref_key_fare), ""));
                 farePreference.setKey(getString(R.string.pref_key_fare));
                 ((ListPreference) farePreference).setEntries(R.array.fare_types);
@@ -139,8 +138,8 @@ public class Settings extends PreferenceActivity {
 
                 //language settings
                 final SwitchPreference irishLanguage = new SwitchPreference(getActivity());
-                irishLanguage.setTitle("Irish Language");
-                irishLanguage.setSummary("Choose this option to use this app with an Irish Gaelic interface.");
+                irishLanguage.setTitle(R.string.irish_language);
+                irishLanguage.setSummary(R.string.irish_language_summary);
                 irishLanguage.setKey(getString(R.string.pref_key_irish));
                 irishLanguage.setDefaultValue(false);
 

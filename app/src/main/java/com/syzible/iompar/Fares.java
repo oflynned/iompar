@@ -46,13 +46,9 @@ public class Fares extends Fragment {
     boolean isLeap = true;
 
     public enum FareType {ADULT, STUDENT, CHILD, OTHER}
-
     public enum FareCaps {ON_PEAK, OFF_PEAK}
-
     public enum FarePayment {LEAP, CASH}
-
     public enum FareJourney {SINGLE, RETURN}
-
     public enum LuasFareCost {ONE_ZONE, TWO_ZONES, THREE_ZONES, FOUR_ZONES, FIVE_EIGHT_ZONES}
 
     FareType fareType;
@@ -82,9 +78,8 @@ public class Fares extends Fragment {
     public enum LuasLines {GREEN, RED}
 
     public enum LuasDirections {
-        TALLAGHT, SAGGART, POINT, BELGARD,
-        BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
-        CONNOLLY, HEUSTON
+        TALLAGHT, SAGGART, CONNOLLY,
+        BRIDES_GLEN, SANDYFORD
     }
 
     private TransportationCategories currentCategory;
@@ -318,7 +313,7 @@ public class Fares extends Fragment {
                 else
                     type = "cash";
 
-                if(hasPair()) {
+                if (hasPair()) {
                     cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
                             getStartPosition(), getEndPosition(), getContext(), type));
                     cost.invalidate();
@@ -342,7 +337,7 @@ public class Fares extends Fragment {
                 else
                     type = "cash";
 
-                if(hasPair()) {
+                if (hasPair()) {
                     cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
                             getStartPosition(), getEndPosition(), getContext(), type));
                     cost.invalidate();
@@ -476,7 +471,7 @@ public class Fares extends Fragment {
                         }
                     }
 
-                    if(isLeap)
+                    if (isLeap)
                         type = "leap";
                     else
                         type = "cash";
@@ -486,110 +481,103 @@ public class Fares extends Fragment {
 
                     int difference, origin, destination;
 
-                    switch (getChosenEndStation()) {
+                    if (getChosenEndStation().equals(getString(R.string.the_point)) ||
+                            getChosenEndStation().equals(getString(R.string.tallaght))) {
                         //tallaght-point
-                        case "The Point":
-                        case "Tallaght":
-                            origin = getTallaghtZoneId(getOriginId(), getDestinationId());
-                            destination = getTallaghtZoneId(getDestinationId(), getOriginId());
-                            difference = (origin - destination);
-                            if(difference < 0){
-                                difference = difference * -1;
-                            }
-                            difference++;
-                            zones.setText("" + difference);
-                            zones.invalidate();
-                            break;
-                        //saggart-connolly or inter station
-                        case "Connolly":
-                        case "Saggart":
-                        case "Heuston":
-                            origin = getSaggartZoneId(getOriginId(), getDestinationId());
-                            destination = getSaggartZoneId(getDestinationId(), getOriginId());
-                            difference = (origin - destination);
-                            if(difference < 0){
-                                difference = difference * -1;
-                            }
-                            difference++;
-                            zones.setText("" + difference);
-                            zones.invalidate();
-                            break;
-                        case "St. Stephen's Green":
-                        case "Sandyford":
-                        case "Bride's Glen":
-                            origin = getGreenLineZoneId(getOriginId(), getDestinationId());
-                            destination = getGreenLineZoneId(getDestinationId(), getOriginId());
-                            difference = (origin - destination);
-                            if(difference < 0){
-                                difference = difference * -1;
-                            }
-                            difference++;
-                            zones.setText("" + difference);
-                            zones.invalidate();
-                            break;
-                        default:
-                            zones.setText("default?");
-                            break;
+                        origin = getTallaghtZoneId(getOriginId(), getDestinationId());
+                        destination = getTallaghtZoneId(getDestinationId(), getOriginId());
+                        difference = (origin - destination);
+                        if (difference < 0) {
+                            difference = difference * -1;
+                        }
+                        difference++;
+                        zones.setText("" + difference);
+                        zones.invalidate();
+                    } else if (getChosenEndStation().equals(getString(R.string.connolly)) ||
+                            getChosenEndStation().equals(getString(R.string.saggart)) ||
+                            getChosenEndStation().equals(getString(R.string.heuston))) {
+                        origin = getSaggartZoneId(getOriginId(), getDestinationId());
+                        destination = getSaggartZoneId(getDestinationId(), getOriginId());
+                        difference = (origin - destination);
+                        if (difference < 0) {
+                            difference = difference * -1;
+                        }
+                        difference++;
+                        zones.setText("" + difference);
+                        zones.invalidate();
+                    } else if (getChosenEndStation().equals(getString(R.string.stephens_green)) ||
+                            getChosenEndStation().equals(getString(R.string.sandyford)) ||
+                            getChosenEndStation().equals(getString(R.string.brides_glen))) {
+                        origin = getGreenLineZoneId(getOriginId(), getDestinationId());
+                        destination = getGreenLineZoneId(getDestinationId(), getOriginId());
+                        difference = (origin - destination);
+                        if (difference < 0) {
+                            difference = difference * -1;
+                        }
+                        difference++;
+                        zones.setText("" + difference);
+                        zones.invalidate();
                     }
                 }
-            } else {
-                if (position == getEndPositionComp()) {
-                    setEnd(false);
-                    System.out.println("start true, end true, unselected end so end is false!");
-                } else if (position == getStartPositionComp()) {
-                    setStart(false);
-                    System.out.println("start true, end true, unselected start so start is false!");
-                }
-                setHasPair(false);
+
+        } else {
+            if (position == getEndPositionComp()) {
+                setEnd(false);
+                System.out.println("start true, end true, unselected end so end is false!");
+            } else if (position == getStartPositionComp()) {
+                setStart(false);
+                System.out.println("start true, end true, unselected start so start is false!");
             }
+            setHasPair(false);
         }
-        System.out.println("Start pos: " + getStartPosition() + ", end pos: " + getEndPosition());
-        baseAdapter.notifyDataSetChanged();
-        baseAdapter.notifyDataSetInvalidated();
     }
+    System.out.println("Start pos: " + getStartPosition() + ", end pos: " + getEndPosition());
+    baseAdapter.notifyDataSetChanged();
+    baseAdapter.notifyDataSetInvalidated();
+}
 
     public String getChosenEndStation() {
         return endStation;
     }
 
-    public void setEndStation (Globals.LineDirection direction) {
+    public void setEndStation(Globals.LineDirection direction) {
         //green line
         if (direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                 direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
-                this.endStation = "Bride's Glen";
+            this.endStation = getString(R.string.brides_glen);
         } else if (direction.equals(Globals.LineDirection.sandyford_to_stephens_green) ||
                 direction.equals(Globals.LineDirection.brides_glen_to_stephens_green)) {
-            this.endStation = "St. Stephen's Green";
+            this.endStation = getString(R.string.stephens_green);
         }
 
         //red line - tallaght/point
         else if (direction.equals(Globals.LineDirection.belgard_to_tallaght) ||
                 direction.equals(Globals.LineDirection.the_point_to_tallaght)) {
-            this.endStation = "Tallaght";
+            this.endStation = getString(R.string.tallaght);
         } else if (direction.equals(Globals.LineDirection.belgard_to_the_point) ||
                 direction.equals(Globals.LineDirection.tallaght_to_the_point) ||
                 direction.equals(Globals.LineDirection.tallaght_to_belgard)) {
-            this.endStation = "The Point";
+            this.endStation = getString(R.string.the_point);
         } else if (direction.equals(Globals.LineDirection.the_point_to_belgard)) {
-            this.endStation = "Tallaght";
+            this.endStation = getString(R.string.tallaght);
         }
 
         //saggart/connolly
         else if (direction.equals(Globals.LineDirection.belgard_to_saggart)) {
-            this.endStation = "Saggart";
+            this.endStation = getString(R.string.saggart);
         } else if (direction.equals(Globals.LineDirection.saggart_to_belgard)) {
-            this.endStation = "The Point";
+            this.endStation = getString(R.string.the_point);
         } else if (direction.equals(Globals.LineDirection.belgard_to_connolly)) {
-            this.endStation = "Connolly";
+            this.endStation = getString(R.string.connolly);
         } else if (direction.equals(Globals.LineDirection.connolly_to_belgard)) {
-            this.endStation = "Saggart";
+            this.endStation = getString(R.string.saggart);
         }
 
         //connolly/heuston
         else if (direction.equals(Globals.LineDirection.heuston_to_connolly)) {
-            this.endStation = "Connolly";
+            this.endStation = getString(R.string.connolly);
         } else if (direction.equals(Globals.LineDirection.connolly_to_heuston)) {
-            this.endStation = "Saggart";
+            this.endStation = getString(R.string.saggart);
         }
     }
 
@@ -1647,206 +1635,206 @@ public class Fares extends Fragment {
         return end;
     }
 
-    class TransportationAdapter extends BaseAdapter {
+class TransportationAdapter extends BaseAdapter {
 
-        Context context;
-        LayoutInflater layoutInflater;
+    Context context;
+    LayoutInflater layoutInflater;
 
-        /**
-         * Default constructor for the transportation adapter which passes the current context
-         * and instantiates an appropriate layout contextually
-         *
-         * @param context the current application context
-         */
-        public TransportationAdapter(Context context) {
-            this.context = context;
-            layoutInflater = LayoutInflater.from(context);
-        }
+    /**
+     * Default constructor for the transportation adapter which passes the current context
+     * and instantiates an appropriate layout contextually
+     *
+     * @param context the current application context
+     */
+    public TransportationAdapter(Context context) {
+        this.context = context;
+        layoutInflater = LayoutInflater.from(context);
+    }
 
-        /**
-         * Counts the number of static elements within the enumeration's state array and adds it
-         * to the count for the current state which the view returns
-         *
-         * @return the count of items within the array to be displayed
-         */
-        @Override
-        public int getCount() {
-            int count = 0;
+    /**
+     * Counts the number of static elements within the enumeration's state array and adds it
+     * to the count for the current state which the view returns
+     *
+     * @return the count of items within the array to be displayed
+     */
+    @Override
+    public int getCount() {
+        int count = 0;
 
-            if (stage == 0) {
-                count = categories.length;
-            } else if (stage == 1) {
-                if (currentCategory == TransportationCategories.LUAS) {
-                    count = luasCategories.length;
+        if (stage == 0) {
+            count = categories.length;
+        } else if (stage == 1) {
+            if (currentCategory == TransportationCategories.LUAS) {
+                count = luasCategories.length;
+            }
+        } else if (stage == 2) {
+            if (currentCategory == TransportationCategories.LUAS) {
+                if (currentLuasLine == LuasLines.GREEN) {
+                    count = luasDirectionGreen.length;
+                } else {
+                    count = luasDirectionRed.length;
                 }
-            } else if (stage == 2) {
-                if (currentCategory == TransportationCategories.LUAS) {
-                    if (currentLuasLine == LuasLines.GREEN) {
-                        count = luasDirectionGreen.length;
-                    } else {
-                        count = luasDirectionRed.length;
+            }
+        } else if (stage == 3) {
+            if (currentCategory == TransportationCategories.LUAS) {
+                if (currentLuasLine == LuasLines.GREEN) {
+                    if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
+                        count = greenLuasStationsBridesGlen.length;
+                    } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
+                        count = greenLuasStationsSandyford.length;
                     }
-                }
-            } else if (stage == 3) {
-                if (currentCategory == TransportationCategories.LUAS) {
-                    if (currentLuasLine == LuasLines.GREEN) {
-                        if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
-                            count = greenLuasStationsBridesGlen.length;
-                        } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
-                            count = greenLuasStationsSandyford.length;
-                        }
-                    } else if (currentLuasLine == LuasLines.RED) {
-                        if (currentLuasDirection == LuasDirections.TALLAGHT) {
-                            count = redLuasStationsTallaght.length;
-                        } else if (currentLuasDirection == LuasDirections.SAGGART) {
-                            count = redLuasStationsSaggart.length;
-                        } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
-                            count = redLuasStationsConnolly.length;
-                        }
+                } else if (currentLuasLine == LuasLines.RED) {
+                    if (currentLuasDirection == LuasDirections.TALLAGHT) {
+                        count = redLuasStationsTallaght.length;
+                    } else if (currentLuasDirection == LuasDirections.SAGGART) {
+                        count = redLuasStationsSaggart.length;
+                    } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                        count = redLuasStationsConnolly.length;
                     }
                 }
             }
-            return count;
         }
+        return count;
+    }
 
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
+    @Override
+    public Object getItem(int position) {
+        return null;
+    }
 
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
 
-        /**
-         * Returns the current stage advanced or returned as a set of arguments within enumeration states
-         *
-         * @return view returns the current contextual view
-         */
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = convertView;
+    /**
+     * Returns the current stage advanced or returned as a set of arguments within enumeration states
+     *
+     * @return view returns the current contextual view
+     */
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = convertView;
 
-            if (view == null) {
-                view = layoutInflater.inflate(R.layout.tile_layout, null);
+        if (view == null) {
+            view = layoutInflater.inflate(R.layout.tile_layout, null);
 
-                String title = "";
-                TextView textView = (TextView) view.findViewById(R.id.tileTitle);
+            String title = "";
+            TextView textView = (TextView) view.findViewById(R.id.tileTitle);
 
-                switch (stage) {
-                    case 0:
-                        title = categories[position].getTitle();
-                        break;
-                    case 1:
-                        if (currentCategory == TransportationCategories.LUAS) {
-                            title = luasCategories[position].getTitle();
+            switch (stage) {
+                case 0:
+                    title = categories[position].getTitle();
+                    break;
+                case 1:
+                    if (currentCategory == TransportationCategories.LUAS) {
+                        title = luasCategories[position].getTitle();
+                    }
+                    break;
+                case 2:
+                    if (currentCategory == TransportationCategories.LUAS) {
+                        if (currentLuasLine == LuasLines.GREEN) {
+                            title = luasDirectionGreen[position].getTitle();
+                        } else {
+                            title = luasDirectionRed[position].getTitle();
                         }
-                        break;
-                    case 2:
-                        if (currentCategory == TransportationCategories.LUAS) {
-                            if (currentLuasLine == LuasLines.GREEN) {
-                                title = luasDirectionGreen[position].getTitle();
-                            } else {
-                                title = luasDirectionRed[position].getTitle();
+                    }
+                    break;
+                case 3:
+                    if (currentCategory == TransportationCategories.LUAS) {
+                        if (currentLuasLine == LuasLines.GREEN) {
+                            if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
+                                title = greenLuasStationsBridesGlen[position].getTitle();
+                            } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
+                                title = greenLuasStationsSandyford[position].getTitle();
+                            }
+                        } else {
+                            if (currentLuasDirection == LuasDirections.TALLAGHT) {
+                                title = redLuasStationsTallaght[position].getTitle();
+                            } else if (currentLuasDirection == LuasDirections.SAGGART) {
+                                title = redLuasStationsSaggart[position].getTitle();
+                            } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                                title = redLuasStationsConnolly[position].getTitle();
                             }
                         }
-                        break;
-                    case 3:
-                        if (currentCategory == TransportationCategories.LUAS) {
-                            if (currentLuasLine == LuasLines.GREEN) {
-                                if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
-                                    title = greenLuasStationsBridesGlen[position].getTitle();
-                                } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
-                                    title = greenLuasStationsSandyford[position].getTitle();
-                                }
-                            } else {
-                                if (currentLuasDirection == LuasDirections.TALLAGHT) {
-                                    title = redLuasStationsTallaght[position].getTitle();
-                                } else if (currentLuasDirection == LuasDirections.SAGGART) {
-                                    title = redLuasStationsSaggart[position].getTitle();
-                                } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
-                                    title = redLuasStationsConnolly[position].getTitle();
-                                }
-                            }
-                        }
-                        break;
-                }
-                textView.setText(title);
-            } else {
-                TextView textView = (TextView) view.findViewById(R.id.tileTitle);
-
-                switch (stage) {
-                    case 0:
-                        textView.setText(categories[position].getTitle());
-                        break;
-                    case 1:
-                        if (currentCategory == TransportationCategories.LUAS) {
-                            textView.setText(luasCategories[position].getTitle());
-                        }
-                        break;
-                    case 2:
-                        if (currentCategory == TransportationCategories.LUAS) {
-                            if (currentLuasLine == LuasLines.GREEN) {
-                                textView.setText(luasDirectionGreen[position].getTitle());
-                            } else {
-                                textView.setText(luasDirectionRed[position].getTitle());
-                            }
-                        }
-                        break;
-                    case 3:
-                        if (currentCategory == TransportationCategories.LUAS) {
-                            if (currentLuasLine == LuasLines.GREEN) {
-                                if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
-                                    textView.setText(greenLuasStationsBridesGlen[position].getTitle());
-                                } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
-                                    textView.setText(greenLuasStationsSandyford[position].getTitle());
-                                }
-                            } else {
-                                if (currentLuasDirection == LuasDirections.TALLAGHT) {
-                                    textView.setText(redLuasStationsTallaght[position].getTitle());
-                                } else if (currentLuasDirection == LuasDirections.SAGGART) {
-                                    textView.setText(redLuasStationsSaggart[position].getTitle());
-                                } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
-                                    textView.setText(redLuasStationsConnolly[position].getTitle());
-                                }
-                            }
-                        }
-                        break;
-                }
+                    }
+                    break;
             }
-            return view;
+            textView.setText(title);
+        } else {
+            TextView textView = (TextView) view.findViewById(R.id.tileTitle);
+
+            switch (stage) {
+                case 0:
+                    textView.setText(categories[position].getTitle());
+                    break;
+                case 1:
+                    if (currentCategory == TransportationCategories.LUAS) {
+                        textView.setText(luasCategories[position].getTitle());
+                    }
+                    break;
+                case 2:
+                    if (currentCategory == TransportationCategories.LUAS) {
+                        if (currentLuasLine == LuasLines.GREEN) {
+                            textView.setText(luasDirectionGreen[position].getTitle());
+                        } else {
+                            textView.setText(luasDirectionRed[position].getTitle());
+                        }
+                    }
+                    break;
+                case 3:
+                    if (currentCategory == TransportationCategories.LUAS) {
+                        if (currentLuasLine == LuasLines.GREEN) {
+                            if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
+                                textView.setText(greenLuasStationsBridesGlen[position].getTitle());
+                            } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
+                                textView.setText(greenLuasStationsSandyford[position].getTitle());
+                            }
+                        } else {
+                            if (currentLuasDirection == LuasDirections.TALLAGHT) {
+                                textView.setText(redLuasStationsTallaght[position].getTitle());
+                            } else if (currentLuasDirection == LuasDirections.SAGGART) {
+                                textView.setText(redLuasStationsSaggart[position].getTitle());
+                            } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                                textView.setText(redLuasStationsConnolly[position].getTitle());
+                            }
+                        }
+                    }
+                    break;
+            }
         }
+        return view;
+    }
+}
+
+class Categories {
+    private String title;
+    private String type;
+
+    //constructors
+    public Categories(String title, String type) {
+        this.title = title;
+        this.type = type;
     }
 
-    class Categories {
-        private String title;
-        private String type;
-
-        //constructors
-        public Categories(String title, String type) {
-            this.title = title;
-            this.type = type;
-        }
-
-        public Categories(String title) {
-            this.title = title;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
+    public Categories(String title) {
+        this.title = title;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+}
 }

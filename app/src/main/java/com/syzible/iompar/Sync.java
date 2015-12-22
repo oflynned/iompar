@@ -122,8 +122,8 @@ public class Sync {
 
                     System.out.println(nextDue);
                 } catch (IOException e) {
-                    setNextDue("Could not connect to real-time services. Check your internet connection.");
-                    setArrivalInfo("Sometimes RTPI.ie is down - our app depends on it to report times :(");
+                    setNextDue(globals.getString(R.string.could_not_connect_real_time));
+                    setArrivalInfo(globals.getString(R.string.sometimes_rtpi_is_down));
                     e.printStackTrace();
                 }
                 setLoaded(true);
@@ -153,8 +153,8 @@ public class Sync {
         Elements rowItemsCheckEmpty = rowCheckEmpty.select("td");
 
         if (rowItemsCheckEmpty.text().equals("No departures found")) {
-            setNextDue("No departures found");
-            setArrivalInfo("No times found");
+            setNextDue(context.getString(R.string.no_departures_found));
+            setArrivalInfo(context.getString(R.string.no_times_found));
         } else {
             for (int i = 0; i < tableRowElements.size(); i++) {
                 Element row = tableRowElements.get(i);
@@ -168,20 +168,20 @@ public class Sync {
                         System.out.println(rowItems.get(j).text());
                         System.out.println(rowItems.get(j + 1).text());
                     } else {
-                        setNextDue("Unavailable, try other line");
-                        setArrivalInfo("Unavailable, try other line");
+                        setNextDue(context.getString(R.string.unavailable_try_other_line));
+                        setArrivalInfo(context.getString(R.string.unavailable_try_other_line));
                     }
                 }
             }
 
             if (!endDestinationList.isEmpty()) {
                 setNextDue(
-                        "Origin:" + "\n" + depart + "\n" +
-                                "Destination:" + "\n" + arrive);
+                        context.getString(R.string.origin) + ": " + "\n" + depart + "\n" +
+                                context.getString(R.string.destination) + ": " + "\n" + arrive);
                 setArrivalInfo(
-                        "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                                "Cost: €" + fares.getZoneTraversal(convertStringToEnum(
+                        context.getString(R.string.terminus) + ": " + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
+                                context.getString(R.string.eta) + ": " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                                context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
                                 getChosenEndStation()), depart, arrive, context, "default"));
 
                 //accessing via dialogs
@@ -207,8 +207,8 @@ public class Sync {
         Elements rowItemsCheckEmpty = rowCheckEmpty.select("td");
 
         if (rowItemsCheckEmpty.text().equals("No departures found")) {
-            setNextDue("No departures found");
-            setArrivalInfo("No times found");
+            setNextDue(context.getString(R.string.no_departures_found));
+            setArrivalInfo(context.getString(R.string.no_times_found));
         } else {
             for (int i = 0; i < tableRowElements.size(); i++) {
                 Element row = tableRowElements.get(i);
@@ -227,20 +227,21 @@ public class Sync {
                         System.out.println(rowItems.get(j).text());
                         System.out.println(rowItems.get(j + 1).text());
                     } else {
-                        setNextDue("Unavailable, try other line");
-                        setArrivalInfo("Unavailable, try other line");
+                        setNextDue(context.getString(R.string.unavailable_try_other_line));
+                        setArrivalInfo(context.getString(R.string.unavailable_try_other_line));
                     }
                 }
             }
 
             if (!endDestinationList.isEmpty()) {
                 setNextDue(
-                        "Origin:" + "\n" + depart + "\n" +
-                                "Destination:" + "\n" + arrive);
+                        context.getString(R.string.origin) + ": " + "\n" + depart + "\n" +
+                                context.getString(R.string.destination) + ": " + "\n" + arrive);
                 setArrivalInfo(
-                        "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                                "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context, "default"));
+                        context.getString(R.string.terminus) + ": " + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
+                                context.getString(R.string.eta) + ": " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                                context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
+                                getChosenEndStation()), depart, arrive, context, "default"));
 
                 //accessing via dialogs
                 setEnumDirection(convertStringToEnum(getChosenEndStation()));
@@ -265,8 +266,8 @@ public class Sync {
         Elements rowItemsCheckEmpty = rowCheckEmpty.select("td");
 
         if (rowItemsCheckEmpty.text().equals("No departures found")) {
-            setNextDue("No departures found");
-            setArrivalInfo("No times found");
+            setNextDue(context.getString(R.string.no_departures_found));
+            setArrivalInfo(context.getString(R.string.no_times_found));
         } else {
             for (int i = 0; i < tableRowElements.size(); i++) {
                 Element row = tableRowElements.get(i);
@@ -292,19 +293,20 @@ public class Sync {
                         System.out.println(rowItems.get(j).text());
                         System.out.println(rowItems.get(j + 1).text());
                     } else {
-                        setNextDue("Unavailable, try other line");
-                        setArrivalInfo("Unavailable, try other line");
+                        setNextDue(context.getString(R.string.unavailable_try_other_line));
+                        setArrivalInfo(context.getString(R.string.unavailable_try_other_line));
                     }
                 }
             }
             if (!endDestinationList.isEmpty()) {
                 setNextDue(
-                        "Origin:" + "\n" + depart + "\n" +
-                                "Destination:" + "\n" + arrive);
+                        context.getString(R.string.origin) + ": " + "\n" + depart + "\n" +
+                                context.getString(R.string.destination) + ": " + "\n" + arrive);
                 setArrivalInfo(
-                        "Terminus:" + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                "ETA: " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                                "Cost: €" + fares.getZoneTraversal(convertStringToEnum(getChosenEndStation()), depart, arrive, context, "default"));
+                        context.getString(R.string.terminus) + ": " + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
+                                context.getString(R.string.eta) + ": " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                                context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
+                                getChosenEndStation()), depart, arrive, context, "default"));
 
                 //accessing via dialogs
                 setEnumDirection(convertStringToEnum(getChosenEndStation()));
@@ -343,13 +345,13 @@ public class Sync {
     public String getTimeFormat(String time) {
         switch (time) {
             case "Unavailable":
-                return "Unavailable";
+                return context.getString(R.string.unavailable);
             case "Due":
-                return "Arriving soon";
+                return context.getString(R.string.arriving_soon);
             case "1 mins":
-                return "1 min away";
+                return context.getString(R.string.one_min_away);
             default:
-                return time.replaceAll("[^0-9]", "") + " mins away";
+                return time.replaceAll("[^0-9]", "") + context.getString(R.string.mins_away);
         }
     }
 
