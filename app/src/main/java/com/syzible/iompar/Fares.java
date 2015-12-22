@@ -480,31 +480,47 @@ public class Fares extends Fragment {
                     cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
                             getStartPosition(), getEndPosition(), getContext(), type));
 
-                    int difference;
+                    int difference, origin, destination;
 
                     switch (getChosenEndStation()) {
                         //tallaght-point
                         case "The Point":
                         case "Tallaght":
-                            difference = Math.abs(getTallaghtZoneId(getOriginId(), getDestinationId()) - getTallaghtZoneId(getDestinationId(), getOriginId())) + 1;
-                            zones.setText(String.valueOf(difference));
+                            origin = getTallaghtZoneId(getOriginId(), getDestinationId());
+                            destination = getTallaghtZoneId(getDestinationId(), getOriginId());
+                            difference = (origin - destination);
+                            if(difference < 0){
+                                difference = difference * -1;
+                            }
+                            difference++;
+                            zones.setText("" + difference);
                             zones.invalidate();
                             break;
                         //saggart-connolly or inter station
                         case "Connolly":
                         case "Saggart":
                         case "Heuston":
-                            difference = Math.abs(getSaggartZoneId(getOriginId(), getDestinationId()) - getSaggartZoneId(getDestinationId(), getOriginId())) + 1;
-                            zones.setText(String.valueOf(difference));
+                            origin = getSaggartZoneId(getOriginId(), getDestinationId());
+                            destination = getSaggartZoneId(getDestinationId(), getOriginId());
+                            difference = (origin - destination);
+                            if(difference < 0){
+                                difference = difference * -1;
+                            }
+                            difference++;
+                            zones.setText("" + difference);
                             zones.invalidate();
                             break;
                         case "St. Stephen's Green":
                         case "Sandyford":
                         case "Bride's Glen":
-                            System.out.println("ORIGIN ID: " + getGreenLineZoneId(getOriginId(), getDestinationId()));
-                            System.out.println("DESTINATION ID: " + getGreenLineZoneId(getDestinationId(), getOriginId()));
-                            difference = Math.abs(getGreenLineZoneId(getOriginId(), getDestinationId()) - getGreenLineZoneId(getOriginId(), getDestinationId())) + 1;
-                            zones.setText(String.valueOf(difference));
+                            origin = getGreenLineZoneId(getOriginId(), getDestinationId());
+                            destination = getGreenLineZoneId(getDestinationId(), getOriginId());
+                            difference = (origin - destination);
+                            if(difference < 0){
+                                difference = difference * -1;
+                            }
+                            difference++;
+                            zones.setText("" + difference);
                             zones.invalidate();
                             break;
                         default:
