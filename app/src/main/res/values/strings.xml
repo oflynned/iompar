@@ -56,6 +56,7 @@
     <string name="slide_one_irish_option">Use app in Irish Gaelic</string>
     <string name="slide_two_title">What\'s your name?</string>
     <string name="slide_two_hint">Your name</string>
+    <string name="slide_two_fare_type">What\'s Your Fare Type?</string>
     <string name="slide_two_description">This can be changed later under settings</string>
     <string name="slide_three_title_one">Payment Preference</string>
     <string name="slide_three_pay_cash">I pay using cash</string>
@@ -89,6 +90,8 @@
     <string name="cards_cleared_successfully">Cards all cleared successfully</string>
     <string name="clear_leap_cards">Clear Leap Cards</string>
     <string name="confirm_remove_all_cards">Are you sure you want to remove all cards?</string>
+    <string name="active">Active</string>
+    <string name="balance">Balance</string>
 
     <!-- fare calculator -->
 

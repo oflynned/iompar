@@ -5,14 +5,15 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!--> Options <-->
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Socruithe</string>
 
     <!--> About Us <-->
-    <string name="about_us">GlassByte is a software development start-up company headquartered in Dublin, Ireland. Our small, ambitious team strives to create innovative and useful software for computing platforms.</string>
-    <string name="about_us_more">For more apps or business enquiries, visit our website!\nhttp://www.glassbyte.com/</string>
+    <string name="about_us">GlassByte - is comhlacht bhogearraí sinn atá bunaithe i mBaile Átha Cliath, Éirinn. Déanann ár bhfoireann bheag uaillmhianach iarracht bogearraí nuálacha agus úsáideacha a fhorbairt as ríomhchéimeanna.</string>
+    <string name="about_us_more">Chun tuilleadh aipeanna a fheiceáil nó fiosrúcháin ghnó, tabhair cuairt dúinn anseo!\nhttp://www.glassbyte.com/</string>
 
     <!--> Settings <-->
-    <string name="apache_title">Apache Licence</string>
+    <string name="apache_title">Ceadúndas Apache</string>
+    <string name="apache_summary">Seo duit roinnt eolais faoi dháileadh bogearraí</string>
     <string name="apache_body">Copyright 2016 GlassByte Limited. Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
 
     <string name="pref_key_contact" translatable="false">pref_key_contact</string>
@@ -25,7 +26,6 @@
 
     <!-- Miscellaneous -->
     <string name="OK">Tá go maith</string>
-    <string name="username">Ainm an Úsáideora</string>
     <string name="leap_card_number">Uimhir an Chárta Leap</string>
     <string name="email">Ríomhphost</string>
     <string name="password">Pasfhocal</string>
@@ -36,6 +36,7 @@
     <string name="slide_one_irish_option">Úsáid an aip as Gaeilge</string>
     <string name="slide_two_title">Cén t-ainm atá ort?</string>
     <string name="slide_two_hint">D\'ainm anseo</string>
+    <string name="slide_two_fare_type">Céard é an cineál táille?</string>
     <string name="slide_two_description">Is féidir leat é seo a athrú sna socruithe ar ball</string>
     <string name="slide_three_title_one">Do Rogha Íocaíochta</string>
     <string name="slide_three_pay_cash">Úsáidim airgead tirim</string>
@@ -44,5 +45,120 @@
     <string name="slide_three_desc">Déanann cartaí Leap iompar níos tapúla, níos éasca, agus níos saoire.\n\nBíodh cinnte é a chlárú ar líne ionas go mbeidh tú in ann d\'iarmhéid a rochtain anseo.</string>
     <string name="slide_four_title">Céard anois?</string>
     <string name="slide_four_desc">Cabhraíonn iompar leat d\'iompar poiblí agus chaiteachas a bhainistiú go cliste.\n\nFair amach ar do chaitheamh, agus ní chaillfear an t-aistear sin arís.</string>
+
+    <!-- general -->
+    <string name="fares_synced">Sioncronaíodh táillí</string>
+    <string name="using_cash">Airgead tirim á úsáid</string>
+    <string name="positive_leapcard_drawer">Tá iarmhéid dearfach Leap ag an bpróifíl seo</string>
+
+    <!-- realtime fragment -->
+    <string name="loading_stations">Stáisiúin á lódáil…</string>
+    <string name="loading_times">Amanna á lódáil…</string>
+    <string name="error_in_data">Earráid in aisghabháil eolais!</string>
+    <string name="check_connection">Déan seic ar do nasc idirlín led\' thoil!</string>
+    <string name="luas_title">Luas</string>
+    <string name="green_line">An Líne Uainne</string>
+    <string name="red_line">An Líne Dearg</string>
+    <string name="brides_glen_stephens_green">Líne Ghleann Bhríde-Fhaiche Stiabhna</string>
+    <string name="sandyford_stephens_green">Líne Áth an Ghainimh-Fhaiche Stiabhna</string>
+    <string name="tallaght_point">Líne Thamhlachta-Iosta na Rinne</string>
+    <string name="saggart_connolly">Líne Theach Sagard-Chonghaile</string>
+    <string name="heuston_connolly">Líne Heuston-Chonghaile</string>
+
+    <!-- manage leap fragment -->
+    <string name="leap_added_successfully">Cuireadh cárta Leap leis go rathúil</string>
+    <string name="cards_cleared_successfully">Baineadh gach cárta Leap de go rathúil</string>
+    <string name="clear_leap_cards">Bain Cártaí Leap De</string>
+    <string name="confirm_remove_all_cards">An bhfuil tú cinnte go dteastaíonn uait na cartaí uilig a bhaint de?</string>
+
+    <!-- fare calculator -->
+
+
+    <!-- expenditures -->
+    <string name="time_added">Am Curtha Leis</string>
+    <string name="type">Cineál</string>
+    <string name="leap_number">Uimhir Leap</string>
+    <string name="cost">Costas</string>
+    <string name="expenditures_this_week">Lán-Chaitheamh an tSeachtain seo:</string>
+    <string name="expenditures_this_month">Lán-Chaitheamh an Mhí seo:</string>
+    <string name="best_option">An Rogha is Fearr Duit:</string>
+    <string name="active">Gníomhach</string>
+    <string name="balance">Iarmhéid</string>
+
+    <!-- add expenditure -->
+    <string name="leap_payment">Íocaíocht Leap</string>
+    <string name="cash_payment">Íocaíocht Airgid Tirime</string>
+    <string name="current_leap_balance">Iarmhéid Reatha Leap:</string>
+    <string name="cost_of_journey">Costas an Aistir seo:</string>
+    <string name="add_expenditure">Cuir Caitheamh Leis</string>
+    <string name="add">Cuir Leis</string>
+    <string name="expenditure_added_successfully">Cuiread caitheamh leis go rathúil</string>
+    <string name="no_active_leap">Easpa Chárta Leap Gníomhaigh</string>
+    <string name="no_active_leap_body">No active Leap card was detected, please activate one under settings. Click add if you wish to add this expense as a cash expenditure.\n\nThis will cost €</string>
+    <string name="cancel">Cealaigh</string>
+
+    <!-- add leap card -->
+    <string name="add_leap">Cuir Cárta Leap Leis</string>
+    <string name="username">Usáideoir</string>
+    <string name="leap_card_username">Ainm an Úsáideoir Leap</string>
+    <string name="leap_card_email">Ríomhphost Chárta Leap</string>
+    <string name="leap_card_password">Pasfhocal Chárta Leap</string>
+
+    <!-- stations -->
+    <string name="stephens_green">Faiche Stiabhna</string>
+    <string name="harcourt_st">Sráid Fhearchair</string>
+    <string name="charlemont">Charlemont</string>
+    <string name="ranelagh">Raghnallach</string>
+    <string name="beechwood">Coill na Feá</string>
+    <string name="cowper">Cowper</string>
+    <string name="milltown">Baile an Mhuilinn</string>
+    <string name="windy_arbour">Na Glasáin</string>
+    <string name="dundrum">Dún Droma</string>
+    <string name="balally">Baile Amhlaoibh</string>
+    <string name="kilmacud">Cill Mochuda</string>
+    <string name="stillorgan">Stigh Lorgan</string>
+    <string name="sandyford">Áth an Ghainimh</string>
+    <string name="central_park">An Pháirc Láir</string>
+    <string name="glencairn">Gleann an Chairn</string>
+    <string name="the_gallops">Na Glasáin</string>
+    <string name="leopardstown_valley">Gleann Bhaile na Lobhar</string>
+    <string name="ballyogan_wood">Coill Bhaile Uí Ógáin</string>
+    <string name="carrickmines">Carraig Mhaighin</string>
+    <string name="laughanstown">Baile an Locháin</string>
+    <string name="cherrywood">Coill na Silíní</string>
+    <string name="brides_glen">Gleann Bhríde</string>
+
+    <string name="connolly">Conghaile</string>
+    <string name="busaras">Busáras</string>
+    <string name="abbey_street">Sráid na Mainistreach</string>
+    <string name="jervis">Jervis</string>
+    <string name="four_courts">Na Ceithre Cúirteanna</string>
+    <string name="smithfield">Margadh na Feirme</string>
+    <string name="museum">Ardmhúsaem</string>
+    <string name="heuston">Heuston</string>
+    <string name="jamess">Ospidéal San Séamas</string>
+    <string name="fatima">Fatima</string>
+    <string name="rialto">Rialto</string>
+    <string name="suir_road">Bóthar na Súire</string>
+    <string name="goldenbridge">An Droichead Órga</string>
+    <string name="drimnagh">Droimneach</string>
+    <string name="blackhorse">An Capall Dubh</string>
+    <string name="bluebell">An Cloigín Gorm</string>
+    <string name="kylemore">An Chill Mhór</string>
+    <string name="red_cow">An Bhó Dhearg</string>
+    <string name="kingswood">Coill an Rí</string>
+    <string name="belgard">Belgard</string>
+    <string name="fettercairn">Fothair Chardain</string>
+    <string name="cheeverstown">Baile an tSíbhrigh</string>
+    <string name="citywest_campus">Campas Gnó Iarthar na Cathrach</string>
+    <string name="fortunestown">Baile Uí Fhortcheirn</string>
+    <string name="saggart">Teach Sagard</string>
+    <string name="the_point">Iosta na Rinne</string>
+    <string name="spencer_dock">Duga Spencer</string>
+    <string name="mayor_square_nci">Cearnóg an Mhéara - CNÉ</string>
+    <string name="georges_dock">Duga Sheoirse</string>
+    <string name="cookstown">Baile an Chócaigh</string>
+    <string name="hospital">Ospidéal Thamhlachta</string>
+    <string name="tallaght">Tamhlacht</string>
 
 </resources>

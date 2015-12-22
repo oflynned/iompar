@@ -19,28 +19,28 @@
                 android:layout_height="match_parent">
                 <TextView
                     android:id="@+id/leap_active_title"
-                    android:text="Active"
+                    android:text="@string/active"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:background="@drawable/table_cell"
                     android:gravity="center"/>
                 <TextView
                     android:id="@+id/leap_number_title"
-                    android:text="Leap Card Number"
+                    android:text="@string/leap_number"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:background="@drawable/table_cell"
                     android:gravity="center"/>
                 <TextView
                     android:id="@+id/leap_user_title"
-                    android:text="Username"
+                    android:text="@string/username"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:background="@drawable/table_cell"
                     android:gravity="center"/>
                 <TextView
                     android:id="@+id/leap_balance_title"
-                    android:text="Balance"
+                    android:text="@string/balance"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:background="@drawable/table_cell"

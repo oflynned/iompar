@@ -318,9 +318,11 @@ public class Fares extends Fragment {
                 else
                     type = "cash";
 
-                cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
-                        getStartPosition(), getEndPosition(), getContext(), type));
-                cost.invalidate();
+                if(hasPair()) {
+                    cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
+                            getStartPosition(), getEndPosition(), getContext(), type));
+                    cost.invalidate();
+                }
             }
         });
 
@@ -340,9 +342,11 @@ public class Fares extends Fragment {
                 else
                     type = "cash";
 
-                cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
-                        getStartPosition(), getEndPosition(), getContext(), type));
-                cost.invalidate();
+                if(hasPair()) {
+                    cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
+                            getStartPosition(), getEndPosition(), getContext(), type));
+                    cost.invalidate();
+                }
             }
         });
 

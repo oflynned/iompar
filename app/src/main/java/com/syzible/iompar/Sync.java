@@ -32,7 +32,7 @@ public class Sync {
     Fares.FareType fareClass;
     Fares.FarePayment farePayment;
 
-    public Sync(Context context){
+    public Sync(Context context) {
         this.context = context;
     }
 
@@ -47,6 +47,7 @@ public class Sync {
     /**
      * Connects to the RTPI URL with the respective stations given and returns the appropriate
      * scraped values for the depart station to destination
+     *
      * @param direction direction in which the user is travelling
      * @param depart    departure station in string format where the user is leaving from
      * @param arrive    name of station at which the user is arriving
@@ -136,6 +137,7 @@ public class Sync {
     /**
      * scrapes the data from the HTML RTPI website given the start and end stations
      * for the given line.
+     *
      * @param doc        document to be scraped
      * @param endStation station the user travels towards
      * @param depart     station the user is coming from
@@ -172,7 +174,7 @@ public class Sync {
                 }
             }
 
-            if(!endDestinationList.isEmpty()){
+            if (!endDestinationList.isEmpty()) {
                 setNextDue(
                         "Origin:" + "\n" + depart + "\n" +
                                 "Destination:" + "\n" + arrive);
@@ -231,7 +233,7 @@ public class Sync {
                 }
             }
 
-            if(!endDestinationList.isEmpty()){
+            if (!endDestinationList.isEmpty()) {
                 setNextDue(
                         "Origin:" + "\n" + depart + "\n" +
                                 "Destination:" + "\n" + arrive);
@@ -295,7 +297,7 @@ public class Sync {
                     }
                 }
             }
-            if(!endDestinationList.isEmpty()){
+            if (!endDestinationList.isEmpty()) {
                 setNextDue(
                         "Origin:" + "\n" + depart + "\n" +
                                 "Destination:" + "\n" + arrive);
@@ -318,25 +320,24 @@ public class Sync {
     }
 
     public Realtime.LuasDirections convertStringToEnum(String endStation) {
-        if(endStation.equals(context.getResources().getString(R.string.tallaght))){
+        if (endStation.equals(context.getResources().getString(R.string.tallaght))) {
             return Realtime.LuasDirections.TALLAGHT;
-        } else if(endStation.equals(context.getResources().getString(R.string.saggart))){
+        } else if (endStation.equals(context.getResources().getString(R.string.saggart))) {
             return Realtime.LuasDirections.SAGGART;
-        } else if(endStation.equals(context.getResources().getString(R.string.connolly))){
+        } else if (endStation.equals(context.getResources().getString(R.string.connolly))) {
             return Realtime.LuasDirections.CONNOLLY;
-        } else if(endStation.equals(context.getResources().getString(R.string.the_point))){
+        } else if (endStation.equals(context.getResources().getString(R.string.the_point))) {
             return Realtime.LuasDirections.POINT;
-        } else if(endStation.equals(context.getResources().getString(R.string.stephens_green))){
+        } else if (endStation.equals(context.getResources().getString(R.string.stephens_green))) {
             return Realtime.LuasDirections.STEPHENS_GREEN;
-        } else if(endStation.equals(context.getResources().getString(R.string.sandyford))){
+        } else if (endStation.equals(context.getResources().getString(R.string.sandyford))) {
             return Realtime.LuasDirections.SANDYFORD;
-        } else if(endStation.equals(context.getResources().getString(R.string.brides_glen))){
+        } else if (endStation.equals(context.getResources().getString(R.string.brides_glen))) {
             return Realtime.LuasDirections.BRIDES_GLEN;
-        } else if(endStation.equals(context.getResources().getString(R.string.heuston))){
+        } else if (endStation.equals(context.getResources().getString(R.string.heuston))) {
             return Realtime.LuasDirections.HEUSTON;
-        } else {
-            return null;
         }
+        return null;
     }
 
     public String getTimeFormat(String time) {
@@ -397,14 +398,43 @@ public class Sync {
         return chosenEndStation;
     }
 
-    public void setFareClass(Fares.FareType fareType){this.fareClass = fareType;}
-    public Fares.FareType getFareClass(){return fareClass;}
-    public void setFarePayment(Fares.FarePayment farePayment){this.farePayment = farePayment;}
-    public Fares.FarePayment getFarePayment(){return farePayment;}
-    public void setEnumDirection(Realtime.LuasDirections lineDirection){this.lineDirection=lineDirection;}
-    public Realtime.LuasDirections getEnumDirection(){return lineDirection;}
-    public void setDepart(String depart){this.depart=depart;}
-    public String getDepart(){return depart;}
-    public void setArrive(String arrive){this.arrive=arrive;}
-    public String getArrive(){return arrive;}
+    public void setFareClass(Fares.FareType fareType) {
+        this.fareClass = fareType;
+    }
+
+    public Fares.FareType getFareClass() {
+        return fareClass;
+    }
+
+    public void setFarePayment(Fares.FarePayment farePayment) {
+        this.farePayment = farePayment;
+    }
+
+    public Fares.FarePayment getFarePayment() {
+        return farePayment;
+    }
+
+    public void setEnumDirection(Realtime.LuasDirections lineDirection) {
+        this.lineDirection = lineDirection;
+    }
+
+    public Realtime.LuasDirections getEnumDirection() {
+        return lineDirection;
+    }
+
+    public void setDepart(String depart) {
+        this.depart = depart;
+    }
+
+    public String getDepart() {
+        return depart;
+    }
+
+    public void setArrive(String arrive) {
+        this.arrive = arrive;
+    }
+
+    public String getArrive() {
+        return arrive;
+    }
 }

@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     ManageLeapCards manageLeapCards = new ManageLeapCards();
     Expenditures expenditures = new Expenditures();
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    Globals globals;
 
     TextView barName, barLeapCardNumber, currentState;
     DrawerLayout drawer;
@@ -67,8 +68,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        setSupportActionBar(toolbar);
 
+        //set appropriate language
+        globals = new Globals(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        globals.setIrish(sharedPreferences.getBoolean(getResources()
+                .getString(R.string.pref_key_irish), false), getResources());
+
+        setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);

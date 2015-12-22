@@ -89,7 +89,7 @@ public class ManageLeapCards extends Fragment {
                                 new AlertDialog.Builder(getContext())
                                         .setTitle(getString(R.string.clear_leap_cards))
                                         .setMessage(getString(R.string.confirm_remove_all_cards))
-                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        .setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
                                                 databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
@@ -97,7 +97,7 @@ public class ManageLeapCards extends Fragment {
                                                 Toast.makeText(getContext(), R.string.cards_cleared_successfully, Toast.LENGTH_SHORT).show();
                                             }
                                         })
-                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
 
                                             }

@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -36,7 +38,6 @@ public class Realtime extends Fragment {
     FloatingActionButton addExpenditureFab;
 
     DatabaseHelper databaseHelper;
-    Globals globals;
 
     AsynchronousActivity asynchronousActivity;
 
@@ -96,6 +97,8 @@ public class Realtime extends Fragment {
     Categories[] beStations;
 
     Sync sync;
+    Globals globals;
+    SharedPreferences sharedPreferences;
 
     /**
      * Overrides the onBackPress() and returns to previous stage without closing fragment
@@ -215,12 +218,25 @@ public class Realtime extends Fragment {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        globals.setIrish(sharedPreferences.getBoolean(getResources()
+                .getString(R.string.pref_key_irish), false), getResources());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_realtime, container, false);
         gridView = (GridView) view.findViewById(R.id.gridview);
         baseAdapter = new TransportationAdapter(this.getContext());
         gridView.setAdapter(baseAdapter);
+
+        globals = new Globals(getContext());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        globals.setIrish(sharedPreferences.getBoolean(getResources()
+                .getString(R.string.pref_key_irish), false), getResources());
 
         infoPanel = (RelativeLayout) view.findViewById(R.id.infopanel);
         infoPanelParams = (RelativeLayout.LayoutParams) infoPanel.getLayoutParams();
