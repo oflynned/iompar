@@ -44,15 +44,15 @@ public class AddLeapCard extends DialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add a Leap Card")
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.add_leap))
+                .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (addLeapDialogListener != null) {
                             addLeapDialogListener.onDoneClick(AddLeapCard.this);
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                     }
@@ -74,7 +74,7 @@ public class AddLeapCard extends DialogFragment {
         leapNumberParams.setMarginEnd(getDp(64));
         leapNumberField.setSingleLine();
         leapNumberField.setInputType(InputType.TYPE_CLASS_NUMBER);
-        leapNumberField.setHint("Leap Card Number");
+        leapNumberField.setHint(getString(R.string.leap_card_number));
         leapNumberField.setLayoutParams(leapNumberParams);
         leapNumberField.setId(View.generateViewId());
 
@@ -87,7 +87,7 @@ public class AddLeapCard extends DialogFragment {
         usernameParams.setMarginEnd(getDp(64));
         usernameField.setSingleLine();
         usernameField.setInputType(InputType.TYPE_CLASS_TEXT);
-        usernameField.setHint("Leap Card Username");
+        usernameField.setHint(R.string.leap_card_username);
         usernameField.setLayoutParams(usernameParams);
         usernameField.setId(View.generateViewId());
 
@@ -100,7 +100,7 @@ public class AddLeapCard extends DialogFragment {
         emailParams.setMarginEnd(getDp(64));
         emailField.setSingleLine();
         emailField.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-        emailField.setHint("Leap Card Email");
+        emailField.setHint(R.string.leap_card_email);
         emailField.setLayoutParams(emailParams);
         emailField.setId(View.generateViewId());
 
@@ -114,7 +114,7 @@ public class AddLeapCard extends DialogFragment {
         passwordField.setSingleLine();
         passwordField.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         passwordField.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        passwordField.setHint("Leap Card Password");
+        passwordField.setHint(R.string.leap_card_password);
         passwordField.setLayoutParams(passwordParams);
         passwordField.setId(View.generateViewId());
 

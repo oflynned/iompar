@@ -79,7 +79,7 @@ public class AddExpenditure extends DialogFragment {
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
         leapTextParams.setMargins(getDp(24), getDp(8), 0, 0);
-        leapText.setText("Leap Payment");
+        leapText.setText(R.string.leap_payment);
         leapText.setLayoutParams(leapTextParams);
         leapText.setId(View.generateViewId());
 
@@ -99,7 +99,7 @@ public class AddExpenditure extends DialogFragment {
                         ViewGroup.LayoutParams.WRAP_CONTENT);
         cashTextParams.addRule(RelativeLayout.BELOW, leapText.getId());
         cashTextParams.setMargins(getDp(24), getDp(8), 0, 0);
-        cashText.setText("Cash Payment");
+        cashText.setText(R.string.cash_payment);
         cashText.setLayoutParams(cashTextParams);
         cashText.setId(View.generateViewId());
 
@@ -120,7 +120,7 @@ public class AddExpenditure extends DialogFragment {
                         ViewGroup.LayoutParams.WRAP_CONTENT);
         currentBalanceTextParams.addRule(RelativeLayout.BELOW, cashText.getId());
         currentBalanceTextParams.setMargins(getDp(24), getDp(8), 0, 0);
-        currentBalanceText.setText("Current Leap Balance:");
+        currentBalanceText.setText(R.string.current_leap_balance);
         currentBalanceText.setLayoutParams(currentBalanceTextParams);
         currentBalanceText.setId(View.generateViewId());
 
@@ -141,7 +141,7 @@ public class AddExpenditure extends DialogFragment {
                         ViewGroup.LayoutParams.WRAP_CONTENT);
         costTextParams.addRule(RelativeLayout.BELOW, currentBalanceText.getId());
         costTextParams.setMargins(getDp(24), getDp(8), 0, 0);
-        costText.setText("Cost of this Journey:");
+        costText.setText(R.string.cost_of_journey);
         costText.setLayoutParams(costTextParams);
         costText.setId(View.generateViewId());
 
@@ -220,8 +220,8 @@ public class AddExpenditure extends DialogFragment {
         propertiesEntry.addView(costText);
         propertiesEntry.addView(cost);
 
-        builder.setTitle("Add Expenditure")
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+        builder.setTitle(context.getString(R.string.add_expenditure))
+                .setPositiveButton(context.getString(R.string.add), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         double cashCost = Double.parseDouble(fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
                                 context, "cash")));
@@ -241,28 +241,28 @@ public class AddExpenditure extends DialogFragment {
                                             traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                             fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
                                                     context, "leap")));
-                                    Toast.makeText(context, "Expenditure added successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
                                 } else {
                                     new AlertDialog.Builder(context)
-                                            .setTitle("No Active Leap Card")
-                                            .setMessage("No active Leap card was detected, please activate one under settings. Click add if you wish to add this expense as a cash expenditure.\n\nThis will cost €" +
+                                            .setTitle(context.getString(R.string.no_active_leap))
+                                            .setMessage(context.getString(R.string.no_active_leap_body) +
                                                     fares.formatDecimals(String.valueOf(difference)) + " more.")
-                                                            .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(DialogInterface dialog, int which) {
-                                                                    //cash payment, no active leap
-                                                                    databaseHelper.insertExpenditure(false, "cash",
-                                                                            fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
-                                                                                    context, "cash")));
-                                                                    Toast.makeText(context, "Expenditure added successfully", Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            })
-                                                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(DialogInterface dialog, int which) {
+                                            .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //cash payment, no active leap
+                                                    databaseHelper.insertExpenditure(false, "cash",
+                                                            fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
+                                                                    context, "cash")));
+                                                    Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                                                }
-                                                            })
+                                                }
+                                            })
                                             .create()
                                             .show();
                                 }
@@ -273,13 +273,13 @@ public class AddExpenditure extends DialogFragment {
                                 databaseHelper.insertExpenditure(false, "cash",
                                         fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
                                                 context, "cash")));
-                                Toast.makeText(context, "Expenditure added successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
                             }
                             databaseHelper.printTableContents(Database.Expenditures.TABLE_NAME);
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                     }

@@ -35,6 +35,7 @@ public class Realtime extends Fragment {
     FloatingActionButton addExpenditureFab;
 
     DatabaseHelper databaseHelper;
+    Globals globals;
 
     AsynchronousActivity asynchronousActivity;
 
@@ -137,15 +138,17 @@ public class Realtime extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        sync = new Sync(this.getActivity().getApplicationContext());
         super.onCreate(savedInstanceState);
         LocalBroadcastManager.getInstance(this.getContext())
                 .registerReceiver(onBackPressedBroadcastReceiver,
                         new IntentFilter(MainActivity.ON_BACK_PRESSED_EVENT));
 
+        sync = new Sync(this.getActivity().getApplicationContext());
+        globals = new Globals(getContext());
+
         //assign transportation types to adapter
         categories = new Categories[1];
-        categories[0] = new Categories("Luas", "local");
+        categories[0] = new Categories(getString(R.string.luas_title), "local");
 
         /* rest will be implemented soon as fares and tracking get finished
         categories = new Categories[5];
@@ -163,50 +166,50 @@ public class Realtime extends Fragment {
         //luas line types
         luasCategories = new Categories[2];
         luasCategories[0] =
-                new Categories("Green Line");
+                new Categories(getString(R.string.green_line));
         luasCategories[1] =
-                new Categories("Red Line");
+                new Categories(getString(R.string.red_line));
 
         //sublines within luas lines
         luasDirectionGreen = new Categories[2];
         luasDirectionGreen[0] =
-                new Categories("Bride's Glen-St. Stephen's Green Line");
+                new Categories(getString(R.string.brides_glen_stephens_green));
         luasDirectionGreen[1] =
-                new Categories("Sandyford-St. Stephen's Green Line");
+                new Categories(getString(R.string.sandyford_stephens_green));
 
         luasDirectionRed = new Categories[3];
         luasDirectionRed[0] =
-                new Categories("Tallaght-The Point Line");
+                new Categories(getString(R.string.tallaght_point));
         luasDirectionRed[1] =
-                new Categories("Saggart-Connolly Line");
+                new Categories(getString(R.string.saggart_connolly));
         //fuck my life and Veolia's ridiculous planning to have 2 stations 50m apart on a sub route
         luasDirectionRed[2] =
-                new Categories("Heuston-Connolly Line");
+                new Categories(getString(R.string.heuston_connolly));
 
         //luas stations
-        greenLuasStationsBridesGlen = new Categories[Globals.greenLineStationsBridesGlenStephensGreen.length];
-        for (int i = 0; i < Globals.greenLineStationsBridesGlenStephensGreen.length; i++) {
-            greenLuasStationsBridesGlen[i] = new Categories(Globals.greenLineStationsBridesGlenStephensGreen[i]);
+        greenLuasStationsBridesGlen = new Categories[globals.greenLineStationsBridesGlenStephensGreen.length];
+        for (int i = 0; i < globals.greenLineStationsBridesGlenStephensGreen.length; i++) {
+            greenLuasStationsBridesGlen[i] = new Categories(globals.greenLineStationsBridesGlenStephensGreen[i]);
         }
 
-        greenLuasStationsSandyford = new Categories[Globals.greenLineBeforeSandyford.length];
-        for (int i = 0; i < Globals.greenLineBeforeSandyford.length; i++) {
-            greenLuasStationsSandyford[i] = new Categories(Globals.greenLineStationsSandyfordStephensGreen[i]);
+        greenLuasStationsSandyford = new Categories[globals.greenLineBeforeSandyford.length];
+        for (int i = 0; i < globals.greenLineBeforeSandyford.length; i++) {
+            greenLuasStationsSandyford[i] = new Categories(globals.greenLineBeforeSandyford[i]);
         }
 
-        redLuasStationsTallaght = new Categories[Globals.redLineStationsTallaghtPoint.length];
-        for (int i = 0; i < Globals.redLineStationsTallaghtPoint.length; i++) {
-            redLuasStationsTallaght[i] = new Categories(Globals.redLineStationsTallaghtPoint[i]);
+        redLuasStationsTallaght = new Categories[globals.redLineStationsTallaghtPoint.length];
+        for (int i = 0; i < globals.redLineStationsTallaghtPoint.length; i++) {
+            redLuasStationsTallaght[i] = new Categories(globals.redLineStationsTallaghtPoint[i]);
         }
 
-        redLuasStationsSaggart = new Categories[Globals.redLineStationsSaggartConnolly.length];
-        for (int i = 0; i < Globals.redLineStationsSaggartConnolly.length; i++) {
-            redLuasStationsSaggart[i] = new Categories(Globals.redLineStationsSaggartConnolly[i]);
+        redLuasStationsSaggart = new Categories[globals.redLineStationsSaggartConnolly.length];
+        for (int i = 0; i < globals.redLineStationsSaggartConnolly.length; i++) {
+            redLuasStationsSaggart[i] = new Categories(globals.redLineStationsSaggartConnolly[i]);
         }
 
-        redLuasStationsConnolly = new Categories[Globals.redLineStationsHeustonConnolly.length];
-        for (int i = 0; i < Globals.redLineStationsHeustonConnolly.length; i++) {
-            redLuasStationsConnolly[i] = new Categories(Globals.redLineStationsHeustonConnolly[i]);
+        redLuasStationsConnolly = new Categories[globals.redLineStationsHeustonConnolly.length];
+        for (int i = 0; i < globals.redLineStationsHeustonConnolly.length; i++) {
+            redLuasStationsConnolly[i] = new Categories(globals.redLineStationsHeustonConnolly[i]);
         }
     }
 
@@ -375,7 +378,6 @@ public class Realtime extends Fragment {
     }
 
     private void handleChoices(Categories[] currentChoice, int position) {
-        addExpenditureFab.hide();
         //check loop
         if (gridView.isItemChecked(position)) {
             if (!isStart() && !isEnd()) {
@@ -383,6 +385,7 @@ public class Realtime extends Fragment {
                 setStartPositionComp(position);
                 setStart(true);
                 setStartPosition(currentChoice[position].getTitle());
+                addExpenditureFab.hide();
             } else if (isStart() && !isEnd()) {
                 if (position != getStartPositionComp()) {
                     System.out.println("end was false where start is true, now end set true");
@@ -390,10 +393,12 @@ public class Realtime extends Fragment {
                     setEnd(true);
                     setHasPair(true);
                     setEndPosition(currentChoice[position].getTitle());
+                    addExpenditureFab.hide();
                 } else {
                     System.out.println("start was true, now start set false");
                     setStart(false);
                     setStartPosition("");
+                    addExpenditureFab.hide();
                 }
             } else if (!isStart() && isEnd()) {
                 if (position != getStartPositionComp()) {
@@ -402,10 +407,12 @@ public class Realtime extends Fragment {
                     setStart(true);
                     setHasPair(true);
                     setStartPosition(currentChoice[position].getTitle());
+                    addExpenditureFab.show();
                 } else {
                     System.out.println("start was false, now start set true");
                     setStart(false);
                     setStartPosition("");
+                    addExpenditureFab.hide();
                 }
             }
         }
@@ -416,6 +423,7 @@ public class Realtime extends Fragment {
                 setStartPositionComp(position);
                 setStart(true);
                 setStartPosition(currentChoice[position].getTitle());
+                addExpenditureFab.hide();
             } else if (isStart() && !isEnd()) {
                 if (position != getStartPositionComp()) {
                     System.out.println("end was false where start is true, now end set true");
@@ -423,10 +431,12 @@ public class Realtime extends Fragment {
                     setHasPair(true);
                     setEnd(true);
                     setEndPosition(currentChoice[position].getTitle());
+                    addExpenditureFab.show();
                 } else {
                     System.out.println("start was true, now start set false");
                     setStart(false);
                     setEndPosition("");
+                    addExpenditureFab.hide();
                 }
             } else if (!isStart() && isEnd()) {
                 if (position != getEndPositionComp()) {
@@ -435,10 +445,12 @@ public class Realtime extends Fragment {
                     setStart(true);
                     setHasPair(true);
                     setStartPosition(currentChoice[position].getTitle());
+                    addExpenditureFab.show();
                 } else {
                     System.out.println("end was true, now end set false");
                     setEnd(false);
                     setEndPosition("");
+                    addExpenditureFab.hide();
                 }
             } else if (isStart() && isEnd()) {
                 if (position == getStartPositionComp()) {
@@ -446,11 +458,13 @@ public class Realtime extends Fragment {
                     setStart(false);
                     setHasPair(false);
                     setStartPosition("");
+                    addExpenditureFab.hide();
                 } else if (position == getEndPositionComp()) {
                     System.out.println("start and end were true in a pair, now end set false");
                     setEnd(false);
                     setHasPair(false);
                     setEndPosition("");
+                    addExpenditureFab.hide();
                 }
             }
         }
@@ -459,8 +473,8 @@ public class Realtime extends Fragment {
                 if (position != getStartPositionComp()
                         && position != getEndPositionComp()) {
                     gridView.setItemChecked(position, false);
-                    addExpenditureFab.hide();
                     System.out.println("trying to check item not already checked");
+                    addExpenditureFab.show();
                 } else {
                     System.out.println("start true, end true!");
                     System.out.println(
@@ -890,7 +904,7 @@ public class Realtime extends Fragment {
         protected void onPreExecute() {
             baseAdapter.notifyDataSetChanged();
             infoPanel.invalidate();
-            displayRTPI("Loading stations...", "Loading times...");
+            displayRTPI(getString(R.string.loading_stations), getString(R.string.loading_times));
         }
 
         @Override
@@ -911,7 +925,7 @@ public class Realtime extends Fragment {
                     }
                 }
             } catch (Exception e) {
-                displayRTPI("Error in retrieving data!", "Please check your internet connection!");
+                displayRTPI(getString(R.string.error_in_data), getString(R.string.check_connection));
                 e.printStackTrace();
             }
             return null;
@@ -922,7 +936,7 @@ public class Realtime extends Fragment {
             baseAdapter.notifyDataSetChanged();
             infoPanel.invalidate();
             displayRTPI(sync.getNextDue(), sync.getArrivalInfo());
-            Toast.makeText(getContext(), "You are using " + sync.getFarePayment() + " payment type under the fare class " + sync.getFareClass(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "You are using " + sync.getFarePayment() + " payment type under the fare class " + sync.getFareClass(), Toast.LENGTH_SHORT).show();
 
             if(swipeRefreshLayout.isRefreshing()){
                 swipeRefreshLayout.setRefreshing(false);

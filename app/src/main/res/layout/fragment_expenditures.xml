@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginTop="?attr/actionBarSize">
 
         <RelativeLayout
@@ -18,7 +18,7 @@
             android:paddingBottom="8dp"
             android:paddingEnd="32dp"
             android:paddingStart="16dp"
-            android:paddingTop="8dp"
+            android:paddingTop="16dp"
             android:layout_centerHorizontal="true">
 
             <TextView
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="64dp"
-                android:text="Total expenditure this week:" />
+                android:text="@string/expenditures_this_week" />
 
             <TextView
                 android:id="@+id/monthly_expenditures_title"
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/weekly_expenditures_title"
                 android:paddingEnd="64dp"
-                android:text="Total expenditure this month:" />
+                android:text="@string/expenditures_this_month" />
 
             <TextView
                 android:id="@+id/best_option_title"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/monthly_expenditures_title"
                 android:paddingEnd="64dp"
-                android:text="Best Option for You:" />
+                android:text="@string/best_option" />
 
         </RelativeLayout>
 
@@ -52,16 +52,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
-            android:paddingEnd="32dp"
+            android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:paddingTop="8dp">
+            android:paddingTop="16dp">
 
             <TextView
                 android:id="@+id/weekly_expenditures"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="false"
-                android:text="€xx.xx" />
+                android:text="€xx.xx"
+                android:layout_centerHorizontal="true" />
 
             <TextView
                 android:id="@+id/monthly_expenditures"
@@ -69,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="false"
                 android:layout_below="@+id/weekly_expenditures"
+                android:layout_centerHorizontal="true"
                 android:text="€xx.xx" />
 
             <TextView
@@ -77,6 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="false"
                 android:layout_below="@+id/monthly_expenditures"
+                android:layout_centerHorizontal="true"
                 android:text="Leap" />
 
         </RelativeLayout>
@@ -85,7 +88,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/expenditures_panel">
-
             <include layout="@layout/row_handler_expenditures" />
         </RelativeLayout>
     </RelativeLayout>

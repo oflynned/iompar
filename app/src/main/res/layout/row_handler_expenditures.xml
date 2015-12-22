@@ -28,15 +28,15 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/table_cell"
                     android:gravity="center"
-                    android:text="Time Added" />
+                    android:text="@string/time_added" />
 
                 <TextView
-                    android:id="@+id/lpayment_type_title"
+                    android:id="@+id/payment_type_title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/table_cell"
                     android:gravity="center"
-                    android:text="Type" />
+                    android:text="@string/type" />
 
                 <TextView
                     android:id="@+id/leap_number_title"
@@ -44,7 +44,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/table_cell"
                     android:gravity="center"
-                    android:text="Leap Number" />
+                    android:text="@string/leap_number" />
 
                 <TextView
                     android:id="@+id/cost_title"
@@ -52,7 +52,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/table_cell"
                     android:gravity="center"
-                    android:text="Cost" />
+                    android:text="@string/cost" />
             </TableRow>
         </TableLayout>
     </ScrollView>

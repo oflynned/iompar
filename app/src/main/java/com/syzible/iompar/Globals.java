@@ -1,17 +1,21 @@
 package com.syzible.iompar;
 
-import android.content.SharedPreferences;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
-import android.view.View;
 
 import java.util.Locale;
 
 /**
  * Created by ed on 28/10/15.
  */
-public class Globals {
+public class Globals extends ContextWrapper {
+    
+    public Globals(Context context){
+        super(context);
+    }
 
     //http querying
     public static String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
@@ -31,17 +35,6 @@ public class Globals {
     public static final int TENTH_OF_SECOND = ONE_SECOND / 10;
     public static final int FIVE_SECONDS = ONE_SECOND * 5;
     public static final int TEN_SECONDS = ONE_SECOND * 10;
-
-    //IDs for fares in fares tables
-    public static final int ONE_ZONE = 1;
-    public static final int TWO_ZONES = 2;
-    public static final int THREE_ZONES = 3;
-    public static final int FOUR_ZONES = 4;
-    public static final int FIVE_EIGHT_ZONES = 5;
-
-    public static final int ADULT_CAP = 1;
-    public static final int CHILD_CAP = 2;
-    public static final int STUDENT_CAP = 3;
 
     //zone IDs
     public static final int DOCKLANDS_ID = 1;
@@ -102,141 +95,113 @@ public class Globals {
         res.updateConfiguration(conf, dm);
     }
 
-    public static String greenLineBeforeSandyford[] = {
-            "St. Stephen's Green",
-            "Harcourt St.",
-            "Charlemont",
-            "Ranelagh",
-            "Beechwood",
-            "Cowper",
-            "Milltown",
-            "Windy Arbour",
-            "Dundrum",
-            "Balally",
-            "Kilmacud",
-            "Stillorgan",
-            "Sandyford"
+    public String greenLineBeforeSandyford[] = {
+            this.getString(R.string.stephens_green),
+            this.getString(R.string.harcourt_st),
+            this.getString(R.string.charlemont),
+            this.getString(R.string.ranelagh),
+            this.getString(R.string.beechwood),
+            this.getString(R.string.cowper),
+            this.getString(R.string.milltown),
+            this.getString(R.string.windy_arbour),
+            this.getString(R.string.dundrum),
+            this.getString(R.string.balally),
+            this.getString(R.string.kilmacud),
+            this.getString(R.string.stillorgan),
+            this.getString(R.string.sandyford)
     };
 
-    public static String greenLineBeforeBridesGlen[] = {
-            "Central Park",
-            "Glencairn",
-            "The Gallops",
-            "Leopardstown Valley",
-            "Ballyogan Wood",
-            "Carrickmines",
-            "Laughanstown",
-            "Cherrywood",
-            "Bride's Glen"
+    public String[] greenLineStationsBridesGlenStephensGreen = {
+            this.getString(R.string.stephens_green),
+            this.getString(R.string.harcourt_st),
+            this.getString(R.string.charlemont),
+            this.getString(R.string.ranelagh),
+            this.getString(R.string.beechwood),
+            this.getString(R.string.cowper),
+            this.getString(R.string.milltown),
+            this.getString(R.string.windy_arbour),
+            this.getString(R.string.dundrum),
+            this.getString(R.string.balally),
+            this.getString(R.string.kilmacud),
+            this.getString(R.string.stillorgan),
+            this.getString(R.string.sandyford),
+            this.getString(R.string.central_park),
+            this.getString(R.string.glencairn),
+            this.getString(R.string.the_gallops),
+            this.getString(R.string.leopardstown_valley),
+            this.getString(R.string.ballyogan_wood),
+            this.getString(R.string.carrickmines),
+            this.getString(R.string.laughanstown),
+            this.getString(R.string.cherrywood),
+            this.getString(R.string.brides_glen)
     };
 
-    public static String greenLineStationsBridesGlenStephensGreen[] = {
-            "St. Stephen's Green",
-            "Harcourt St.",
-            "Charlemont",
-            "Ranelagh",
-            "Beechwood",
-            "Cowper",
-            "Milltown",
-            "Windy Arbour",
-            "Dundrum",
-            "Balally",
-            "Kilmacud",
-            "Stillorgan",
-            "Sandyford",
-            "Central Park",
-            "Glencairn",
-            "The Gallops",
-            "Leopardstown Valley",
-            "Ballyogan Wood",
-            "Carrickmines",
-            "Laughanstown",
-            "Cherrywood",
-            "Bride's Glen"
+    public String[] redLineStationsSaggartConnolly = {
+            this.getString(R.string.connolly),
+            this.getString(R.string.busaras),
+            this.getString(R.string.abbey_street),
+            this.getString(R.string.jervis),
+            this.getString(R.string.four_courts),
+            this.getString(R.string.smithfield),
+            this.getString(R.string.museum),
+            this.getString(R.string.heuston),
+            this.getString(R.string.jamess),
+            this.getString(R.string.fatima),
+            this.getString(R.string.rialto),
+            this.getString(R.string.suir_road),
+            this.getString(R.string.goldenbridge),
+            this.getString(R.string.drimnagh),
+            this.getString(R.string.blackhorse),
+            this.getString(R.string.bluebell),
+            this.getString(R.string.kylemore),
+            this.getString(R.string.red_cow),
+            this.getString(R.string.kingswood),
+            this.getString(R.string.belgard),
+            this.getString(R.string.fettercairn),
+            this.getString(R.string.cheeverstown),
+            this.getString(R.string.citywest_campus),
+            this.getString(R.string.fortunestown),
+            this.getString(R.string.saggart)
     };
 
-    public static String greenLineStationsSandyfordStephensGreen[] = {
-            "St. Stephen's Green",
-            "Harcourt St.",
-            "Charlemont",
-            "Ranelagh",
-            "Beechwood",
-            "Cowper",
-            "Milltown",
-            "Windy Arbour",
-            "Dundrum",
-            "Balally",
-            "Kilmacud",
-            "Stillorgan",
-            "Sandyford"
+    public String[] redLineStationsHeustonConnolly = {
+            this.getString(R.string.connolly),
+            this.getString(R.string.busaras),
+            this.getString(R.string.abbey_street),
+            this.getString(R.string.jervis),
+            this.getString(R.string.four_courts),
+            this.getString(R.string.smithfield),
+            this.getString(R.string.museum),
+            this.getString(R.string.heuston)
     };
 
-    public static String redLineStationsSaggartConnolly[] = {
-            "Connolly",
-            "Busaras",
-            "Abbey Street",
-            "Jervis",
-            "Four Courts",
-            "Smithfield",
-            "Museum",
-            "Heuston",
-            "James's",
-            "Fatima",
-            "Rialto",
-            "Suir Road",
-            "Goldenbridge",
-            "Drimnagh",
-            "Blackhorse",
-            "Bluebell",
-            "Kylemore",
-            "Red Cow",
-            "Kingswood",
-            "Belgard",
-            "Fettercairn",
-            "Cheeverstown",
-            "Citywest Campus",
-            "Fortunestown",
-            "Saggart"
-    };
-
-    public static String redLineStationsHeustonConnolly[] = {
-            "Connolly",
-            "Busaras",
-            "Abbey Street",
-            "Jervis",
-            "Four Courts",
-            "Smithfield",
-            "Museum",
-            "Heuston"
-    };
-
-    public static String redLineStationsTallaghtPoint[] = {
-            "The Point",
-            "Spencer Dock",
-            "Mayor Square - NCI",
-            "George's Dock",
-            "Busaras",
-            "Abbey Street",
-            "Jervis",
-            "Four Courts",
-            "Smithfield",
-            "Museum",
-            "Heuston",
-            "James's",
-            "Fatima",
-            "Rialto",
-            "Suir Road",
-            "Goldenbridge",
-            "Drimnagh",
-            "Blackhorse",
-            "Bluebell",
-            "Kylemore",
-            "Red Cow",
-            "Kingswood",
-            "Belgard",
-            "Cookstown",
-            "Hospital",
-            "Tallaght"
+    public String[]  redLineStationsTallaghtPoint = {
+            this.getString(R.string.the_point),
+            this.getString(R.string.spencer_dock),
+            this.getString(R.string.mayor_square_nci),
+            this.getString(R.string.georges_dock),
+            this.getString(R.string.busaras),
+            this.getString(R.string.abbey_street),
+            this.getString(R.string.jervis),
+            this.getString(R.string.four_courts),
+            this.getString(R.string.smithfield),
+            this.getString(R.string.museum),
+            this.getString(R.string.heuston),
+            this.getString(R.string.jamess),
+            this.getString(R.string.fatima),
+            this.getString(R.string.rialto),
+            this.getString(R.string.suir_road),
+            this.getString(R.string.goldenbridge),
+            this.getString(R.string.drimnagh),
+            this.getString(R.string.blackhorse),
+            this.getString(R.string.bluebell),
+            this.getString(R.string.kylemore),
+            this.getString(R.string.red_cow),
+            this.getString(R.string.kingswood),
+            this.getString(R.string.belgard),
+            this.getString(R.string.cookstown),
+            this.getString(R.string.hospital),
+            this.getString(R.string.tallaght)
     };
 
     public enum LineDirection {
@@ -266,173 +231,119 @@ public class Globals {
     }
 
     public String getLuasStation(String string) {
-        String RTPI = "";
         switch (string) {
             //green
             case "St. Stephen's Green":
-                RTPI = "LUAS24";
-                break;
+                return "LUAS24";
             case "Harcourt St.":
-                RTPI = "LUAS25";
-                break;
+                return "LUAS25";
             case "Charlemont":
-                RTPI = "LUAS26";
-                break;
+                return "LUAS26";
             case "Ranelagh":
-                RTPI = "LUAS27";
-                break;
+                return "LUAS27";
             case "Beechwood":
-                RTPI = "LUAS28";
-                break;
+                return "LUAS28";
             case "Cowper":
-                RTPI = "LUAS29";
-                break;
+                return "LUAS29";
             case "Milltown":
-                RTPI = "LUAS30";
-                break;
+                return "LUAS30";
             case "Windy Arbour":
-                RTPI = "LUAS31";
-                break;
+                return "LUAS31";
             case "Dundrum":
-                RTPI = "LUAS32";
-                break;
+                return "LUAS32";
             case "Balally":
-                RTPI = "LUAS33";
-                break;
+                return "LUAS33";
             case "Kilmacud":
-                RTPI = "LUAS34";
-                break;
+                return "LUAS34";
             case "Stillorgan":
-                RTPI = "LUAS35";
-                break;
+                return "LUAS35";
             case "Sandyford":
-                RTPI = "LUAS36";
-                break;
+                return "LUAS36";
             case "Central Park":
-                RTPI = "LUAS37";
-                break;
+                return "LUAS37";
             case "Glencairn":
-                RTPI = "LUAS38";
-                break;
+                return "LUAS38";
             case "The Gallops":
-                RTPI = "LUAS39";
-                break;
+                return "LUAS39";
             case "Leopardstown Valley":
-                RTPI = "LUAS40";
-                break;
+                return "LUAS40";
             case "Ballogan Wood":
-                RTPI = "LUAS42";
-                break;
+                return "LUAS42";
             case "Carrickmines":
-                RTPI = "LUAS44";
-                break;
+                return "LUAS44";
             case "Laughanstown":
-                RTPI = "LUAS46";
-                break;
+                return "LUAS46";
             case "Cherrywood":
-                RTPI = "LUAS47";
-                break;
+                return "LUAS47";
             case "Bride's Glen":
-                RTPI = "LUAS48";
-                break;
+                return "LUAS48";
+
             //red
             case "The Point":
-                RTPI = "LUAS57";
-                break;
+                return "LUAS57";
             case "Spencer Dock":
-                RTPI = "LUAS56";
-                break;
+                return "LUAS56";
             case "Mayor Square - NCI":
-                RTPI = "LUAS55";
-                break;
+                return "LUAS55";
             case "George's Dock":
-                RTPI = "LUAS54";
-                break;
+                return "LUAS54";
             case "Connolly":
-                RTPI = "LUAS23";
-                break;
+                return "LUAS23";
             case "Busaras":
-                RTPI = "LUAS22";
-                break;
+                return "LUAS22";
             case "Abbey Street":
-                RTPI = "LUAS21";
-                break;
+                return "LUAS21";
             case "Jervis":
-                RTPI = "LUAS20";
-                break;
+                return "LUAS20";
             case "Four Courts":
-                RTPI = "LUAS19";
-                break;
+                return "LUAS19";
             case "Smithfield":
-                RTPI = "LUAS18";
-                break;
+                return "LUAS18";
             case "Museum":
-                RTPI = "LUAS17";
-                break;
+                return "LUAS17";
             case "Heuston":
-                RTPI = "LUAS16";
-                break;
+                return "LUAS16";
             case "James's":
-                RTPI = "LUAS15";
-                break;
+                return "LUAS15";
             case "Fatima":
-                RTPI = "LUAS14";
-                break;
+                return "LUAS14";
             case "Rialto":
-                RTPI = "LUAS13";
-                break;
+                return "LUAS13";
             case "Suir Road":
-                RTPI = "LUAS12";
-                break;
+                return "LUAS12";
             case "Goldenbridge":
-                RTPI = "LUAS11";
-                break;
+                return "LUAS11";
             case "Drimnagh":
-                RTPI = "LUAS10";
-                break;
+                return "LUAS10";
             case "Blackhorse":
-                RTPI = "LUAS9";
-                break;
+                return "LUAS9";
             case "Bluebell":
-                RTPI = "LUAS8";
-                break;
+                return "LUAS8";
             case "Kylemore":
-                RTPI = "LUAS7";
-                break;
+                return "LUAS7";
             case "Red Cow":
-                RTPI = "LUAS6";
-                break;
+                return "LUAS6";
             case "Kingswood":
-                RTPI = "LUAS5";
-                break;
+                return "LUAS5";
             case "Belgard":
-                RTPI = "LUAS4";
-                break;
+                return "LUAS4";
             case "Cookstown":
-                RTPI = "LUAS3";
-                break;
+                return "LUAS3";
             case "Hospital":
-                RTPI = "LUAS2";
-                break;
+                return "LUAS2";
             case "Tallaght":
-                RTPI = "LUAS1";
-                break;
+                return "LUAS1";
             case "Fettercairn":
-                RTPI = "LUAS49";
-                break;
+                return "LUAS49";
             case "Cheeverstown":
-                RTPI = "LUAS50";
-                break;
+                return "LUAS50";
             case "Citywest Campus":
-                RTPI = "LUAS51";
-                break;
+                return "LUAS51";
             case "Fortunestown":
-                RTPI = "LUAS52";
-                break;
+                return "LUAS52";
             case "Saggart":
-                RTPI = "LUAS53";
-                break;
+                return "LUAS53";
         }
-        return RTPI;
+        return null;
     }
 }

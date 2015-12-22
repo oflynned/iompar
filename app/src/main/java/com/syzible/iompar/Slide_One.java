@@ -29,7 +29,7 @@ public class Slide_One extends Fragment {
         final View view = inflater.inflate(R.layout.slide_one, container, false);
         Switch irishSwitch = (Switch) view.findViewById(R.id.switch_pref_irish);
 
-        globals = new Globals();
+        globals = new Globals(getActivity());
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         boolean isIrish = sharedPreferences.getBoolean(getResources()

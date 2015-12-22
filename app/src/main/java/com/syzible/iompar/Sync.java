@@ -25,7 +25,6 @@ public class Sync {
     ArrayList<String> endDestinationList = new ArrayList<>();
     ArrayList<String> waitingTimeList = new ArrayList<>();
 
-    Globals globals = new Globals();
     Fares fares = new Fares();
 
     Fares.FareType fareClass;
@@ -39,7 +38,7 @@ public class Sync {
                                 String depart,
                                 String arrive) throws Exception {
         setLoaded(false);
-        threadConnect(direction, depart, arrive);
+        threadConnect(direction, depart, arrive, context);
         return getDepartures();
     }
 
@@ -51,7 +50,8 @@ public class Sync {
      * @param arrive    name of station at which the user is arriving
      */
     public void threadConnect(final Globals.LineDirection direction, final String depart,
-                              final String arrive) {
+                              final String arrive, final Context context) {
+        final Globals globals = new Globals(context);
         Thread downloadThread = new Thread() {
             public void run() {
                 setLoaded(false);
@@ -65,7 +65,7 @@ public class Sync {
                     //green line
                     if (direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                             direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
-                        if (stationBeforeSandyford(arrive, Globals.greenLineBeforeSandyford)) {
+                        if (stationBeforeSandyford(arrive, globals.greenLineBeforeSandyford)) {
                             System.out.println("towards Sandyford/Bride's Glen");
                             scrapeData(doc, "Sandyford", "Bride's Glen", depart, arrive);
                         } else {

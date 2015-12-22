@@ -86,6 +86,13 @@ public class Expenditures extends Fragment {
         sqLiteDatabase.close();
         setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
         monthlySubTotal.setText(getSubTotal());
+
+        //is it worth buying a specific ticket?
+
+        /*cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LEAP_CAPS, null);
+        if(Double.parseDouble(monthlySubTotal.getText().toString()) > cursor.getString()){
+
+        }*/
     }
 
     public void calculateTotalWeeklyExpenditure(){
@@ -98,7 +105,7 @@ public class Expenditures extends Fragment {
         calendar.clear(Calendar.MINUTE);
         calendar.clear(Calendar.SECOND);
         calendar.clear(Calendar.MILLISECOND);
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
         firstDayOfWeek = calendar.getTimeInMillis();
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +

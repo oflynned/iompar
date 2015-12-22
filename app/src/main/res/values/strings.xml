@@ -65,11 +65,115 @@
     <string name="slide_four_title">What now?</string>
     <string name="slide_four_desc">iompar helps you track your public transport and expenditures intelligently.\n\nMonitor your spending and never miss that journey again.</string>
 
+    <!-- general -->
+    <string name="fares_synced">Fares synced</string>
+    <string name="using_cash">Using cash</string>
+    <string name="positive_leapcard_drawer">This profile has a positive Leap balance</string>
+
     <!-- realtime fragment -->
+    <string name="loading_stations">Loading stations…</string>
+    <string name="loading_times">Loading times…</string>
+    <string name="error_in_data">Error in retrieving data!</string>
+    <string name="check_connection">Please check your internet connection!</string>
+    <string name="luas_title">Luas</string>
+    <string name="green_line">Green Line</string>
+    <string name="red_line">Red Line</string>
+    <string name="brides_glen_stephens_green">Bride\'s Glen-St. Stephen\'s Green Line</string>
+    <string name="sandyford_stephens_green">Sandyford-St. Stephen\'s Green Line</string>
+    <string name="tallaght_point">Tallaght-The Point Line</string>
+    <string name="saggart_connolly">Saggart-Connolly Line</string>
+    <string name="heuston_connolly">Heuston-Connolly Line</string>
 
     <!-- manage leap fragment -->
+    <string name="leap_added_successfully">Leap card added successfully</string>
+    <string name="cards_cleared_successfully">Cards all cleared successfully</string>
+    <string name="clear_leap_cards">Clear Leap Cards</string>
+    <string name="confirm_remove_all_cards">Are you sure you want to remove all cards?</string>
 
     <!-- fare calculator -->
 
+
     <!-- expenditures -->
+    <string name="time_added">Time Added</string>
+    <string name="type">Type</string>
+    <string name="leap_number">Leap Number</string>
+    <string name="cost">Cost</string>
+    <string name="expenditures_this_week">Total expenditure this week:</string>
+    <string name="expenditures_this_month">Total expenditure this month:</string>
+    <string name="best_option">Best Option for You:</string>
+
+    <!-- add expenditure -->
+    <string name="leap_payment">Leap Payment</string>
+    <string name="cash_payment">Cash Payment</string>
+    <string name="current_leap_balance">Current Leap Balance:</string>
+    <string name="cost_of_journey">Cost of this Journey:</string>
+    <string name="add_expenditure">Add Expenditure</string>
+    <string name="add">Add</string>
+    <string name="expenditure_added_successfully">Expenditure added successfully</string>
+    <string name="no_active_leap">No Active Leap Card</string>
+    <string name="no_active_leap_body">No active Leap card was detected, please activate one under settings. Click add if you wish to add this expense as a cash expenditure.\n\nThis will cost €</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- add leap card -->
+    <string name="add_leap">Add a Leap Card</string>
+    <string name="leap_card_username">Leap Card Username</string>
+    <string name="leap_card_email">Leap Card Email</string>
+    <string name="leap_card_password">Leap Card Password</string>
+
+    <!-- stations -->
+    <string name="stephens_green">St. Stephen\'s Green</string>
+    <string name="harcourt_st">Harcourt St.</string>
+    <string name="charlemont">Charlemont</string>
+    <string name="ranelagh">Ranelagh</string>
+    <string name="beechwood">Beechwood</string>
+    <string name="cowper">Cowper</string>
+    <string name="milltown">Milltown</string>
+    <string name="windy_arbour">Windy Arbour</string>
+    <string name="dundrum">Dundrum</string>
+    <string name="balally">Balally</string>
+    <string name="kilmacud">Kilmacud</string>
+    <string name="stillorgan">Stillorgan</string>
+    <string name="sandyford">Sandyford</string>
+    <string name="central_park">Central Park</string>
+    <string name="glencairn">Glencairn</string>
+    <string name="the_gallops">The Gallops</string>
+    <string name="leopardstown_valley">Leopardstown Valley</string>
+    <string name="ballyogan_wood">Ballyogan Wood</string>
+    <string name="carrickmines">Carrickmines</string>
+    <string name="laughanstown">Laughanstown</string>
+    <string name="cherrywood">Cherrywood</string>
+    <string name="brides_glen">Bride\'s Glen</string>
+    <string name="connolly">Connolly</string>
+    <string name="busaras">Busaras</string>
+    <string name="abbey_street">Abbey Street</string>
+    <string name="jervis">Jervis</string>
+    <string name="four_courts">Four Courts</string>
+    <string name="smithfield">Smithfield</string>
+    <string name="museum">Museum</string>
+    <string name="heuston">Heuston</string>
+    <string name="jamess">James\'s</string>
+    <string name="fatima">Fatima</string>
+    <string name="rialto">Rialto</string>
+    <string name="suir_road">Suir Road</string>
+    <string name="goldenbridge">Goldenbridge</string>
+    <string name="drimnagh">Drimnagh</string>
+    <string name="blackhorse">Blackhorse</string>
+    <string name="bluebell">Bluebell</string>
+    <string name="kylemore">Kylemore</string>
+    <string name="red_cow">Red Cow</string>
+    <string name="kingswood">Kingswood</string>
+    <string name="belgard">Belgard</string>
+    <string name="fettercairn">Fettercairn</string>
+    <string name="cheeverstown">Cheeverstown</string>
+    <string name="citywest_campus">Citywest Campus</string>
+    <string name="fortunestown">Fortunestown</string>
+    <string name="saggart">Saggart</string>
+    <string name="the_point">The Point</string>
+    <string name="spencer_dock">Spencer Dock</string>
+    <string name="mayor_square_nci">Mayor Square - NCI</string>
+    <string name="georges_dock">George\'s Dock</string>
+    <string name="cookstown">Cookstown</string>
+    <string name="hospital">Hospital</string>
+    <string name="tallaght">Tallaght</string>
+
 </resources>

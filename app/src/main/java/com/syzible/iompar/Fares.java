@@ -57,15 +57,6 @@ public class Fares extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fare, null);
 
-        setFareType(FareType.ADULT);
-        setFareJourney(FareJourney.SINGLE);
-        setFarePayment(FarePayment.CASH);
-        setFareCaps(FareCaps.ON_PEAK);
-        setLuasFareCost(LuasFareCost.FIVE_EIGHT_ZONES);
-        calculateFare(getContext());
-
-        System.out.println("Fare cost: €" + getFare());
-
         return view;
     }
 
@@ -126,8 +117,8 @@ public class Fares extends Fragment {
             System.out.println("It is currently NOT peak hour");
         }
 
-        setOriginId(getStationIndex(line, origin));
-        setDestinationId(getStationIndex(line, destination));
+        setOriginId(getStationIndex(line, origin, getContext()));
+        setDestinationId(getStationIndex(line, destination, getContext()));
         System.out.println("origin id: " + getOriginId());
         System.out.println("destination id: " + getDestinationId());
 
@@ -375,12 +366,13 @@ public class Fares extends Fragment {
      * @param station station index to be found
      * @return the index of the station of the whole array
      */
-    public int getStationIndex(Realtime.LuasDirections line, String station) {
+    public int getStationIndex(Realtime.LuasDirections line, String station, Context context) {
+        Globals globals = new Globals(context);
         System.out.println("LINE: " + line);
         int index = 0;
         switch (line) {
             case TALLAGHT:
-                for (String searchStation : Globals.redLineStationsTallaghtPoint) {
+                for (String searchStation : globals.redLineStationsTallaghtPoint) {
                     index++;
                     if (searchStation.contains(station)) {
                         return index;
@@ -389,7 +381,7 @@ public class Fares extends Fragment {
                 break;
             case SAGGART:
             case CONNOLLY:
-                for (String searchStation : Globals.redLineStationsSaggartConnolly) {
+                for (String searchStation : globals.redLineStationsSaggartConnolly) {
                     index++;
                     if (searchStation.contains(station)) {
                         return index;
@@ -397,7 +389,7 @@ public class Fares extends Fragment {
                 }
                 break;
             case POINT:
-                for (String searchStation : Globals.redLineStationsTallaghtPoint) {
+                for (String searchStation : globals.redLineStationsTallaghtPoint) {
                     index++;
                     if (searchStation.contains(station)) {
                         return index;
@@ -407,7 +399,7 @@ public class Fares extends Fragment {
             case BRIDES_GLEN:
             case SANDYFORD:
             case STEPHENS_GREEN:
-                for (String searchStation : Globals.greenLineStationsBridesGlenStephensGreen) {
+                for (String searchStation : globals.greenLineStationsBridesGlenStephensGreen) {
                     index++;
                     if (searchStation.contains(station)) {
                         return index;

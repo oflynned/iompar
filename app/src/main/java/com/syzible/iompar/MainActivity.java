@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStart(){
         super.onStart();
         setNavigationBarProfile();
-
     }
 
     public void setNavigationBarProfile(){
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity
             cursor.moveToFirst();
             leapNumber = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER);
         } else {
-            leapNumber = "Using cash";
+            leapNumber = getString(R.string.using_cash);
         }
 
         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
@@ -134,7 +133,7 @@ public class MainActivity extends AppCompatActivity
 
         //set appropriate state if leap is positive, if cash is being used or anything else
         currentState.invalidate();
-        currentState.setText("This profile has a positive Leap balance");
+        currentState.setText(getString(R.string.positive_leapcard_drawer));
 
         sqLiteDatabase.close();
         cursor.close();
@@ -384,7 +383,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getApplicationContext(), "Fares synced", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.fares_synced), Toast.LENGTH_SHORT).show();
         }
     }
 }

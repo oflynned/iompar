@@ -80,21 +80,21 @@ public class ManageLeapCards extends Fragment {
                                                 addLeapCard.getEmailField(), addLeapCard.getPasswordField(), false);
                                         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                                         populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
-                                        Toast.makeText(getContext(), "Leap card added successfully", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), R.string.leap_added_successfully, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 break;
                             //clear table
                             case 1:
                                 new AlertDialog.Builder(getContext())
-                                        .setTitle("Clear Leap Cards")
-                                        .setMessage("Are you sure you want to remove all cards?")
+                                        .setTitle(getString(R.string.clear_leap_cards))
+                                        .setMessage(getString(R.string.confirm_remove_all_cards))
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
                                                 databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                                                 populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
-                                                Toast.makeText(getContext(), "Cards all cleared successfully", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getContext(), R.string.cards_cleared_successfully, Toast.LENGTH_SHORT).show();
                                             }
                                         })
                                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
