@@ -315,25 +315,25 @@ public class Sync {
     }
 
     public Realtime.LuasDirections convertStringToEnum(String endStation) {
-        switch (endStation) {
-            case "Tallaght":
-                return Realtime.LuasDirections.TALLAGHT;
-            case "Saggart":
-                return Realtime.LuasDirections.SAGGART;
-            case "Connolly":
-                return Realtime.LuasDirections.CONNOLLY;
-            case "The Point":
-                return Realtime.LuasDirections.POINT;
-            case "St. Stephen's Green":
-                return Realtime.LuasDirections.STEPHENS_GREEN;
-            case "Sandyford":
-                return Realtime.LuasDirections.SANDYFORD;
-            case "Bride's Glen":
-                return Realtime.LuasDirections.BRIDES_GLEN;
-            case "Heuston":
-                return Realtime.LuasDirections.HEUSTON;
+        if(endStation.equals(context.getResources().getString(R.string.tallaght))){
+            return Realtime.LuasDirections.TALLAGHT;
+        } else if(endStation.equals(context.getResources().getString(R.string.saggart))){
+            return Realtime.LuasDirections.SAGGART;
+        } else if(endStation.equals(context.getResources().getString(R.string.connolly))){
+            return Realtime.LuasDirections.CONNOLLY;
+        } else if(endStation.equals(context.getResources().getString(R.string.the_point))){
+            return Realtime.LuasDirections.POINT;
+        } else if(endStation.equals(context.getResources().getString(R.string.stephens_green))){
+            return Realtime.LuasDirections.STEPHENS_GREEN;
+        } else if(endStation.equals(context.getResources().getString(R.string.sandyford))){
+            return Realtime.LuasDirections.SANDYFORD;
+        } else if(endStation.equals(context.getResources().getString(R.string.brides_glen))){
+            return Realtime.LuasDirections.BRIDES_GLEN;
+        } else if(endStation.equals(context.getResources().getString(R.string.heuston))){
+            return Realtime.LuasDirections.HEUSTON;
+        } else {
+            return null;
         }
-        return null;
     }
 
     public String getTimeFormat(String time) {

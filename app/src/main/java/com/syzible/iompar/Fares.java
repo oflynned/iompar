@@ -22,6 +22,11 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -35,7 +40,7 @@ import java.util.TimeZone;
 public class Fares extends Fragment {
 
     int originId, destinationId;
-    String direction, fare;
+    String direction, fare, endStation;
 
     public enum FareType {ADULT, STUDENT, CHILD, OTHER}
 
@@ -55,6 +60,7 @@ public class Fares extends Fragment {
 
     DatabaseHelper databaseHelper;
     Globals globals;
+    Sync sync;
 
     private boolean start, end, pair = false;
     String startPosition, endPosition = "";
@@ -131,6 +137,7 @@ public class Fares extends Fragment {
                 .registerReceiver(onBackPressedBroadcastReceiver,
                         new IntentFilter(MainActivity.ON_BACK_PRESSED_EVENT));
         globals = new Globals(getContext());
+        sync = new Sync(getContext());
 
         categories = new Categories[1];
         categories[0] = new Categories(getString(R.string.luas_title), "local");
@@ -376,7 +383,40 @@ public class Fares extends Fragment {
                             "start station: " + getStartPosition() + "\n" +
                                     "end station: " + getEndPosition());
 
-                    getZoneTraversal
+                    if(currentLuasDirection == LuasDirections.SAGGART) {
+                        if(getStartPositionComp() < getEndPositionComp()){
+                            setEndStation(Globals.LineDirection.connolly_to_saggart);
+                        } else {
+                            setEndStation(Globals.LineDirection.belgard_to_saggart);
+                        }
+                    } else if(currentLuasDirection == LuasDirections.TALLAGHT) {
+                        if(getStartPositionComp() < getEndPositionComp()){
+                            setEndStation(Globals.LineDirection.the_point_to_tallaght);
+                        } else {
+                            setEndStation(Globals.LineDirection.tallaght_to_the_point);
+                        }
+                    } else if(currentLuasDirection == LuasDirections.CONNOLLY) {
+                        if(getStartPositionComp() < getEndPositionComp()){
+                            setEndStation(Globals.LineDirection.connolly_to_saggart);
+                        } else {
+                            setEndStation(Globals.LineDirection.belgard_to_saggart);
+                        }
+                    } else if(currentLuasDirection == LuasDirections.SANDYFORD) {
+                        if(getStartPositionComp() < getEndPositionComp()){
+                            setEndStation(Globals.LineDirection.stephens_green_to_sandyford);
+                        } else {
+                            setEndStation(Globals.LineDirection.sandyford_to_stephens_green);
+                        }
+                    } else if(currentLuasDirection == LuasDirections.BRIDES_GLEN){
+                        if(getStartPositionComp() < getEndPositionComp()){
+                            setEndStation(Globals.LineDirection.stephens_green_to_brides_glen);
+                        } else {
+                            setEndStation(Globals.LineDirection.brides_glen_to_stephens_green);
+                        }
+                    }
+
+                    getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
+                            getStartPosition(), getEndPosition(), getContext(), "default");
                 }
             } else {
                 if (position == getEndPositionComp()) {
@@ -392,6 +432,51 @@ public class Fares extends Fragment {
         System.out.println("Start pos: " + getStartPosition() + ", end pos: " + getEndPosition());
         baseAdapter.notifyDataSetChanged();
         baseAdapter.notifyDataSetInvalidated();
+    }
+
+    public String getChosenEndStation() {
+        return endStation;
+    }
+
+    public void setEndStation (Globals.LineDirection direction) {
+        //green line
+        if (direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
+                direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
+                this.endStation = "Bride's Glen";
+        } else if (direction.equals(Globals.LineDirection.sandyford_to_stephens_green) ||
+                direction.equals(Globals.LineDirection.brides_glen_to_stephens_green)) {
+            this.endStation = "St. Stephen's Green";
+        }
+
+        //red line - tallaght/point
+        else if (direction.equals(Globals.LineDirection.belgard_to_tallaght) ||
+                direction.equals(Globals.LineDirection.the_point_to_tallaght)) {
+            this.endStation = "Tallaght";
+        } else if (direction.equals(Globals.LineDirection.belgard_to_the_point) ||
+                direction.equals(Globals.LineDirection.tallaght_to_the_point) ||
+                direction.equals(Globals.LineDirection.tallaght_to_belgard)) {
+            this.endStation = "The Point";
+        } else if (direction.equals(Globals.LineDirection.the_point_to_belgard)) {
+            this.endStation = "Tallaght";
+        }
+
+        //saggart/connolly
+        else if (direction.equals(Globals.LineDirection.belgard_to_saggart)) {
+            this.endStation = "Saggart";
+        } else if (direction.equals(Globals.LineDirection.saggart_to_belgard)) {
+            this.endStation = "The Point";
+        } else if (direction.equals(Globals.LineDirection.belgard_to_connolly)) {
+            this.endStation = "Connolly";
+        } else if (direction.equals(Globals.LineDirection.connolly_to_belgard)) {
+            this.endStation = "Saggart";
+        }
+
+        //connolly/heuston
+        else if (direction.equals(Globals.LineDirection.heuston_to_connolly)) {
+            this.endStation = "Connolly";
+        } else if (direction.equals(Globals.LineDirection.connolly_to_heuston)) {
+            this.endStation = "Saggart";
+        }
     }
 
     /**
@@ -1321,7 +1406,7 @@ public class Fares extends Fragment {
     }
 
     public String formatDecimals(String fare) {
-        double castFare = Double.parseDouble(fare.replaceAll("[€]",""));
+        double castFare = Double.parseDouble(fare.replaceAll("[€]", ""));
         return String.format("%.2f", castFare);
     }
 
@@ -1372,7 +1457,6 @@ public class Fares extends Fragment {
     public FareJourney getFareJourney() {
         return fareJourney;
     }
-
 
 
     public void setStartPosition(String startPosition) {
@@ -1453,6 +1537,7 @@ public class Fares extends Fragment {
         /**
          * Default constructor for the transportation adapter which passes the current context
          * and instantiates an appropriate layout contextually
+         *
          * @param context the current application context
          */
         public TransportationAdapter(Context context) {
@@ -1463,6 +1548,7 @@ public class Fares extends Fragment {
         /**
          * Counts the number of static elements within the enumeration's state array and adds it
          * to the count for the current state which the view returns
+         *
          * @return the count of items within the array to be displayed
          */
         @Override
@@ -1517,6 +1603,7 @@ public class Fares extends Fragment {
 
         /**
          * Returns the current stage advanced or returned as a set of arguments within enumeration states
+         *
          * @return view returns the current contextual view
          */
         @Override
