@@ -642,8 +642,8 @@ public class Fares extends Fragment {
             System.out.println("It is currently NOT peak hour");
         }
 
-        setOriginId(getStationIndex(line, origin, getContext()));
-        setDestinationId(getStationIndex(line, destination, getContext()));
+        setOriginId(getStationIndex(line, origin, context));
+        setDestinationId(getStationIndex(line, destination, context));
         System.out.println("origin id: " + getOriginId());
         System.out.println("destination id: " + getDestinationId());
 
@@ -1596,12 +1596,6 @@ public class Fares extends Fragment {
     public int getEndPositionComp() {
         return endPositionComp;
     }
-
-    public int getDp(float pixels) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                pixels, getContext().getResources().getDisplayMetrics());
-    }
-
 
     public void setHasPair(boolean pair) {
         this.pair = pair;

@@ -58,7 +58,7 @@ public class Realtime extends Fragment {
     public enum LuasLines {GREEN, RED}
 
     public enum LuasDirections {
-        TALLAGHT, SAGGART, POINT, BELGARD,
+        TALLAGHT, SAGGART, POINT,
         BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
         CONNOLLY, HEUSTON
     }

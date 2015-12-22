@@ -97,10 +97,10 @@
     <string name="unavailable_try_other_line">Níl ar fáil, bain triail as líne eile</string>
     <string name="unavailable">Níl ar fáil</string>
     <string name="arriving_soon">Go luath</string>
-    <string name="one_min_away">1 nóim uaim</string>
-    <string name="mins_away">" nóim uaim"</string>
+    <string name="one_min_away">1 nóim uait</string>
+    <string name="mins_away">" nóim uait"</string>
     <string name="could_not_connect_real_time">Ní féidir nascadh le seirbhísí fíorama. Seiceáil do nasc idirlín led\' thoil.</string>
-    <string name="sometimes_rtpi_is_down">Scaití ní bhíonn RTPI.ie le fáil - tá ár n-aip ag braith air chun obair i gceart :(</string>
+    <string name="sometimes_rtpi_is_down">Scaití ní bhíonn RTPI.ie ar fáil - tá ár n-aip ag braith air chun obair i gceart :(</string>
 
     <!-- manage leap fragment -->
     <string name="leap_added_successfully">Cuireadh cárta Leap leis go rathúil</string>

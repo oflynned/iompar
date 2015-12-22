@@ -65,15 +65,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         //set appropriate language
         globals = new Globals(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         globals.setIrish(sharedPreferences.getBoolean(getResources()
                 .getString(R.string.pref_key_irish), false), getResources());
+
+        setContentView(R.layout.activity_main);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(

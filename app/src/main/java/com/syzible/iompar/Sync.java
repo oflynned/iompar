@@ -92,7 +92,7 @@ public class Sync {
                         System.out.println("towards the point");
                         scrapeData(doc, "The Point", depart, arrive);
                     } else if (direction.equals(Globals.LineDirection.the_point_to_belgard)) {
-                        System.out.println("towards the point");
+                        System.out.println("towards tallaght");
                         scrapeData(doc, "Tallaght", depart, arrive);
                     }
 
@@ -176,11 +176,11 @@ public class Sync {
 
             if (!endDestinationList.isEmpty()) {
                 setNextDue(
-                        context.getString(R.string.origin) + ": " + "\n" + depart + "\n" +
-                                context.getString(R.string.destination) + ": " + "\n" + arrive);
+                        context.getString(R.string.origin) + "\n" + depart + "\n" +
+                                context.getString(R.string.destination) + "\n" + arrive);
                 setArrivalInfo(
-                        context.getString(R.string.terminus) + ": " + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                context.getString(R.string.eta) + ": " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                        context.getString(R.string.terminus) + "\n" +  convertEndStation(String.valueOf(endDestinationList.get(0))) + "\n" +
+                                context.getString(R.string.eta) + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                                 context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
                                 getChosenEndStation()), depart, arrive, context, "default"));
 
@@ -235,11 +235,11 @@ public class Sync {
 
             if (!endDestinationList.isEmpty()) {
                 setNextDue(
-                        context.getString(R.string.origin) + ": " + "\n" + depart + "\n" +
-                                context.getString(R.string.destination) + ": " + "\n" + arrive);
+                        context.getString(R.string.origin) + "\n" + depart + "\n" +
+                                context.getString(R.string.destination) + "\n" + arrive);
                 setArrivalInfo(
-                        context.getString(R.string.terminus) + ": " + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                context.getString(R.string.eta) + ": " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                        context.getString(R.string.terminus) + "\n" + convertEndStation(String.valueOf(endDestinationList.get(0))) + "\n" +
+                                context.getString(R.string.eta) + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                                 context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
                                 getChosenEndStation()), depart, arrive, context, "default"));
 
@@ -303,8 +303,8 @@ public class Sync {
                         context.getString(R.string.origin) + ": " + "\n" + depart + "\n" +
                                 context.getString(R.string.destination) + ": " + "\n" + arrive);
                 setArrivalInfo(
-                        context.getString(R.string.terminus) + ": " + "\n" + String.valueOf(endDestinationList.get(0)) + "\n" +
-                                context.getString(R.string.eta) + ": " + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                        context.getString(R.string.terminus) + "\n" +  convertEndStation(String.valueOf(endDestinationList.get(0))) + "\n" +
+                                context.getString(R.string.eta) + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
                                 context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
                                 getChosenEndStation()), depart, arrive, context, "default"));
 
@@ -322,22 +322,48 @@ public class Sync {
     }
 
     public Realtime.LuasDirections convertStringToEnum(String endStation) {
-        if (endStation.equals(context.getResources().getString(R.string.tallaght))) {
+        System.out.println(endStation);
+        if(endStation.equals(context.getString(R.string.tallaght))) {
             return Realtime.LuasDirections.TALLAGHT;
-        } else if (endStation.equals(context.getResources().getString(R.string.saggart))) {
+        } else if(endStation.equals(context.getString(R.string.saggart))) {
             return Realtime.LuasDirections.SAGGART;
-        } else if (endStation.equals(context.getResources().getString(R.string.connolly))) {
+        } else if(endStation.equals(context.getString(R.string.connolly))) {
             return Realtime.LuasDirections.CONNOLLY;
-        } else if (endStation.equals(context.getResources().getString(R.string.the_point))) {
+        } else if(endStation.equals(context.getString(R.string.the_point))) {
             return Realtime.LuasDirections.POINT;
-        } else if (endStation.equals(context.getResources().getString(R.string.stephens_green))) {
+        } else if(endStation.equals(context.getString(R.string.stephens_green))) {
             return Realtime.LuasDirections.STEPHENS_GREEN;
-        } else if (endStation.equals(context.getResources().getString(R.string.sandyford))) {
+        } else if(endStation.equals(context.getString(R.string.sandyford))) {
             return Realtime.LuasDirections.SANDYFORD;
-        } else if (endStation.equals(context.getResources().getString(R.string.brides_glen))) {
+        } else if(endStation.equals(context.getString(R.string.brides_glen))) {
             return Realtime.LuasDirections.BRIDES_GLEN;
-        } else if (endStation.equals(context.getResources().getString(R.string.heuston))) {
+        } else if(endStation.equals(context.getString(R.string.heuston))) {
             return Realtime.LuasDirections.HEUSTON;
+        } else {
+            return null;
+        }
+    }
+
+    public String convertEndStation(String endStation){
+        switch (endStation){
+            case "Tallaght":
+                return context.getString(R.string.tallaght);
+            case "Saggart":
+                return context.getString(R.string.saggart);
+            case "Connolly":
+                return context.getString(R.string.connolly);
+            case "The Point":
+                return context.getString(R.string.the_point);
+            case "Heuston":
+                return context.getString(R.string.heuston);
+            case "Sandyford":
+                return context.getString(R.string.sandyford);
+            case "Bride's Glen":
+                return context.getString(R.string.brides_glen);
+            case "St. Stephen's Green":
+                return context.getString(R.string.stephens_green);
+            case "Belgard":
+                return context.getString(R.string.belgard);
         }
         return null;
     }

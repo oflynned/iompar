@@ -231,118 +231,118 @@ public class Globals extends ContextWrapper {
     }
 
     public String getLuasStation(String string) {
-        switch (string) {
-            //green
-            case "St. Stephen's Green":
-                return "LUAS24";
-            case "Harcourt St.":
-                return "LUAS25";
-            case "Charlemont":
-                return "LUAS26";
-            case "Ranelagh":
-                return "LUAS27";
-            case "Beechwood":
-                return "LUAS28";
-            case "Cowper":
-                return "LUAS29";
-            case "Milltown":
-                return "LUAS30";
-            case "Windy Arbour":
-                return "LUAS31";
-            case "Dundrum":
-                return "LUAS32";
-            case "Balally":
-                return "LUAS33";
-            case "Kilmacud":
-                return "LUAS34";
-            case "Stillorgan":
-                return "LUAS35";
-            case "Sandyford":
-                return "LUAS36";
-            case "Central Park":
-                return "LUAS37";
-            case "Glencairn":
-                return "LUAS38";
-            case "The Gallops":
-                return "LUAS39";
-            case "Leopardstown Valley":
-                return "LUAS40";
-            case "Ballogan Wood":
-                return "LUAS42";
-            case "Carrickmines":
-                return "LUAS44";
-            case "Laughanstown":
-                return "LUAS46";
-            case "Cherrywood":
-                return "LUAS47";
-            case "Bride's Glen":
-                return "LUAS48";
+        //green
+        if(string.equals(this.getString(R.string.stephens_green))) {
+            return "LUAS24";
+        } else if(string.equals(this.getString(R.string.harcourt_st))) {
+            return "LUAS25";
+        } else if(string.equals(this.getString(R.string.charlemont))) {
+            return "LUAS26";
+        } else if(string.equals(this.getString(R.string.ranelagh))) {
+            return "LUAS27";
+        } else if(string.equals(this.getString(R.string.beechwood))) {
+            return "LUAS28";
+        } else if(string.equals(this.getString(R.string.cowper))) {
+            return "LUAS29";
+        } else if(string.equals(this.getString(R.string.milltown))) {
+            return "LUAS30";
+        } else if(string.equals(this.getString(R.string.windy_arbour))) {
+            return "LUAS31";
+        } else if(string.equals(this.getString(R.string.dundrum))) {
+            return "LUAS32";
+        } else if(string.equals(this.getString(R.string.balally))) {
+            return "LUAS33";
+        } else if(string.equals(this.getString(R.string.kilmacud))) {
+            return "LUAS34";
+        } else if(string.equals(this.getString(R.string.stillorgan))) {
+            return "LUAS35";
+        } else if(string.equals(this.getString(R.string.sandyford))) {
+            return "LUAS36";
+        } else if(string.equals(this.getString(R.string.central_park))) {
+            return "LUAS37";
+        } else if(string.equals(this.getString(R.string.glencairn))) {
+            return "LUAS38";
+        } else if(string.equals(this.getString(R.string.the_gallops))) {
+            return "LUAS39";
+        } else if(string.equals(this.getString(R.string.leopardstown_valley))) {
+            return "LUAS40";
+        } else if(string.equals(this.getString(R.string.ballyogan_wood))) {
+            return "LUAS42";
+        } else if(string.equals(this.getString(R.string.carrickmines))) {
+            return "LUAS44";
+        } else if(string.equals(this.getString(R.string.laughanstown))) {
+            return "LUAS46";
+        } else if(string.equals(this.getString(R.string.cherrywood))) {
+            return "LUAS47";
+        } else if(string.equals(this.getString(R.string.brides_glen))) {
+            return "LUAS48";
+        }
 
-            //red
-            case "The Point":
-                return "LUAS57";
-            case "Spencer Dock":
-                return "LUAS56";
-            case "Mayor Square - NCI":
-                return "LUAS55";
-            case "George's Dock":
-                return "LUAS54";
-            case "Connolly":
-                return "LUAS23";
-            case "Busaras":
-                return "LUAS22";
-            case "Abbey Street":
-                return "LUAS21";
-            case "Jervis":
-                return "LUAS20";
-            case "Four Courts":
-                return "LUAS19";
-            case "Smithfield":
-                return "LUAS18";
-            case "Museum":
-                return "LUAS17";
-            case "Heuston":
-                return "LUAS16";
-            case "James's":
-                return "LUAS15";
-            case "Fatima":
-                return "LUAS14";
-            case "Rialto":
-                return "LUAS13";
-            case "Suir Road":
-                return "LUAS12";
-            case "Goldenbridge":
-                return "LUAS11";
-            case "Drimnagh":
-                return "LUAS10";
-            case "Blackhorse":
-                return "LUAS9";
-            case "Bluebell":
-                return "LUAS8";
-            case "Kylemore":
-                return "LUAS7";
-            case "Red Cow":
-                return "LUAS6";
-            case "Kingswood":
-                return "LUAS5";
-            case "Belgard":
-                return "LUAS4";
-            case "Cookstown":
-                return "LUAS3";
-            case "Hospital":
-                return "LUAS2";
-            case "Tallaght":
-                return "LUAS1";
-            case "Fettercairn":
-                return "LUAS49";
-            case "Cheeverstown":
-                return "LUAS50";
-            case "Citywest Campus":
-                return "LUAS51";
-            case "Fortunestown":
-                return "LUAS52";
-            case "Saggart":
-                return "LUAS53";
+        //red
+        else if(string.equals(this.getString(R.string.the_point))) {
+            return "LUAS57";
+        } else if(string.equals(this.getString(R.string.spencer_dock))) {
+            return "LUAS56";
+        } else if(string.equals(this.getString(R.string.mayor_square_nci))) {
+            return "LUAS55";
+        } else if(string.equals(this.getString(R.string.georges_dock))) {
+            return "LUAS54";
+        } else if(string.equals(this.getString(R.string.connolly))) {
+            return "LUAS23";
+        } else if(string.equals(this.getString(R.string.busaras))) {
+            return "LUAS22";
+        } else if(string.equals(this.getString(R.string.abbey_street))) {
+            return "LUAS21";
+        } else if(string.equals(this.getString(R.string.jervis))) {
+            return "LUAS20";
+        } else if(string.equals(this.getString(R.string.four_courts))) {
+            return "LUAS19";
+        } else if(string.equals(this.getString(R.string.smithfield))) {
+            return "LUAS18";
+        } else if(string.equals(this.getString(R.string.museum))) {
+            return "LUAS17";
+        } else if(string.equals(this.getString(R.string.heuston))) {
+            return "LUAS16";
+        } else if(string.equals(this.getString(R.string.jamess))) {
+            return "LUAS15";
+        } else if(string.equals(this.getString(R.string.fatima))) {
+            return "LUAS14";
+        } else if(string.equals(this.getString(R.string.rialto))) {
+            return "LUAS13";
+        } else if(string.equals(this.getString(R.string.suir_road))) {
+            return "LUAS12";
+        } else if(string.equals(this.getString(R.string.goldenbridge))) {
+            return "LUAS11";
+        } else if(string.equals(this.getString(R.string.drimnagh))) {
+            return "LUAS10";
+        } else if(string.equals(this.getString(R.string.blackhorse))) {
+            return "LUAS9";
+        } else if(string.equals(this.getString(R.string.bluebell))) {
+            return "LUAS8";
+        } else if(string.equals(this.getString(R.string.kylemore))) {
+            return "LUAS7";
+        } else if(string.equals(this.getString(R.string.red_cow))) {
+            return "LUAS6";
+        } else if(string.equals(this.getString(R.string.kingswood))) {
+            return "LUAS5";
+        } else if(string.equals(this.getString(R.string.belgard))) {
+            return "LUAS4";
+        } else if(string.equals(this.getString(R.string.cookstown))) {
+            return "LUAS3";
+        } else if(string.equals(this.getString(R.string.hospital))) {
+            return "LUAS2";
+        } else if(string.equals(this.getString(R.string.tallaght))) {
+            return "LUAS1";
+        } else if(string.equals(this.getString(R.string.fettercairn))) {
+            return "LUAS49";
+        } else if(string.equals(this.getString(R.string.cheeverstown))) {
+            return "LUAS50";
+        } else if(string.equals(this.getString(R.string.citywest_campus))) {
+            return "LUAS51";
+        } else if(string.equals(this.getString(R.string.fortunestown))) {
+            return "LUAS52";
+        } else if(string.equals(this.getString(R.string.saggart))) {
+            return "LUAS53";
         }
         return null;
     }
