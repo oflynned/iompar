@@ -1,20 +1,30 @@
 package com.syzible.iompar;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -23,8 +33,6 @@ import java.util.TimeZone;
  * Created by ed on 29/10/15.
  */
 public class Fares extends Fragment {
-
-    View view;
 
     int originId, destinationId;
     String direction, fare;
@@ -46,18 +54,344 @@ public class Fares extends Fragment {
     LuasFareCost luasFareCost;
 
     DatabaseHelper databaseHelper;
+    Globals globals;
+
+    private boolean start, end, pair = false;
+    String startPosition, endPosition = "";
+    int startPositionComp, endPositionComp;
+
+    View view;
+    int stage = 0;
+
+    private BaseAdapter baseAdapter;
+    private GridView gridView;
+
+    public enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
+
+    public enum LuasLines {GREEN, RED}
+
+    public enum LuasDirections {
+        TALLAGHT, SAGGART, POINT, BELGARD,
+        BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
+        CONNOLLY, HEUSTON
+    }
+
+    private TransportationCategories currentCategory;
+    private LuasLines currentLuasLine;
+    private LuasDirections currentLuasDirection;
+
+    //current choice
+    Categories[] categories;
+    Categories[] currentChoice;
+    //luas
+    Categories[] luasCategories;
+    Categories[] luasDirectionGreen;
+    Categories[] luasDirectionRed;
+    Categories[] greenLuasStationsBridesGlen;
+    Categories[] greenLuasStationsSandyford;
+    Categories[] redLuasStationsTallaght;
+    Categories[] redLuasStationsSaggart;
+    Categories[] redLuasStationsConnolly;
+
+    private BroadcastReceiver onBackPressedBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (stage > 0) {
+                stage--;
+                switch (stage) {
+                    case 0:
+                        gridView.setAdapter(new TransportationAdapter(context));
+                        break;
+                    default:
+                        if (currentCategory == TransportationCategories.LUAS)
+                            gridView.setAdapter(new TransportationAdapter(context));
+                        else if (currentCategory == TransportationCategories.TRAIN)
+                            gridView.setAdapter(new TransportationAdapter(context));
+                        else if (currentCategory == TransportationCategories.DART)
+                            gridView.setAdapter(new TransportationAdapter(context));
+                        else if (currentCategory == TransportationCategories.BUS)
+                            gridView.setAdapter(new TransportationAdapter(context));
+                        else if (currentCategory == TransportationCategories.BUS_EIREANN)
+                            gridView.setAdapter(new TransportationAdapter(context));
+                }
+                gridView.setItemChecked(getStartPositionComp(), false);
+                gridView.setItemChecked(getEndPositionComp(), false);
+                setStart(false);
+                setEnd(false);
+                setHasPair(false);
+                gridView.invalidate();
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(this.getContext())
+                .registerReceiver(onBackPressedBroadcastReceiver,
+                        new IntentFilter(MainActivity.ON_BACK_PRESSED_EVENT));
+        globals = new Globals(getContext());
+
+        categories = new Categories[1];
+        categories[0] = new Categories(getString(R.string.luas_title), "local");
+
+        //luas line types
+        luasCategories = new Categories[2];
+        luasCategories[0] =
+                new Categories(getString(R.string.green_line));
+        luasCategories[1] =
+                new Categories(getString(R.string.red_line));
+
+        //sublines within luas lines
+        luasDirectionGreen = new Categories[2];
+        luasDirectionGreen[0] =
+                new Categories(getString(R.string.brides_glen_stephens_green));
+        luasDirectionGreen[1] =
+                new Categories(getString(R.string.sandyford_stephens_green));
+
+        luasDirectionRed = new Categories[3];
+        luasDirectionRed[0] =
+                new Categories(getString(R.string.tallaght_point));
+        luasDirectionRed[1] =
+                new Categories(getString(R.string.saggart_connolly));
+        //fuck my life and Veolia's ridiculous planning to have 2 stations 50m apart on a sub route
+        luasDirectionRed[2] =
+                new Categories(getString(R.string.heuston_connolly));
+
+        //luas stations
+        greenLuasStationsBridesGlen = new Categories[globals.greenLineStationsBridesGlenStephensGreen.length];
+        for (int i = 0; i < globals.greenLineStationsBridesGlenStephensGreen.length; i++) {
+            greenLuasStationsBridesGlen[i] = new Categories(globals.greenLineStationsBridesGlenStephensGreen[i]);
+        }
+
+        greenLuasStationsSandyford = new Categories[globals.greenLineBeforeSandyford.length];
+        for (int i = 0; i < globals.greenLineBeforeSandyford.length; i++) {
+            greenLuasStationsSandyford[i] = new Categories(globals.greenLineBeforeSandyford[i]);
+        }
+
+        redLuasStationsTallaght = new Categories[globals.redLineStationsTallaghtPoint.length];
+        for (int i = 0; i < globals.redLineStationsTallaghtPoint.length; i++) {
+            redLuasStationsTallaght[i] = new Categories(globals.redLineStationsTallaghtPoint[i]);
+        }
+
+        redLuasStationsSaggart = new Categories[globals.redLineStationsSaggartConnolly.length];
+        for (int i = 0; i < globals.redLineStationsSaggartConnolly.length; i++) {
+            redLuasStationsSaggart[i] = new Categories(globals.redLineStationsSaggartConnolly[i]);
+        }
+
+        redLuasStationsConnolly = new Categories[globals.redLineStationsHeustonConnolly.length];
+        for (int i = 0; i < globals.redLineStationsHeustonConnolly.length; i++) {
+            redLuasStationsConnolly[i] = new Categories(globals.redLineStationsHeustonConnolly[i]);
+        }
     }
 
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fare, null);
+        gridView = (GridView) view.findViewById(R.id.gridview);
+        baseAdapter = new TransportationAdapter(this.getContext());
+        gridView.setAdapter(baseAdapter);
+        gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if (stage == 0) {
+                    currentChoice = categories;
+                    stage++;
+
+                    switch (position) {
+                        case 0:
+                            //luas
+                            setCurrentCategory(TransportationCategories.LUAS);
+                            break;
+                    }
+                    gridView.setAdapter(baseAdapter);
+                } else if (stage == 1) {
+                    if (getCurrentCategory() == TransportationCategories.LUAS) {
+                        switch (position) {
+                            case 0:
+                                currentLuasLine = LuasLines.GREEN;
+                                stage++;
+                                gridView.setAdapter(baseAdapter);
+                                break;
+                            case 1:
+                                currentLuasLine = LuasLines.RED;
+                                stage++;
+                                gridView.setAdapter(baseAdapter);
+                                break;
+                        }
+                    }
+                } else if (stage == 2) {
+                    if (getCurrentCategory() == TransportationCategories.LUAS) {
+                        if (currentLuasLine == LuasLines.GREEN) {
+                            switch (position) {
+                                case 0:
+                                    currentLuasDirection = LuasDirections.BRIDES_GLEN;
+                                    stage++;
+                                    gridView.setAdapter(baseAdapter);
+                                    break;
+                                case 1:
+                                    currentLuasDirection = LuasDirections.SANDYFORD;
+                                    stage++;
+                                    gridView.setAdapter(baseAdapter);
+                                    break;
+                            }
+                        } else {
+                            switch (position) {
+                                case 0:
+                                    currentLuasDirection = LuasDirections.TALLAGHT;
+                                    stage++;
+                                    gridView.setAdapter(baseAdapter);
+                                    break;
+                                case 1:
+                                    currentLuasDirection = LuasDirections.SAGGART;
+                                    stage++;
+                                    gridView.setAdapter(baseAdapter);
+                                    break;
+                                case 2:
+                                    currentLuasDirection = LuasDirections.CONNOLLY;
+                                    stage++;
+                                    gridView.setAdapter(baseAdapter);
+                            }
+                        }
+                    }
+                } else if (stage == 3) {
+                    if (currentCategory == TransportationCategories.LUAS) {
+                        if (currentLuasLine == LuasLines.GREEN) {
+                            if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
+                                currentChoice = greenLuasStationsBridesGlen;
+                            } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
+                                currentChoice = greenLuasStationsSandyford;
+                            }
+                        } else {
+                            if (currentLuasDirection == LuasDirections.TALLAGHT) {
+                                currentChoice = redLuasStationsTallaght;
+                            } else if (currentLuasDirection == LuasDirections.SAGGART) {
+                                currentChoice = redLuasStationsSaggart;
+                            } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                                currentChoice = redLuasStationsConnolly;
+                            }
+                        }
+                        if (!Arrays.toString(currentChoice).equals("")) {
+                            handleChoices(currentChoice, position);
+                        }
+                    }
+                }
+            }
+        });
 
         return view;
+    }
+
+    private void handleChoices(Categories[] currentChoice, int position) {
+        //check loop
+        if (gridView.isItemChecked(position)) {
+            if (!isStart() && !isEnd()) {
+                System.out.println("start and end were false, now start set true with end still false");
+                setStartPositionComp(position);
+                setStart(true);
+                setStartPosition(currentChoice[position].getTitle());
+            } else if (isStart() && !isEnd()) {
+                if (position != getStartPositionComp()) {
+                    System.out.println("end was false where start is true, now end set true");
+                    setEndPositionComp(position);
+                    setEnd(true);
+                    setHasPair(true);
+                    setEndPosition(currentChoice[position].getTitle());
+                } else {
+                    System.out.println("start was true, now start set false");
+                    setStart(false);
+                    setStartPosition("");
+                }
+            } else if (!isStart() && isEnd()) {
+                if (position != getStartPositionComp()) {
+                    System.out.println("start was false where end is true, now start set true");
+                    setStartPositionComp(position);
+                    setStart(true);
+                    setHasPair(true);
+                    setStartPosition(currentChoice[position].getTitle());
+                } else {
+                    System.out.println("start was false, now start set true");
+                    setStart(false);
+                    setStartPosition("");
+                }
+            }
+        }
+        //uncheck loop
+        else {
+            if (!isStart() && !isEnd()) {
+                System.out.println("start and end were false, now start set true with end still false");
+                setStartPositionComp(position);
+                setStart(true);
+                setStartPosition(currentChoice[position].getTitle());
+            } else if (isStart() && !isEnd()) {
+                if (position != getStartPositionComp()) {
+                    System.out.println("end was false where start is true, now end set true");
+                    setEndPositionComp(position);
+                    setHasPair(true);
+                    setEnd(true);
+                    setEndPosition(currentChoice[position].getTitle());
+                } else {
+                    System.out.println("start was true, now start set false");
+                    setStart(false);
+                    setEndPosition("");
+                }
+            } else if (!isStart() && isEnd()) {
+                if (position != getEndPositionComp()) {
+                    System.out.println("start was false where end is true, now start set true");
+                    setStartPositionComp(position);
+                    setStart(true);
+                    setHasPair(true);
+                    setStartPosition(currentChoice[position].getTitle());
+                } else {
+                    System.out.println("end was true, now end set false");
+                    setEnd(false);
+                    setEndPosition("");
+                }
+            } else if (isStart() && isEnd()) {
+                if (position == getStartPositionComp()) {
+                    System.out.println("start and end were true in a pair, now start set false");
+                    setStart(false);
+                    setHasPair(false);
+                    setStartPosition("");
+                } else if (position == getEndPositionComp()) {
+                    System.out.println("start and end were true in a pair, now end set false");
+                    setEnd(false);
+                    setHasPair(false);
+                    setEndPosition("");
+                }
+            }
+        }
+        if (isStart() && isEnd()) {
+            if (hasPair()) {
+                if (position != getStartPositionComp()
+                        && position != getEndPositionComp()) {
+                    gridView.setItemChecked(position, false);
+                    System.out.println("trying to check item not already checked");
+                } else {
+                    System.out.println("start true, end true!");
+                    System.out.println(
+                            "start station: " + getStartPosition() + "\n" +
+                                    "end station: " + getEndPosition());
+
+                    getZoneTraversal
+                }
+            } else {
+                if (position == getEndPositionComp()) {
+                    setEnd(false);
+                    System.out.println("start true, end true, unselected end so end is false!");
+                } else if (position == getStartPositionComp()) {
+                    setStart(false);
+                    System.out.println("start true, end true, unselected start so start is false!");
+                }
+                setHasPair(false);
+            }
+        }
+        System.out.println("Start pos: " + getStartPosition() + ", end pos: " + getEndPosition());
+        baseAdapter.notifyDataSetChanged();
+        baseAdapter.notifyDataSetInvalidated();
     }
 
     /**
@@ -1039,4 +1373,275 @@ public class Fares extends Fragment {
         return fareJourney;
     }
 
+
+
+    public void setStartPosition(String startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public String getStartPosition() {
+        return startPosition;
+    }
+
+    public void setEndPosition(String endPosition) {
+        this.endPosition = endPosition;
+    }
+
+    public String getEndPosition() {
+        return endPosition;
+    }
+
+    public void setStartPositionComp(int startPositionComp) {
+        this.startPositionComp = startPositionComp;
+    }
+
+    public int getStartPositionComp() {
+        return startPositionComp;
+    }
+
+    public void setEndPositionComp(int endPositionComp) {
+        this.endPositionComp = endPositionComp;
+    }
+
+    public int getEndPositionComp() {
+        return endPositionComp;
+    }
+
+    public int getDp(float pixels) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                pixels, getContext().getResources().getDisplayMetrics());
+    }
+
+
+    public void setHasPair(boolean pair) {
+        this.pair = pair;
+    }
+
+    public boolean hasPair() {
+        return pair;
+    }
+
+    public void setCurrentCategory(TransportationCategories currentCategory) {
+        this.currentCategory = currentCategory;
+    }
+
+    public TransportationCategories getCurrentCategory() {
+        return currentCategory;
+    }
+
+    public void setStart(boolean start) {
+        this.start = start;
+    }
+
+    public boolean isStart() {
+        return start;
+    }
+
+    public void setEnd(boolean end) {
+        this.end = end;
+    }
+
+    public boolean isEnd() {
+        return end;
+    }
+
+    class TransportationAdapter extends BaseAdapter {
+
+        Context context;
+        LayoutInflater layoutInflater;
+
+        /**
+         * Default constructor for the transportation adapter which passes the current context
+         * and instantiates an appropriate layout contextually
+         * @param context the current application context
+         */
+        public TransportationAdapter(Context context) {
+            this.context = context;
+            layoutInflater = LayoutInflater.from(context);
+        }
+
+        /**
+         * Counts the number of static elements within the enumeration's state array and adds it
+         * to the count for the current state which the view returns
+         * @return the count of items within the array to be displayed
+         */
+        @Override
+        public int getCount() {
+            int count = 0;
+
+            if (stage == 0) {
+                count = categories.length;
+            } else if (stage == 1) {
+                if (currentCategory == TransportationCategories.LUAS) {
+                    count = luasCategories.length;
+                }
+            } else if (stage == 2) {
+                if (currentCategory == TransportationCategories.LUAS) {
+                    if (currentLuasLine == LuasLines.GREEN) {
+                        count = luasDirectionGreen.length;
+                    } else {
+                        count = luasDirectionRed.length;
+                    }
+                }
+            } else if (stage == 3) {
+                if (currentCategory == TransportationCategories.LUAS) {
+                    if (currentLuasLine == LuasLines.GREEN) {
+                        if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
+                            count = greenLuasStationsBridesGlen.length;
+                        } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
+                            count = greenLuasStationsSandyford.length;
+                        }
+                    } else if (currentLuasLine == LuasLines.RED) {
+                        if (currentLuasDirection == LuasDirections.TALLAGHT) {
+                            count = redLuasStationsTallaght.length;
+                        } else if (currentLuasDirection == LuasDirections.SAGGART) {
+                            count = redLuasStationsSaggart.length;
+                        } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                            count = redLuasStationsConnolly.length;
+                        }
+                    }
+                }
+            }
+            return count;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        /**
+         * Returns the current stage advanced or returned as a set of arguments within enumeration states
+         * @return view returns the current contextual view
+         */
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+
+            if (view == null) {
+                view = layoutInflater.inflate(R.layout.tile_layout, null);
+
+                String title = "";
+                TextView textView = (TextView) view.findViewById(R.id.tileTitle);
+
+                switch (stage) {
+                    case 0:
+                        title = categories[position].getTitle();
+                        break;
+                    case 1:
+                        if (currentCategory == TransportationCategories.LUAS) {
+                            title = luasCategories[position].getTitle();
+                        }
+                        break;
+                    case 2:
+                        if (currentCategory == TransportationCategories.LUAS) {
+                            if (currentLuasLine == LuasLines.GREEN) {
+                                title = luasDirectionGreen[position].getTitle();
+                            } else {
+                                title = luasDirectionRed[position].getTitle();
+                            }
+                        }
+                        break;
+                    case 3:
+                        if (currentCategory == TransportationCategories.LUAS) {
+                            if (currentLuasLine == LuasLines.GREEN) {
+                                if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
+                                    title = greenLuasStationsBridesGlen[position].getTitle();
+                                } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
+                                    title = greenLuasStationsSandyford[position].getTitle();
+                                }
+                            } else {
+                                if (currentLuasDirection == LuasDirections.TALLAGHT) {
+                                    title = redLuasStationsTallaght[position].getTitle();
+                                } else if (currentLuasDirection == LuasDirections.SAGGART) {
+                                    title = redLuasStationsSaggart[position].getTitle();
+                                } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                                    title = redLuasStationsConnolly[position].getTitle();
+                                }
+                            }
+                        }
+                        break;
+                }
+                textView.setText(title);
+            } else {
+                TextView textView = (TextView) view.findViewById(R.id.tileTitle);
+
+                switch (stage) {
+                    case 0:
+                        textView.setText(categories[position].getTitle());
+                        break;
+                    case 1:
+                        if (currentCategory == TransportationCategories.LUAS) {
+                            textView.setText(luasCategories[position].getTitle());
+                        }
+                        break;
+                    case 2:
+                        if (currentCategory == TransportationCategories.LUAS) {
+                            if (currentLuasLine == LuasLines.GREEN) {
+                                textView.setText(luasDirectionGreen[position].getTitle());
+                            } else {
+                                textView.setText(luasDirectionRed[position].getTitle());
+                            }
+                        }
+                        break;
+                    case 3:
+                        if (currentCategory == TransportationCategories.LUAS) {
+                            if (currentLuasLine == LuasLines.GREEN) {
+                                if (currentLuasDirection == LuasDirections.BRIDES_GLEN) {
+                                    textView.setText(greenLuasStationsBridesGlen[position].getTitle());
+                                } else if (currentLuasDirection == LuasDirections.SANDYFORD) {
+                                    textView.setText(greenLuasStationsSandyford[position].getTitle());
+                                }
+                            } else {
+                                if (currentLuasDirection == LuasDirections.TALLAGHT) {
+                                    textView.setText(redLuasStationsTallaght[position].getTitle());
+                                } else if (currentLuasDirection == LuasDirections.SAGGART) {
+                                    textView.setText(redLuasStationsSaggart[position].getTitle());
+                                } else if (currentLuasDirection == LuasDirections.CONNOLLY) {
+                                    textView.setText(redLuasStationsConnolly[position].getTitle());
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            return view;
+        }
+    }
+
+    class Categories {
+        private String title;
+        private String type;
+
+        //constructors
+        public Categories(String title, String type) {
+            this.title = title;
+            this.type = type;
+        }
+
+        public Categories(String title) {
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+    }
 }
