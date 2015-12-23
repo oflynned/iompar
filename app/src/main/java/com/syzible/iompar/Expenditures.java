@@ -1,10 +1,12 @@
 package com.syzible.iompar;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,10 +35,16 @@ public class Expenditures extends Fragment {
     DatabaseHelper databaseHelper;
 
     TableLayout tableLayout;
-    TextView monthlySubTotal, weeklySubTotal, bestOption;
+    TextView monthlySubTotal, weeklySubTotal, dailySubTotal;
+    TextView monthlySubTotalCash, weeklySubTotalCash, dailySubTotalCash;
+    String dailyCap, weeklyCap;
+
     Fares fares;
     double total;
-    long currentTime, firstDayOfWeek, firstDayOfMonth;
+    long currentTime, firstDayOfWeek, firstDayOfMonth, firstTimeOfDay;
+
+    SharedPreferences sharedPreferences;
+    String fareType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -43,16 +53,101 @@ public class Expenditures extends Fragment {
         fares = new Fares();
         databaseHelper = new DatabaseHelper(getContext());
 
+        dailySubTotal = (TextView) view.findViewById(R.id.daily_expenditures);
         monthlySubTotal = (TextView) view.findViewById(R.id.monthly_expenditures);
         weeklySubTotal = (TextView) view.findViewById(R.id.weekly_expenditures);
-        bestOption = (TextView) view.findViewById(R.id.best_option);
+
+        dailySubTotalCash = (TextView) view.findViewById(R.id.daily_expenditures_cash);
+        monthlySubTotalCash = (TextView) view.findViewById(R.id.monthly_expenditures_cash);
+        weeklySubTotalCash = (TextView) view.findViewById(R.id.weekly_expenditures_cash);
+
         tableLayout = (TableLayout) view.findViewById(R.id.expenditures_table);
 
         populateTable();
-        calculateTotalMonthlyExpenditure();
+        setCaps();
+        calculateTotalDailyExpenditure();
         calculateTotalWeeklyExpenditure();
+        calculateTotalMonthlyExpenditure();
 
         return view;
+    }
+
+    public void setCaps(){
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        fareType = sharedPreferences.getString(getString(R.string.pref_key_fare), "");
+
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LEAP_CAPS, null);
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            if (fareType.equals(getString(R.string.adult))) {
+                cursor.moveToPosition(0);
+                setDailyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY)));
+                setWeeklyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY)));
+            } else if (fareType.equals(getString(R.string.child))) {
+                cursor.moveToPosition(1);
+                setDailyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY)));
+                setWeeklyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY)));
+            } else if (fareType.equals(getString(R.string.student))) {
+                cursor.moveToPosition(2);
+                setDailyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY)));
+                setWeeklyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY)));
+            } else {
+                setDailyCap("€0.00");
+                setWeeklyCap("€0.00");
+            }
+        }
+        cursor.close();
+        sqLiteDatabase.close();
+    }
+
+    public void calculateTotalDailyExpenditure(){
+        //current time in millis
+        currentTime = System.currentTimeMillis();
+
+        //00:00 of current day to filter current expenditures by
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.clear(Calendar.MINUTE);
+        calendar.clear(Calendar.MILLISECOND);
+        firstTimeOfDay = calendar.getTimeInMillis();
+
+        String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
+                " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
+                firstTimeOfDay + " AND " + currentTime +
+                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber() + ");";
+
+        total = 0;
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            for(int i = 0; i < cursor.getCount(); i++){
+                total += Double.parseDouble(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
+                cursor.moveToNext();
+            }
+        }
+        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)) + "/" + getDailyCap());
+        dailySubTotal.setText(getSubTotal());
+
+        query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
+                " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
+                firstTimeOfDay + " AND " + currentTime + ");";
+        total = 0;
+        sqLiteDatabase = databaseHelper.getReadableDatabase();
+        cursor = sqLiteDatabase.rawQuery(query, null);
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            for(int i = 0; i < cursor.getCount(); i++){
+                total += Double.parseDouble(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
+                cursor.moveToNext();
+            }
+        }
+        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
+        dailySubTotalCash.setText(getSubTotal());
+
+        cursor.close();
+        sqLiteDatabase.close();
     }
 
     public void calculateTotalMonthlyExpenditure(){
@@ -69,8 +164,9 @@ public class Expenditures extends Fragment {
 
         firstDayOfMonth = calendar.getTimeInMillis();
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
-                " WHERE " + Database.Expenditures.TIME_ADDED + " BETWEEN "
-                + firstDayOfMonth + " AND " + currentTime;
+                " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
+                firstDayOfMonth + " AND " + currentTime +
+                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber() + ");";
 
         total = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -82,17 +178,28 @@ public class Expenditures extends Fragment {
                 cursor.moveToNext();
             }
         }
-        cursor.close();
-        sqLiteDatabase.close();
         setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
         monthlySubTotal.setText(getSubTotal());
 
-        //is it worth buying a specific ticket?
+        query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
+                " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
+                firstDayOfMonth + " AND " + currentTime + ");";
 
-        /*cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LEAP_CAPS, null);
-        if(Double.parseDouble(monthlySubTotal.getText().toString()) > cursor.getString()){
+        total = 0;
+        sqLiteDatabase = databaseHelper.getReadableDatabase();
+        cursor = sqLiteDatabase.rawQuery(query, null);
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            for(int i = 0; i < cursor.getCount(); i++){
+                total += Double.parseDouble(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
+                cursor.moveToNext();
+            }
+        }
+        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
+        monthlySubTotal.setText(getSubTotal());
 
-        }*/
+        cursor.close();
+        sqLiteDatabase.close();
     }
 
     public void calculateTotalWeeklyExpenditure(){
@@ -109,8 +216,9 @@ public class Expenditures extends Fragment {
 
         firstDayOfWeek = calendar.getTimeInMillis();
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
-                " WHERE " + Database.Expenditures.TIME_ADDED + " BETWEEN "
-                + firstDayOfWeek + " AND " + currentTime;
+                " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
+                firstDayOfWeek + " AND " + currentTime +
+                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber() + ");";
 
         total = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -122,10 +230,28 @@ public class Expenditures extends Fragment {
                 cursor.moveToNext();
             }
         }
-        cursor.close();
-        sqLiteDatabase.close();
+        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)) + "/" + getWeeklyCap());
+        weeklySubTotal.setText(getSubTotal());
+
+        query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
+                " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
+                firstDayOfWeek + " AND " + currentTime + ");";
+
+        total = 0;
+        sqLiteDatabase = databaseHelper.getReadableDatabase();
+        cursor = sqLiteDatabase.rawQuery(query, null);
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            for(int i = 0; i < cursor.getCount(); i++){
+                total += Double.parseDouble(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
+                cursor.moveToNext();
+            }
+        }
         setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
         weeklySubTotal.setText(getSubTotal());
+
+        cursor.close();
+        sqLiteDatabase.close();
     }
 
     public void populateTable() {
@@ -252,4 +378,19 @@ public class Expenditures extends Fragment {
 
     public void setSubTotal(String subtotal){this.subtotal=subtotal;}
     public String getSubTotal(){return subtotal;}
+    public void setDailyCap(String dailyCap){this.dailyCap = dailyCap;}
+    public String getDailyCap(){return dailyCap;}
+    public void setWeeklyCap(String weeklyCap){this.weeklyCap = weeklyCap;}
+    public String getWeeklyCap(){return weeklyCap;}
+    public String getActiveLeapNumber(){
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            return cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER);
+        }
+        cursor.close();
+        sqLiteDatabase.close();
+        return null;
+    }
 }

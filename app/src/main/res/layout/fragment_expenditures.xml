@@ -7,89 +7,186 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="0dp"
         android:layout_marginTop="?attr/actionBarSize">
 
         <RelativeLayout
-            android:id="@+id/expenditures_panel"
+            android:id="@+id/cash_overview_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:paddingEnd="32dp"
-            android:paddingStart="16dp"
-            android:paddingTop="16dp"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp">
 
             <TextView
-                android:id="@+id/weekly_expenditures_title"
+                android:id="@+id/cash_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingEnd="64dp"
-                android:text="@string/expenditures_this_week" />
+                android:layout_alignParentEnd="false"
+                android:layout_centerHorizontal="true"
+                android:text="Overall Expenditure" />
 
-            <TextView
-                android:id="@+id/monthly_expenditures_title"
+            <RelativeLayout
+                android:id="@+id/expenditures_panel_cash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/weekly_expenditures_title"
-                android:paddingEnd="64dp"
-                android:text="@string/expenditures_this_month" />
+                android:paddingBottom="8dp"
+                android:paddingTop="16dp"
+                android:gravity="center_horizontal"
+                android:layout_margin="8dp">
 
-            <TextView
-                android:id="@+id/best_option_title"
+                <TextView
+                    android:id="@+id/daily_expenditures_title_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total expenditures today:" />
+
+                <TextView
+                    android:id="@+id/weekly_expenditures_title_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/daily_expenditures_title_cash"
+                    android:text="@string/expenditures_this_week" />
+
+                <TextView
+                    android:id="@+id/monthly_expenditures_title_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/weekly_expenditures_title_cash"
+                    android:text="@string/expenditures_this_month" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/expenditures_panel_costs_cash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/monthly_expenditures_title"
-                android:paddingEnd="64dp"
-                android:text="@string/best_option" />
+                android:layout_toEndOf="@+id/expenditures_panel_cash"
+                android:layout_margin="8dp"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp">
 
+                <TextView
+                    android:id="@+id/daily_expenditures_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_centerHorizontal="true"
+                    android:text="daily" />
+
+                <TextView
+                    android:layout_below="@+id/daily_expenditures_cash"
+                    android:id="@+id/weekly_expenditures_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_centerHorizontal="true"
+                    android:text="weekly" />
+
+                <TextView
+                    android:id="@+id/monthly_expenditures_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_below="@+id/weekly_expenditures_cash"
+                    android:layout_centerHorizontal="true"
+                    android:text="monthly" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_alignEnd="@+id/expenditures_panel"
-            android:id="@+id/expenditures_panel_costs"
+            android:layout_below="@id/cash_overview_panel"
+            android:id="@+id/overview_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="16dp">
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp">
 
             <TextView
-                android:id="@+id/weekly_expenditures"
+                android:id="@+id/leap_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="false"
-                android:text="€xx.xx"
-                android:layout_centerHorizontal="true" />
-
-            <TextView
-                android:id="@+id/monthly_expenditures"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_below="@+id/weekly_expenditures"
                 android:layout_centerHorizontal="true"
-                android:text="€xx.xx" />
+                android:text="Active Leap Card" />
 
-            <TextView
-                android:id="@+id/best_option"
+            <RelativeLayout
+                android:id="@+id/expenditures_panel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_below="@+id/monthly_expenditures"
-                android:layout_centerHorizontal="true"
-                android:text="Leap" />
+                android:paddingBottom="8dp"
+                android:paddingTop="16dp"
+                android:gravity="center_horizontal"
+                android:layout_margin="8dp">
 
+                <TextView
+                    android:id="@+id/daily_expenditures_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total expenditures today:" />
+
+                <TextView
+                    android:id="@+id/weekly_expenditures_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/daily_expenditures_title"
+                    android:text="@string/expenditures_this_week" />
+
+                <TextView
+                    android:id="@+id/monthly_expenditures_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/weekly_expenditures_title"
+                    android:text="@string/expenditures_this_month" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/expenditures_panel_costs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/expenditures_panel"
+                android:layout_margin="8dp"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/daily_expenditures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_centerHorizontal="true"
+                    android:text="daily" />
+
+                <TextView
+                    android:layout_below="@+id/daily_expenditures"
+                    android:id="@+id/weekly_expenditures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_centerHorizontal="true"
+                    android:text="weekly" />
+
+                <TextView
+                    android:id="@+id/monthly_expenditures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_below="@+id/weekly_expenditures"
+                    android:layout_centerHorizontal="true"
+                    android:text="monthly" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/expenditures_panel">
+            android:layout_below="@id/overview_panel">
+
             <include layout="@layout/row_handler_expenditures" />
         </RelativeLayout>
     </RelativeLayout>
-
 </RelativeLayout>

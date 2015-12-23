@@ -238,6 +238,9 @@ public class AddExpenditure extends DialogFragment {
                                 if (traverseCardNumber.getCount() > 0) {
                                     //insert leap expenditure
                                     traverseCardNumber.moveToFirst();
+                                    //add expenditure from zonesTraversed() here
+                                    //ensure to check cap from fare type set
+
                                     databaseHelper.insertExpenditure(true,
                                             traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                             fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,

@@ -37,7 +37,11 @@ public class Slide_Two extends Fragment {
         fareSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Selected: " + fareSelection.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                if(fareSelection.getItemAtPosition(position).toString().equals(getString(R.string.student))){
+                    Toast.makeText(getContext(),
+                            "Please ensure you have a student Leap card in order to avail of student prices.",
+                            Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
