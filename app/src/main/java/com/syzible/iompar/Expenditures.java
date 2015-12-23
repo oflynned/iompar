@@ -196,7 +196,7 @@ public class Expenditures extends Fragment {
             }
         }
         setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
-        monthlySubTotal.setText(getSubTotal());
+        monthlySubTotalCash.setText(getSubTotal());
 
         cursor.close();
         sqLiteDatabase.close();
@@ -248,7 +248,7 @@ public class Expenditures extends Fragment {
             }
         }
         setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
-        weeklySubTotal.setText(getSubTotal());
+        weeklySubTotalCash.setText(getSubTotal());
 
         cursor.close();
         sqLiteDatabase.close();
@@ -340,8 +340,10 @@ public class Expenditures extends Fragment {
                             databaseHelper.removeRecord(Database.Expenditures.TABLE_NAME, Database.Expenditures.ID, row);
                             tableLayout.invalidate();
                             populateTable();
-                            calculateTotalMonthlyExpenditure();
+                            setCaps();
+                            calculateTotalDailyExpenditure();
                             calculateTotalWeeklyExpenditure();
+                            calculateTotalMonthlyExpenditure();
                         }
                     })
                             .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
