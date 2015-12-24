@@ -3,9 +3,11 @@ package com.syzible.iompar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +21,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 /**
  * Created by ed on 29/10/15.
  */
@@ -29,6 +33,7 @@ public class AddExpenditure extends DialogFragment {
     private Switch leapSwitch, cashSwitch;
     private setAddExpenditureListener addExpenditureDialogListener = null;
     private String costBalanceText;
+    private double dailyCap, weeklyCap;
     
     Context context;
 
@@ -37,6 +42,7 @@ public class AddExpenditure extends DialogFragment {
 
     DatabaseHelper databaseHelper;
     Fares fares = new Fares();
+    Expenditures expenditures;
 
     public AddExpenditure(){}
 
@@ -64,6 +70,7 @@ public class AddExpenditure extends DialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         context = getActivity();
+        expenditures = new Expenditures();
         
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -238,14 +245,91 @@ public class AddExpenditure extends DialogFragment {
                                 if (traverseCardNumber.getCount() > 0) {
                                     //insert leap expenditure
                                     traverseCardNumber.moveToFirst();
-                                    //add expenditure from zonesTraversed() here
-                                    //ensure to check cap from fare type set
 
-                                    databaseHelper.insertExpenditure(true,
-                                            traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                            fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
-                                                    context, "leap")));
-                                    Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
+                                    //check daily & weekly caps, if amount > daily, add difference
+                                    //if weekly has been reached, free travel for this week
+                                    Expenditures expenditures = new Expenditures();
+
+                                    double currentDailyExpenditure = 0;
+                                    double currentWeeklyExpenditure = 0;
+                                    double overshoot;
+                                    double cumulative;
+
+                                    long currentTime;
+                                    long firstTimeOfDay;
+
+                                    setCaps();
+
+                                    //current time in millis
+                                    currentTime = System.currentTimeMillis();
+
+                                    //00:00 of current day to filter current expenditures by
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                                    calendar.clear(Calendar.MINUTE);
+                                    calendar.clear(Calendar.MILLISECOND);
+                                    firstTimeOfDay = calendar.getTimeInMillis();
+
+                                    String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
+                                            " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
+                                            firstTimeOfDay + " AND " + currentTime +
+                                            ") AND (" + Database.Expenditures.CARD_NUMBER + " = " +
+                                            expenditures.getActiveLeapNumber(databaseHelper) + ");";
+
+                                    SQLiteDatabase expensesDB = databaseHelper.getReadableDatabase();
+                                    Cursor expensesCursor = expensesDB.rawQuery(query, null);
+                                    if (expensesCursor.getCount() > 0) {
+                                        expensesCursor.moveToFirst();
+                                        for (int i = 0; i < expensesCursor.getCount(); i++) {
+                                            currentDailyExpenditure += expensesCursor
+                                                    .getDouble(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE);
+                                            System.out.println(currentDailyExpenditure);
+                                        }
+                                    } else {
+                                        currentDailyExpenditure = 0;
+                                    }
+
+                                    System.out.println("CURRENT EXPENDITURE " + leapCost);
+                                    System.out.println("CURRENT DAILY EXP " + currentDailyExpenditure);
+                                    cumulative = currentDailyExpenditure + leapCost;
+                                    System.out.println("CUMULATIVE EXP " + cumulative);
+                                    System.out.println("CURRENT DAILY CAP " + getDailyCap());
+
+                                    if (currentDailyExpenditure >= getDailyCap()) {
+                                        databaseHelper.insertExpenditure(true,
+                                                traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
+                                                fares.formatDecimals(String.valueOf(0)));
+
+                                        Toast.makeText(getContext(), "Daily cap reached, free travel for rest of day", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        if (cumulative > getDailyCap()) {
+                                            overshoot = getDailyCap() - currentDailyExpenditure;
+                                            if (overshoot < 0) {
+                                                overshoot = overshoot * -1;
+                                            }
+
+                                            System.out.println("OVERSHOOT OF €" + overshoot);
+                                            System.out.println("DAILY CAP €" + getDailyCap());
+                                            System.out.println("CURRENT DAILY EXP €" + currentDailyExpenditure);
+
+                                            databaseHelper.insertExpenditure(true,
+                                                    traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
+                                                    fares.formatDecimals(String.valueOf(overshoot)));
+
+                                            Toast.makeText(getContext(), "Daily cap now reached, €" +
+                                                    fares.formatDecimals(String.valueOf(overshoot)) +
+                                                    " paid for transit", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            System.out.println("Entered else loop? - inserting leap exp");
+                                            databaseHelper.insertExpenditure(true,
+                                                    traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
+                                                    fares.formatDecimals(String.valueOf(leapCost)));
+                                            Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    expensesDB.close();
+                                    expensesCursor.close();
                                 } else {
                                     new AlertDialog.Builder(context)
                                             .setTitle(context.getString(R.string.no_active_leap))
@@ -302,6 +386,36 @@ public class AddExpenditure extends DialogFragment {
         return builder.create();
     }
 
+    public void setCaps(){
+        System.out.println("IN CAPS CHECK");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String fareType = sharedPreferences.getString(getString(R.string.pref_key_fare), "");
+
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LEAP_CAPS, null);
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            if (fareType.equals(getString(R.string.adult))) {
+                cursor.moveToPosition(0);
+                setDailyCap(cursor.getDouble(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY));
+                setWeeklyCap(cursor.getDouble(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY));
+            } else if (fareType.equals(getString(R.string.child))) {
+                cursor.moveToPosition(1);
+                setDailyCap(cursor.getDouble(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY));
+                setWeeklyCap(cursor.getDouble(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY));
+            } else if (fareType.equals(getString(R.string.student))) {
+                cursor.moveToPosition(2);
+                setDailyCap(cursor.getDouble(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY));
+                setWeeklyCap(cursor.getDouble(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY));
+            } else {
+                setDailyCap(0);
+                setWeeklyCap(0);
+            }
+        }
+        cursor.close();
+        sqLiteDatabase.close();
+    }
+
     public int getDp(float pixels) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 pixels, context.getResources().getDisplayMetrics());
@@ -309,5 +423,9 @@ public class AddExpenditure extends DialogFragment {
 
     public void setLeapActive(boolean hasLeapActive){this.hasLeapActive = hasLeapActive;}
     public boolean isLeapActive(){return hasLeapActive;}
+    public void setDailyCap(double dailyCap){this.dailyCap=dailyCap;}
+    public double getDailyCap(){return dailyCap;}
+    public void setWeeklyCap(double weeklyCap){this.weeklyCap=weeklyCap;}
+    public double getWeeklyCap(){return weeklyCap;}
 
 }

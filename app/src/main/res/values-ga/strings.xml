@@ -35,15 +35,6 @@
     <string name="child">Páiste</string>
     <string name="other">Eile</string>
 
-    <!-- keys -->
-    <string name="pref_key_contact" translatable="false">pref_key_contact</string>
-    <string name="pref_key_app_settings" translatable="false">pref_key_settings</string>
-    <string name="pref_key_language" translatable="false">pref_key_language</string>
-
-    <string name="pref_key_name" translatable="false">pref_key_name</string>
-    <string name="pref_key_prefer_leap" translatable="false">pref_key_prefer_leap</string>
-    <string name="pref_key_irish" translatable="false">pref_key_irish</string>
-
     <!-- Miscellaneous -->
     <string name="OK">Tá go maith</string>
     <string name="leap_card_number">Uimhir an Chárta Leap</string>

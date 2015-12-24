@@ -1,5 +1,6 @@
 package com.syzible.iompar;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -115,7 +116,7 @@ public class Expenditures extends Fragment {
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
                 firstTimeOfDay + " AND " + currentTime +
-                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber() + ");";
+                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber(databaseHelper) + ");";
 
         total = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -166,7 +167,7 @@ public class Expenditures extends Fragment {
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
                 firstDayOfMonth + " AND " + currentTime +
-                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber() + ");";
+                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber(databaseHelper) + ");";
 
         total = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -218,7 +219,7 @@ public class Expenditures extends Fragment {
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
                 firstDayOfWeek + " AND " + currentTime +
-                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber() + ");";
+                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber(databaseHelper) + ");";
 
         total = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -384,7 +385,7 @@ public class Expenditures extends Fragment {
     public String getDailyCap(){return dailyCap;}
     public void setWeeklyCap(String weeklyCap){this.weeklyCap = weeklyCap;}
     public String getWeeklyCap(){return weeklyCap;}
-    public String getActiveLeapNumber(){
+    public String getActiveLeapNumber(DatabaseHelper databaseHelper){
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
         if(cursor.getCount() > 0){

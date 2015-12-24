@@ -45,10 +45,15 @@
     <string name="pref_key_app_settings" translatable="false">pref_key_settings</string>
     <string name="pref_key_language" translatable="false">pref_key_language</string>
 
+    <!-- settings -->
     <string name="pref_key_name" translatable="false">pref_key_name</string>
     <string name="pref_key_fare" translatable="false">pref_key_fare</string>
     <string name="pref_key_prefer_leap" translatable="false">pref_key_prefer_leap</string>
     <string name="pref_key_irish" translatable="false">pref_key_irish</string>
+
+    <!-- leap caps expenditure management -->
+    <string name="pref_key_daily_cap_reached" translatable="false">pref_key_daily_cap_reached</string>
+    <string name="pref_key_weekly_cap_reached" translatable="false">pref_key_weekly_cap_reached</string>
 
     <!-- leap keys for expenditure management -->
     <string name="pref_key_last_synced_balance" translatable="false">pref_key_last_synced_balance</string>
@@ -128,7 +133,7 @@
     <!-- fare calculator -->
     <string name="leap">Leap</string>
     <string name="cash">Cash</string>
-    <string name="cash_lowercase">Cash</string>
+    <string name="cash_lowercase">cash</string>
     <string name="zones_fares">Zones:</string>
     <string name="cost_fares">Cost:</string>
 
