@@ -106,13 +106,15 @@ public class ManageLeapCards extends Fragment {
                                 break;
                             //breakdown of costs
                             case 2:
-                                DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+                                /*DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
                                 databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
                                 databaseHelper.insertRecord(
                                         Database.LeapLogin.TABLE_NAME,
                                         null, null, null, null, null, null, 0, null, 0, 0, 0, false,
                                         Globals.USER_LEAP_NUMBER, Globals.USER_NAME, Globals.USER_EMAIL, Globals.USER_PASS, true);
-                                populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
+                                populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);*/
+                                Leap leap = new Leap(getContext());
+                                leap.scrape();
                             }
                         }
 
