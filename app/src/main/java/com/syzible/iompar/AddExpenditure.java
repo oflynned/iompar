@@ -356,7 +356,7 @@ public class AddExpenditure extends DialogFragment {
                                                     databaseHelper.insertExpenditure(true,
                                                             traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                             fares.formatDecimals(String.valueOf(leapCost)));
-                                                    Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                         } else {
@@ -367,7 +367,7 @@ public class AddExpenditure extends DialogFragment {
                                                     traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                     fares.formatDecimals(String.valueOf(overshoot)));
                                             Toast.makeText(getContext(), "Weekly cap reached, €" +
-                                                    fares.formatDecimals(String.valueOf(overshoot)) + " paid for transit", Toast.LENGTH_SHORT).show();
+                                                    fares.formatDecimals(String.valueOf(overshoot)) + " paid for transit", Toast.LENGTH_LONG).show();
                                         }
                                     } else {
                                         System.out.println("currently weekly exp >= weekly cap");
@@ -394,7 +394,7 @@ public class AddExpenditure extends DialogFragment {
                                                     databaseHelper.insertExpenditure(false, "cash",
                                                             fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
                                                                     context, "cash")));
-                                                    Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_LONG).show();
                                                 }
                                             })
                                             .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -413,7 +413,7 @@ public class AddExpenditure extends DialogFragment {
                                 databaseHelper.insertExpenditure(false, "cash",
                                         fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
                                                 context, "cash")));
-                                Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_LONG).show();
                             }
                             databaseHelper.printTableContents(Database.Expenditures.TABLE_NAME);
                         }
