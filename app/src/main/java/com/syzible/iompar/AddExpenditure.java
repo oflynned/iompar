@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by ed on 29/10/15.
@@ -252,11 +253,8 @@ public class AddExpenditure extends DialogFragment {
                                     //if weekly has been reached, free travel for this week
                                     Expenditures expenditures = new Expenditures();
 
-                                    double currentDailyExpenditure = 0;
-                                    double currentWeeklyExpenditure = 0;
-                                    double overshoot;
-                                    double cumulative;
-
+                                    double currentDailyExpenditure = 0, currentWeeklyExpenditure = 0;
+                                    double overshoot, cumulative;
                                     long currentTime, firstTimeOfDay, firstTimeOfWeek;
 
                                     setCaps();
@@ -272,12 +270,12 @@ public class AddExpenditure extends DialogFragment {
                                     firstTimeOfDay = calendar.getTimeInMillis();
 
                                     //first day of current week time in millis
-                                    Calendar weeklyCalendar = Calendar.getInstance();
+                                    Calendar weeklyCalendar = Calendar.getInstance(Locale.GERMANY);
                                     weeklyCalendar.set(Calendar.HOUR_OF_DAY, 0);
                                     weeklyCalendar.clear(Calendar.MINUTE);
                                     weeklyCalendar.clear(Calendar.SECOND);
                                     weeklyCalendar.clear(Calendar.MILLISECOND);
-                                    weeklyCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                                    weeklyCalendar.set(Calendar.DAY_OF_WEEK, weeklyCalendar.getFirstDayOfWeek());
                                     firstTimeOfWeek = weeklyCalendar.getTimeInMillis();
 
                                     String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
@@ -311,12 +309,14 @@ public class AddExpenditure extends DialogFragment {
                                     if (weeklyExpensesCursor.getCount() > 0) {
                                         weeklyExpensesCursor.moveToFirst();
                                         for (int i = 0; i < weeklyExpensesCursor.getCount(); i++) {
-                                            currentWeeklyExpenditure += expensesCursor
+                                            System.out.println("CURRENT COUNT " + i + "/" + weeklyExpensesCursor.getCount());
+                                            currentWeeklyExpenditure += weeklyExpensesCursor
                                                     .getDouble(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE);
-                                            weeklyExpensesCursor.moveToNext();
                                             System.out.println(currentWeeklyExpenditure);
+                                            weeklyExpensesCursor.moveToNext();
                                         }
                                     } else {
+                                        System.out.println("else loop defaulted");
                                         currentWeeklyExpenditure = 0;
                                     }
 
@@ -324,43 +324,58 @@ public class AddExpenditure extends DialogFragment {
 
                                     //if less than weekly cap
                                     if (currentWeeklyExpenditure < getWeeklyCap()) {
-                                        //if greater than or equal to daily cap -> free
-                                        if (currentDailyExpenditure >= getDailyCap()) {
+                                        System.out.println("currently weekly exp < weekly cap");
+                                        if ((currentWeeklyExpenditure + leapCost) < getWeeklyCap()) {
+                                            //if greater than or equal to daily cap -> free
+                                            if (currentDailyExpenditure >= getDailyCap()) {
+                                                System.out.println("currently daily exp >= daily cap");
+                                                databaseHelper.insertExpenditure(true,
+                                                        traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
+                                                        fares.formatDecimals(String.valueOf(0)));
+                                                Toast.makeText(getContext(), "Daily cap has reached, free travel for the rest of the day", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                System.out.println("currently daily exp < daily cap");
+                                                //else if less than cap and expenditure puts amounts over cap
+                                                //find distance to cap and add as expenditure
+                                                if (cumulative > getDailyCap()) {
+                                                    overshoot = getDailyCap() - currentDailyExpenditure;
+                                                    if (overshoot < 0) {
+                                                        overshoot = overshoot * -1;
+                                                    }
+
+                                                    databaseHelper.insertExpenditure(true,
+                                                            traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
+                                                            fares.formatDecimals(String.valueOf(overshoot)));
+
+                                                    Toast.makeText(getContext(), "Daily cap has been reached, €" +
+                                                            fares.formatDecimals(String.valueOf(overshoot)) +
+                                                            " paid for transit", Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    //else under the cap and just add raw expenditure to table
+                                                    System.out.println("Entered else loop? - inserting regular leap exp");
+                                                    databaseHelper.insertExpenditure(true,
+                                                            traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
+                                                            fares.formatDecimals(String.valueOf(leapCost)));
+                                                    Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        } else {
+                                            System.out.println("currently weekly exp + exp > weekly cap");
+                                            //if cumulative is GREATER than currently weekly expenditure
+                                            overshoot = getWeeklyCap() - currentWeeklyExpenditure;
                                             databaseHelper.insertExpenditure(true,
                                                     traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                                    fares.formatDecimals(String.valueOf(0)));
-                                            Toast.makeText(getContext(), "Daily cap has reached, free travel for the rest of the day", Toast.LENGTH_LONG).show();
-                                        } else {
-                                            //else if less than cap and expenditure puts amounts over cap
-                                            //find distance to cap and add as expenditure
-                                            if (cumulative > getDailyCap()) {
-                                                overshoot = getDailyCap() - currentDailyExpenditure;
-                                                if (overshoot < 0) {
-                                                    overshoot = overshoot * -1;
-                                                }
-
-                                                databaseHelper.insertExpenditure(true,
-                                                        traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                                        fares.formatDecimals(String.valueOf(overshoot)));
-
-                                                Toast.makeText(getContext(), "Daily cap now reached, €" +
-                                                        fares.formatDecimals(String.valueOf(overshoot)) +
-                                                        " paid for transit", Toast.LENGTH_LONG).show();
-                                            } else {
-                                                //else under the cap and just add raw expenditure to table
-                                                System.out.println("Entered else loop? - inserting leap exp");
-                                                databaseHelper.insertExpenditure(true,
-                                                        traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                                        fares.formatDecimals(String.valueOf(leapCost)));
-                                                Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_SHORT).show();
-                                            }
+                                                    fares.formatDecimals(String.valueOf(overshoot)));
+                                            Toast.makeText(getContext(), "Weekly cap reached, €" +
+                                                    fares.formatDecimals(String.valueOf(overshoot)) + " paid for transit", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
+                                        System.out.println("currently weekly exp >= weekly cap");
                                         //else over weekly cap, therefore free transportation even if daily cap not reached
                                         databaseHelper.insertExpenditure(true,
                                                 traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                 fares.formatDecimals(String.valueOf(0)));
-                                        Toast.makeText(getContext(), "Weekly cap has reached, free travel for the rest of the week", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getContext(), "Weekly cap has been reached, free travel for the rest of the week", Toast.LENGTH_LONG).show();
                                     }
 
                                     weeklyExpensesCursor.close();

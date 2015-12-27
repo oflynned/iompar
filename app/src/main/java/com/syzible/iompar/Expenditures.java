@@ -1,6 +1,5 @@
 package com.syzible.iompar;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -20,10 +19,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by ed on 29/10/15.
@@ -55,8 +53,8 @@ public class Expenditures extends Fragment {
         databaseHelper = new DatabaseHelper(getContext());
 
         dailySubTotal = (TextView) view.findViewById(R.id.daily_expenditures);
-        monthlySubTotal = (TextView) view.findViewById(R.id.monthly_expenditures);
         weeklySubTotal = (TextView) view.findViewById(R.id.weekly_expenditures);
+        monthlySubTotal = (TextView) view.findViewById(R.id.monthly_expenditures);
 
         dailySubTotalCash = (TextView) view.findViewById(R.id.daily_expenditures_cash);
         monthlySubTotalCash = (TextView) view.findViewById(R.id.monthly_expenditures_cash);
@@ -208,14 +206,14 @@ public class Expenditures extends Fragment {
         currentTime = System.currentTimeMillis();
 
         //first day of current week time in millis
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.clear(Calendar.MINUTE);
-        calendar.clear(Calendar.SECOND);
-        calendar.clear(Calendar.MILLISECOND);
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Calendar weeklyCalendar = Calendar.getInstance(Locale.GERMANY);
+        weeklyCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        weeklyCalendar.clear(Calendar.MINUTE);
+        weeklyCalendar.clear(Calendar.SECOND);
+        weeklyCalendar.clear(Calendar.MILLISECOND);
+        weeklyCalendar.set(Calendar.DAY_OF_WEEK, weeklyCalendar.getFirstDayOfWeek());
+        firstDayOfWeek = weeklyCalendar.getTimeInMillis();
 
-        firstDayOfWeek = calendar.getTimeInMillis();
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
                 firstDayOfWeek + " AND " + currentTime +
@@ -234,6 +232,7 @@ public class Expenditures extends Fragment {
         setSubTotal("€" + fares.formatDecimals(String.valueOf(total)) + "/" + getWeeklyCap());
         weeklySubTotal.setText(getSubTotal());
 
+        //overall weekly
         query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
                 firstDayOfWeek + " AND " + currentTime + ");";
