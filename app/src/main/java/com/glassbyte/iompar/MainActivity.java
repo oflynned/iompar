@@ -72,9 +72,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        interstitialAd = new InterstitialAd(getBaseContext());
-        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-
         //set appropriate language
         globals = new Globals(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -104,24 +101,10 @@ public class MainActivity extends AppCompatActivity
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
+        asynchronousInterstitial.execute();
+
         setFragment();
-
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                requestNewInterstitial();
-            }
-        });
-        requestNewInterstitial();
-        interstitialAd.show();
-    }
-
-    private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
-                .build();
-
-        interstitialAd.loadAd(adRequest);
     }
 
     @Override
@@ -229,6 +212,32 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.content_frame, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    class AsynchronousInterstitial extends AsyncTask<Void, Void, Void> {
+
+        AdRequest adRequest;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            interstitialAd = new InterstitialAd(getBaseContext());
+            interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+            adRequest = new AdRequest.Builder().build();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            interstitialAd.loadAd(adRequest);
+            interstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    if (interstitialAd.isLoaded()) {
+                        interstitialAd.show();
+                    }
+                }
+            });
+        }
     }
 }
 
