@@ -212,7 +212,7 @@ public class ManageLeapCards extends Fragment {
 
             //balance - need to work on this as it takes from other table
             final TextView balanceField = new TextView(getContext());
-            balanceField.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_BALANCE));
+            //balanceField.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_BALANCE));
             TableRow.LayoutParams balanceParams =
                     new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);

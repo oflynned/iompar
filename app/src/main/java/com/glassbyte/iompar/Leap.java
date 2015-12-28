@@ -138,6 +138,7 @@ public class Leap extends WebViewClient {
 
                                         System.out.println("Reported Leap balance:");
                                         System.out.println(returnedPost);
+                                        Toast.makeText(context, returnedPost, Toast.LENGTH_LONG).show();
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
