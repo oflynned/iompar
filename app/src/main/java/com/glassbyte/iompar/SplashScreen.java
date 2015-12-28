@@ -5,18 +5,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -54,43 +47,24 @@ public class SplashScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/libelsuit.ttf");
-        TextView GlassByte = (TextView) findViewById(R.id.logotext);
-        GlassByte.setTypeface(tf);
-        startAnimations();
         Thread splash = new Thread() {
             public void run() {
                 try {
-                    int timer = 0;
-                    while (timer < 2000) {
-                        if (synced && (timer < 2000)) {
-                            sleep(100);
-                            timer = timer + 100;
-                        }
+                    while (!synced) {
+                        sleep(100);
                     }
-                    startActivity(new Intent("com.glassbyte.iompar.ClearScreen"));
+                    if (synced) {
+                        startActivity(new Intent("com.glassbyte.iompar.ClearScreen"));
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
                     finish();
                 }
+
             }
         };
         splash.start();
-    }
-
-    private void startAnimations() {
-        Animation anim = AnimationUtils.loadAnimation(this, R.anim.jump_from_down);
-        anim.reset();
-        ScrollView l = (ScrollView) findViewById(R.id.scrollView);
-        l.clearAnimation();
-        l.startAnimation(anim);
-
-        anim = AnimationUtils.loadAnimation(this, R.anim.jump_to_down);
-        anim.reset();
-        ImageView iv = (ImageView) findViewById(R.id.image_view);
-        iv.clearAnimation();
-        iv.startAnimation(anim);
     }
 
     public void setFares() {
@@ -276,7 +250,6 @@ public class SplashScreen extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             synced = true;
-            Toast.makeText(getApplicationContext(), getString(R.string.fares_synced), Toast.LENGTH_SHORT).show();
         }
     }
 }
