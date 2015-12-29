@@ -127,6 +127,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onUserInteraction() {
         super.onUserInteraction();
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        globals.setIrish(sharedPreferences.getBoolean(getResources()
+                .getString(R.string.pref_key_irish), false), getResources());
+
         setNavigationBarProfile();
     }
 
@@ -144,13 +149,13 @@ public class MainActivity extends AppCompatActivity
             if(balance.contains("-€")){
                 currentState.setText(getString(R.string.negative_leapcard_drawer));
             } else if (!balance.contains("€") || balance.contains("no_key")){
-                currentState.setText("Unsynced");
+                currentState.setText(R.string.unsynced);
             } else {
                 currentState.setText(getString(R.string.positive_leapcard_drawer));
             }
         } else {
             leapNumber = getString(R.string.cash_leapcard_drawer);
-            currentState.setText("Cannot sync Leap balance");
+            currentState.setText(R.string.cannot_sync_leap_balance);
         }
 
         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);

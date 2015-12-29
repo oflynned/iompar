@@ -71,7 +71,7 @@ public class IntroActivity extends AppIntro2 {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {
-            Toast.makeText(this, "Hey you! You forgot to tell us your name.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.forgot_name, Toast.LENGTH_LONG).show();
         }
     }
 

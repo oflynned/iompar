@@ -46,7 +46,7 @@ public class EditLeapCard extends DialogFragment {
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Edit a Leap Card")
+        builder.setTitle(getContext().getString(R.string.edit_leap_card))
                 .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (editLeapDialogListener != null) {

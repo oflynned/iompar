@@ -143,7 +143,9 @@ public class AddExpenditure extends DialogFragment {
         currentBalanceParams.addRule(RelativeLayout.ALIGN_PARENT_END, currentBalanceText.getId());
         currentBalanceParams.setMargins(0, getDp(8), getDp(24), 0);
         //current leap card balance
-        currentBalance.setText("€xx.xx");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        currentBalance.setText(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),
+                getString(R.string.unsynced)));
         currentBalance.setLayoutParams(currentBalanceParams);
         currentBalance.setId(View.generateViewId());
 
@@ -333,7 +335,7 @@ public class AddExpenditure extends DialogFragment {
                                                 databaseHelper.insertExpenditure(true,
                                                         traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                         fares.formatDecimals(String.valueOf(0)));
-                                                Toast.makeText(getContext(), "Daily cap has reached, free travel for the rest of the day", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(getContext(), R.string.daily_cap_reached, Toast.LENGTH_LONG).show();
                                             } else {
                                                 System.out.println("currently daily exp < daily cap");
                                                 //else if less than cap and expenditure puts amounts over cap
@@ -348,9 +350,9 @@ public class AddExpenditure extends DialogFragment {
                                                             traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                             fares.formatDecimals(String.valueOf(overshoot)));
 
-                                                    Toast.makeText(getContext(), "Daily cap has been reached, €" +
+                                                    Toast.makeText(getContext(), context.getString(R.string.daily_cap_reached_paid) +
                                                             fares.formatDecimals(String.valueOf(overshoot)) +
-                                                            " paid for transit", Toast.LENGTH_LONG).show();
+                                                            context.getString(R.string.paid_for_transit), Toast.LENGTH_LONG).show();
                                                 } else {
                                                     //else under the cap and just add raw expenditure to table
                                                     System.out.println("Entered else loop? - inserting regular leap exp");
@@ -367,8 +369,9 @@ public class AddExpenditure extends DialogFragment {
                                             databaseHelper.insertExpenditure(true,
                                                     traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                     fares.formatDecimals(String.valueOf(overshoot)));
-                                            Toast.makeText(getContext(), "Weekly cap reached, €" +
-                                                    fares.formatDecimals(String.valueOf(overshoot)) + " paid for transit", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), context.getString(R.string.weekly_cap_reached) +
+                                                    fares.formatDecimals(String.valueOf(overshoot)) +
+                                                    context.getString(R.string.paid_for_transit), Toast.LENGTH_LONG).show();
                                         }
                                     } else {
                                         System.out.println("currently weekly exp >= weekly cap");
@@ -376,7 +379,7 @@ public class AddExpenditure extends DialogFragment {
                                         databaseHelper.insertExpenditure(true,
                                                 traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                 fares.formatDecimals(String.valueOf(0)));
-                                        Toast.makeText(getContext(), "Weekly cap has been reached, free travel for the rest of the week", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getContext(), R.string.weekly_cap_reached_free_transit, Toast.LENGTH_LONG).show();
                                     }
 
                                     weeklyExpensesCursor.close();

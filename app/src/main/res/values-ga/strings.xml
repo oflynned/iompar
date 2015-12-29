@@ -88,7 +88,7 @@
     <string name="unavailable">Níl ar fáil</string>
     <string name="arriving_soon">Go luath</string>
     <string name="one_min_away">1 nóim uait</string>
-    <string name="mins_away">" nóim uait"</string>
+    <string name="mins_away">nóim uait</string>
     <string name="could_not_connect_real_time">Ní féidir nascadh le seirbhísí fíorama. Seiceáil do nasc idirlín led\' thoil.</string>
     <string name="sometimes_rtpi_is_down">Scaití ní bhíonn RTPI.ie ar fáil - tá ár n-aip ag braith air chun obair i gceart :(</string>
 
@@ -197,7 +197,29 @@
     <string name="cookstown">Baile an Chócaigh</string>
     <string name="hospital">Ospidéal Thamhlachta</string>
     <string name="tallaght">Tamhlacht</string>
+
+    <!-- GOA trasna leis -->
     <string name="slide_three_desc_leap">Déanann cartaí Leap iompar níos tapúla, níos éasca, agus níos saoire.\n\nBíodh cinnte é a chlárú ar líne ionas go mbeidh tú in ann d\'iarmhéid a rochtain anseo.</string>
     <string name="slide_three_desc_cash">Tá airgead tirim níos moille agus níos costasaí ná cárta Leap.\n\nCeannaigh cárta Leap as €5 chun airgead a shabháil san iompraíocht.</string>
+    <string name="add_leap_cheaper_fares">Cuir cárta Leap leis chun d\'iarmhéid a sheiceáil ar líne agus táillí níos saoire a aimsiú</string>
+    <string name="cannot_sync_leap_balance">Ní féidir an iarmhéid Leap a shioncronú</string>
+    <string name="cash_leapcard_drawer">Tá airgid tirim á úsáid</string>
+    <string name="complete_all_fields">Críochnaigh gach aon réimse led\' thoil</string>
+    <string name="connecting">Á cheangail…</string>
+    <string name="daily_cap_reached">Teorainn laethúil sroichte, tá taisteal saor in aisce don  chuid eile den lá</string>
+    <string name="daily_cap_reached_paid">Teorainn laethúil sroichte, €</string>
+    <string name="edit_leap_card">Cuir Cárta Leap in Eagar</string>
+    <string name="expenditures_today">Méid iomlán inniu:</string>
+    <string name="forgot_name">Hé, tusa! Rinne tú dearmad d\'ainm a insint dúinne.</string>
+    <string name="input_email">Cuir ríomhphost leis led\' thoil</string>
+    <string name="input_leap_number">Cuir uimhir chárta Leap cláraithe leis led\' thoil</string>
+    <string name="input_password">Cuir pasfhocal leis led\' thoil</string>
+    <string name="input_username">Cuir ainm an úsáídeora leis led\'thoil</string>
+    <string name="leap_modified_successfully">Athraíodh an cárta Leap go rathúil!</string>
+    <string name="negative_leapcard_drawer">Tá iarmhéid Leap diúltach ag an bpróifíl seo</string>
+    <string name="paid_for_transit">" íoctha as iompar"</string>
+    <string name="unsynced">Míshioncronaithe</string>
+    <string name="weekly_cap_reached">Teorainn na seachtaine sroichte, €</string>
+    <string name="weekly_cap_reached_free_transit">Teorainn na seachtaine sroichte, taisteal saor in aisce don chuid eile den tseachtain</string>
 
 </resources>

@@ -159,7 +159,7 @@
     <string name="expenditure_added_successfully">Expenditure added successfully</string>
     <string name="no_active_leap">No Active Leap Card</string>
     <string name="no_active_leap_body">No active Leap card was detected, please activate one under settings. Click add if you wish to add this expense as a cash expenditure.\n\nThis will cost €</string>
-    <string name="more">" more."</string>
+    <string name="more">more.</string>
     <string name="cancel">Cancel</string>
 
     <!-- add leap card -->
@@ -223,4 +223,25 @@
     <string name="cookstown">Cookstown</string>
     <string name="hospital">Hospital</string>
     <string name="tallaght">Tallaght</string>
+
+    <!-- LOL fuck it -->
+    <string name="daily_cap_reached">Daily cap has reached, free travel for the rest of the day</string>
+    <string name="daily_cap_reached_paid">Daily cap has been reached, €</string>
+    <string name="paid_for_transit">" paid for transit"</string>
+    <string name="weekly_cap_reached">Weekly cap reached, €</string>
+    <string name="weekly_cap_reached_free_transit">Weekly cap has been reached, free travel for the rest of the week</string>
+    <string name="edit_leap_card">Edit a Leap Card</string>
+    <string name="forgot_name">Hey you! You forgot to tell us your name.</string>
+    <string name="unsynced">Unsynced</string>
+    <string name="cannot_sync_leap_balance">Cannot sync Leap balance</string>
+    <string name="complete_all_fields">Please complete all fields</string>
+    <string name="input_leap_number">Please input a registered Leap card number</string>
+    <string name="input_username">Please input a username</string>
+    <string name="input_email">Please input an email</string>
+    <string name="input_password">Please input a password</string>
+    <string name="leap_modified_successfully">Leap card modified successfully!</string>
+    <string name="connecting">Connecting…</string>
+    <string name="add_leap_cheaper_fares">Add a Leap card to check your balance and get cheaper fares</string>
+    <string name="fares_synced">Fared synced</string>
+    <string name="using_cash">Using cash</string>
 </resources>
