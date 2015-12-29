@@ -271,7 +271,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "SELECT * FROM " + Database.LeapLogin.TABLE_NAME +
                     " WHERE " + Database.LeapLogin.IS_ACTIVE + " = 1;";
 
-    public DatabaseHelper(Context context){
+    public DatabaseHelper(Context context) {
         super(context, Database.DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -292,8 +292,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(oldVersion < newVersion){
-            for(int i = 0; i <= TABLES.length; i++){
+        if (oldVersion < newVersion) {
+            for (int i = 0; i <= TABLES.length; i++) {
                 final String UPGRADE_TABLE =
                         "ALTER TABLE " + TABLES[i] + ";";
                 db.execSQL(UPGRADE_TABLE);
@@ -309,11 +309,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             String adultCashReturn, String childCashReturn,
                             //leap caps
                             String luasDailyCap, String luasWeeklyCap, String dbLuasDartCommDailyCap,
-                            String dbLuasDartCommWeeklyCap){
+                            String dbLuasDartCommWeeklyCap) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        switch (tableName){
+        switch (tableName) {
             case Database.LuasSingleFares.TABLE_NAME:
                 contentValues.put(Database.LuasSingleFares.ADULT, adultCashSingle);
                 contentValues.put(Database.LuasSingleFares.CHILD, childCashSingle);
@@ -340,7 +340,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void insertExpenditure(boolean isLeap, String cardNumber, String expenditure){
+    public void insertExpenditure(boolean isLeap, String cardNumber, String expenditure) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -361,11 +361,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                              double topUp, double expenditure,
                              double balanceChange, boolean negative,
                              String userName, String cardNumber, String userEmail,
-                             String userPassword, boolean isActive){
+                             String userPassword, boolean isActive) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        switch (tableName){
+        switch (tableName) {
             case Database.BusEireannFavourites.TABLE_NAME:
                 contentValues.put(Database.BusEireannFavourites.STOP_NUMBER, stopNumber);
                 contentValues.put(Database.BusEireannFavourites.ROUTE, route);
@@ -417,7 +417,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void removeRecord(String tableName, String idCol, int id){
+    public void removeRecord(String tableName, String idCol, int id) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         String removeRowQuery =
@@ -434,12 +434,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                              String cardNumber, String balance,
                              String date, double topUp, double expenditure,
                              double balanceChange, boolean negative,
-                             String userName, String userEmail, String userPassword, boolean isActive){
+                             String userName, String userEmail, String userPassword, boolean isActive) {
 
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        switch (tableName){
+        switch (tableName) {
             case Database.BusEireannFavourites.TABLE_NAME:
                 contentValues.put(Database.BusEireannFavourites.STOP_NUMBER, stopNumber);
                 contentValues.put(Database.BusEireannFavourites.ROUTE, route);
@@ -486,10 +486,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.update(tableName, contentValues,
                 colId + "=" + "?", whereArgs);
         writeDb.close();
-
     }
 
-    public void modifyActive(String tableName, String colIsActive, String colId, int id, boolean active){
+    public void modifyLeapCard(int id, String number, String username, String email, String password) {
+        SQLiteDatabase writeDb = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Database.LeapLogin.CARD_NUMBER, number);
+        contentValues.put(Database.LeapLogin.USER_NAME, username);
+        contentValues.put(Database.LeapLogin.USER_EMAIL, email);
+        contentValues.put(Database.LeapLogin.USER_PASSWORD, password);
+
+        String[] whereArgs = {String.valueOf(id)};
+        writeDb.update(Database.LeapLogin.TABLE_NAME, contentValues,
+                Database.LeapLogin.ID + "=" + "?", whereArgs);
+        writeDb.close();
+    }
+
+    public void modifyActive(String tableName, String colIsActive, String colId, int id, boolean active) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -501,7 +514,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void modifyFrequency(String tableName, String colFreq, String colId, int id, int frequency){
+    public void modifyFrequency(String tableName, String colFreq, String colId, int id, int frequency) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -513,7 +526,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void clearTable(String tableName){
+    public void clearTable(String tableName) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
         String clearTableQuery =
                 "DELETE FROM " + tableName + ";";
@@ -521,10 +534,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void printTableContents(String tableName){
+    public void printTableContents(String tableName) {
         SQLiteDatabase readDb = this.getReadableDatabase();
         Cursor cursor = readDb.rawQuery("SELECT * FROM " + tableName, null);
-        if(cursor.getCount() > 0) {
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
 
             int rowNum = cursor.getCount();

@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... params) {
             interstitialAd = new InterstitialAd(getBaseContext());
-            interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+            interstitialAd.setAdUnitId(Globals.ADMOB_ID_DEVELOPMENT);
             adRequest = new AdRequest.Builder().build();
             return null;
         }

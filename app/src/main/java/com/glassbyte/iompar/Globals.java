@@ -17,6 +17,9 @@ public class Globals extends ContextWrapper {
         super(context);
     }
 
+    public static String ADMOB_ID = "ca-app-pub-7053740901071844/4386004018";
+    public static String ADMOB_ID_DEVELOPMENT = "ca-app-pub-3940256099942544/1033173712";
+
     //http querying
     public static String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
     public static String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
@@ -32,8 +35,6 @@ public class Globals extends ContextWrapper {
     public static final String USER_PASS = "thuga8Da!";
 
     public static final int ONE_SECOND = 1000;
-    public static final int TENTH_OF_SECOND = ONE_SECOND / 10;
-    public static final int FIVE_SECONDS = ONE_SECOND * 5;
     public static final int TEN_SECONDS = ONE_SECOND * 10;
 
     //zone IDs

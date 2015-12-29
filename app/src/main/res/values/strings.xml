@@ -40,12 +40,10 @@
         <item>@string/other</item>
     </string-array>
 
-    <!-- untranslatable pref keys -->
+    <!-- untranslatable pref keys - settings -->
     <string name="pref_key_contact" translatable="false">pref_key_contact</string>
     <string name="pref_key_app_settings" translatable="false">pref_key_settings</string>
     <string name="pref_key_language" translatable="false">pref_key_language</string>
-
-    <!-- settings -->
     <string name="pref_key_name" translatable="false">pref_key_name</string>
     <string name="pref_key_fare" translatable="false">pref_key_fare</string>
     <string name="pref_key_prefer_leap" translatable="false">pref_key_prefer_leap</string>
