@@ -83,6 +83,8 @@ public class Leap extends WebViewClient {
                                         "document.getElementById('ContentPlaceHolder1_btnlogin').click();" +
                                         "};");
 
+                                Toast.makeText(context, "Retrieving currently active Leap balance...", Toast.LENGTH_LONG).show();
+
                                 //now scrape redirect data on successful login
                                 if (webView.getTitle().equals("My Leap Card Overview")) {
                                     System.out.println("logged in");

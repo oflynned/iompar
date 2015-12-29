@@ -64,7 +64,7 @@ public class ManageLeapCards extends Fragment {
                 .addItem(R.drawable.ic_add_white_18dp)
                 .addItem(R.drawable.ic_clear_white_18dp)
                 .addItem(R.drawable.ic_input_white_18dp)
-                .addItem(R.drawable.ic_attach_money_white_48dp)
+                .addItem(R.drawable.ic_attach_money_white_18dp)
                 .attach(filterMenuLayout)
                 .withListener(new FilterMenu.OnMenuChangeListener() {
                     @Override
@@ -77,14 +77,38 @@ public class ManageLeapCards extends Fragment {
                                 addLeapCard.setAddLeapDialogListener(new AddLeapCard.setAddLeapListener() {
                                     @Override
                                     public void onDoneClick(DialogFragment dialogFragment) {
-                                        databaseHelper.insertRecord(
-                                                Database.LeapLogin.TABLE_NAME,
-                                                null, null, null, null, null, null, 0, null, 0, 0, 0, false,
-                                                addLeapCard.getNumberField(), addLeapCard.getUsernameField(),
-                                                addLeapCard.getEmailField(), addLeapCard.getPasswordField(), false);
-                                        databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
-                                        populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
-                                        Toast.makeText(getContext(), R.string.leap_added_successfully, Toast.LENGTH_SHORT).show();
+                                        if (addLeapCard.getNumberField().matches("") &&
+                                                addLeapCard.getUsernameField().matches("") &&
+                                                addLeapCard.getEmailField().matches("") &&
+                                                addLeapCard.getPasswordField().matches("")) {
+                                            Toast.makeText(getActivity(), "Please input all fields", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            if (addLeapCard.getNumberField().matches("")) {
+                                                Toast.makeText(getActivity(), "Please input a registered Leap card number", Toast.LENGTH_SHORT).show();
+                                            }
+                                            if (addLeapCard.getUsernameField().matches("")) {
+                                                Toast.makeText(getActivity(), "Please input a username", Toast.LENGTH_SHORT).show();
+                                            }
+                                            if (addLeapCard.getEmailField().matches("")) {
+                                                Toast.makeText(getActivity(), "Please input an email", Toast.LENGTH_SHORT).show();
+                                            }
+                                            if (addLeapCard.getPasswordField().matches("")) {
+                                                Toast.makeText(getActivity(), "Please input a password", Toast.LENGTH_SHORT).show();
+                                            }
+                                            if (!addLeapCard.getNumberField().matches("") &&
+                                                    !addLeapCard.getUsernameField().matches("") &&
+                                                    !addLeapCard.getEmailField().matches("") &&
+                                                    !addLeapCard.getPasswordField().matches("")) {
+                                                databaseHelper.insertRecord(
+                                                        Database.LeapLogin.TABLE_NAME,
+                                                        null, null, null, null, null, null, 0, null, 0, 0, 0, false,
+                                                        addLeapCard.getNumberField(), addLeapCard.getUsernameField(),
+                                                        addLeapCard.getEmailField(), addLeapCard.getPasswordField(), false);
+                                                databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
+                                                populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
+                                                Toast.makeText(getContext(), R.string.leap_added_successfully, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
                                     }
                                 });
                                 break;
@@ -112,7 +136,7 @@ public class ManageLeapCards extends Fragment {
                             case 2:
                                 Leap leap = new Leap(getContext());
                                 leap.scrape();
-                                Toast.makeText(getContext(), "Retrieving active Leap card balance...", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "Connecting...", Toast.LENGTH_LONG).show();
                                 break;
                             //top up
                             case 3:
@@ -267,7 +291,7 @@ public class ManageLeapCards extends Fragment {
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     if (editLeapCard.getNumberField().matches("")) {
-                                        Toast.makeText(getActivity(), "Please input a Leap card number",
+                                        Toast.makeText(getActivity(), "Please input a registered Leap card number",
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                     if (editLeapCard.getUsernameField().matches("")) {
