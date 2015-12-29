@@ -20,6 +20,8 @@ public class Slide_Two extends Fragment {
     public EditText nameField;
     public TextView title, desc;
     public Spinner fareSelection;
+    private boolean notified;
+    private String fareType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,9 +40,28 @@ public class Slide_Two extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(fareSelection.getItemAtPosition(position).toString().equals(getString(R.string.student))){
-                    Toast.makeText(getContext(),
-                            "Please ensure you have a student Leap card in order to avail of student prices.",
-                            Toast.LENGTH_LONG).show();
+                    if(!isNotified()) {
+                        Toast.makeText(getContext(),
+                                "Please ensure you have a student Leap card in order to avail of student prices.",
+                                Toast.LENGTH_LONG).show();
+                        setNotified(true);
+                    }
+                }
+
+                switch (position){
+                    case 0:
+                        setFareType(getString(R.string.adult));
+                        break;
+                    case 1:
+                        setFareType(getString(R.string.student));
+                        break;
+                    case 2:
+                        setFareType(getString(R.string.child));
+                        break;
+                    case 3:
+                        setFareType(getString(R.string.other));
+                        break;
+
                 }
             }
 
@@ -62,4 +83,8 @@ public class Slide_Two extends Fragment {
     }
 
     public String getNameField(){return nameField.getText().toString();}
+    public void setNotified(boolean notified){this.notified=notified;}
+    public boolean isNotified(){return notified;}
+    public void setFareType(String fareType){this.fareType=fareType;}
+    public String getFareType(){return fareType;}
 }

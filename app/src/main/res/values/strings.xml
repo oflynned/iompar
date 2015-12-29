@@ -51,9 +51,8 @@
     <string name="pref_key_prefer_leap" translatable="false">pref_key_prefer_leap</string>
     <string name="pref_key_irish" translatable="false">pref_key_irish</string>
 
-    <!-- leap caps expenditure management -->
-    <string name="pref_key_daily_cap_reached" translatable="false">pref_key_daily_cap_reached</string>
-    <string name="pref_key_weekly_cap_reached" translatable="false">pref_key_weekly_cap_reached</string>
+    <!-- first run setup -->
+    <string name="pref_key_has_been_run" translatable="false">pref_key_has_been_run</string>
 
     <!-- leap keys for expenditure management -->
     <string name="pref_key_last_synced_balance" translatable="false">pref_key_last_synced_balance</string>
@@ -82,7 +81,8 @@
     <string name="slide_three_pay_cash">I pay using cash</string>
     <string name="slide_three_pay_leap">I pay using Leap</string>
     <string name="slide_three_title_two">Leap Information</string>
-    <string name="slide_three_desc">Leap cards make transport quicker, easier, and cheaper.\n\nMake sure to register it online so you can access your balance here.</string>
+    <string name="slide_three_desc_leap">Leap cards make transport quicker, easier, and cheaper.\n\nMake sure to register it online so you can access your balance here.</string>
+    <string name="slide_three_desc_cash">Cash is slower and more expensive to use in comparison to a Leap card.\n\nPurchase a Leap card for €5 and save money on journeys.</string>
     <string name="slide_four_title">What now?</string>
     <string name="slide_four_desc">iompar helps you track your public transport and expenditures intelligently.\n\nMonitor your spending and never miss that journey again.</string>
 
@@ -118,7 +118,7 @@
     <string name="unavailable">Unavailable</string>
     <string name="arriving_soon">Arriving soon</string>
     <string name="one_min_away">1 min away</string>
-    <string name="mins_away">" mins away"</string>
+    <string name="mins_away"> mins away</string>
     <string name="could_not_connect_real_time">Could not connect to real-time services. Check your internet connection.</string>
     <string name="sometimes_rtpi_is_down">Sometimes RTPI.ie is down - our app depends on it to report times :(</string>
 
@@ -161,7 +161,7 @@
     <string name="expenditure_added_successfully">Expenditure added successfully</string>
     <string name="no_active_leap">No Active Leap Card</string>
     <string name="no_active_leap_body">No active Leap card was detected, please activate one under settings. Click add if you wish to add this expense as a cash expenditure.\n\nThis will cost €</string>
-    <string name="more">"more."</string>
+    <string name="more">" more."</string>
     <string name="cancel">Cancel</string>
 
     <!-- add leap card -->

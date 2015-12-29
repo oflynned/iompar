@@ -101,8 +101,9 @@ public class MainActivity extends AppCompatActivity
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
-        asynchronousInterstitial.execute();
+        //ayyyy lmao our income
+        //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
+        //asynchronousInterstitial.execute();
 
         setFragment();
     }

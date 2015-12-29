@@ -2,11 +2,13 @@ package com.glassbyte.iompar;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -51,10 +53,16 @@ public class SplashScreen extends Activity {
             public void run() {
                 try {
                     while (!synced) {
-                        sleep(100);
+                        sleep(Globals.ONE_SECOND);
                     }
                     if (synced) {
-                        startActivity(new Intent("com.glassbyte.iompar.ClearScreen"));
+                        SharedPreferences sharedPreferences =
+                                PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                        if(!sharedPreferences.getBoolean(getString(R.string.pref_key_has_been_run), false)){
+                            startActivity(new Intent(getBaseContext(), IntroActivity.class));
+                        } else {
+                            startActivity(new Intent("com.glassbyte.iompar.ClearScreen"));
+                        }
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

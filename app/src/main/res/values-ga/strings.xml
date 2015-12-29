@@ -53,7 +53,6 @@
     <string name="slide_three_pay_cash">Úsáidim airgead</string>
     <string name="slide_three_pay_leap">Úsáidim cárta Leap</string>
     <string name="slide_three_title_two">Eolas faoi Do Chárta Leap</string>
-    <string name="slide_three_desc">Déanann cartaí Leap iompar níos tapúla, níos éasca, agus níos saoire.\n\nBíodh cinnte é a chlárú ar líne ionas go mbeidh tú in ann d\'iarmhéid a rochtain anseo.</string>
     <string name="slide_four_title">Céard anois?</string>
     <string name="slide_four_desc">Cabhraíonn iompar leat d\'iompar poiblí agus chaiteachas a bhainistiú go cliste.\n\nFair amach ar do chaitheamh, agus ní chaillfear an t-aistear sin arís.</string>
 
@@ -80,7 +79,7 @@
     <string name="saggart_connolly">Líne Theach Sagard-Chonghaile</string>
     <string name="heuston_connolly">Líne Heuston-Chonghaile</string>
     <string name="terminus">Críoch:</string>
-    <string name="eta">"Tuar: "</string>
+    <string name="eta">"Tuar Ama: "</string>
     <string name="origin">Ó:</string>
     <string name="destination">Chuig:</string>
     <string name="no_departures_found">Ní fuarthas imeachtaí</string>
@@ -127,7 +126,7 @@
     <string name="expenditure_added_successfully">Cuiread caitheamh leis go rathúil</string>
     <string name="no_active_leap">Easpa Chárta Leap Gníomhaigh</string>
     <string name="no_active_leap_body">Ní aimsíodh aon chárta Leap atá gníomhach, cuir cárta i ngníomh sna socruithe led\' thoil. Gliogáil cuir leis má theastaíonn uait é seo a chur leis mar chaitheamh airgid.\n\nCosnóidh é seo €</string>
-    <string name="more">"sa bhreis."</string>
+    <string name="more">" sa bhreis."</string>
     <string name="cancel">Cealaigh</string>
     <string name="remove_expenditure">Bain Caiteachas De</string>
     <string name="remove">Bain De</string>
@@ -198,5 +197,7 @@
     <string name="cookstown">Baile an Chócaigh</string>
     <string name="hospital">Ospidéal Thamhlachta</string>
     <string name="tallaght">Tamhlacht</string>
+    <string name="slide_three_desc_leap">Déanann cartaí Leap iompar níos tapúla, níos éasca, agus níos saoire.\n\nBíodh cinnte é a chlárú ar líne ionas go mbeidh tú in ann d\'iarmhéid a rochtain anseo.</string>
+    <string name="slide_three_desc_cash">Tá airgead tirim níos moille agus níos costasaí ná cárta Leap.\n\nCeannaigh cárta Leap as €5 chun airgead a shabháil san iompraíocht.</string>
 
 </resources>

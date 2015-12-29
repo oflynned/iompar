@@ -1,7 +1,10 @@
 package com.glassbyte.iompar;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -51,11 +54,25 @@ public class IntroActivity extends AppIntro2 {
 
         //transition animation
         setFlowAnimation();
+        slide_two.setNotified(false);
     }
 
     @Override
     public void onDonePressed() {
-        Toast.makeText(getBaseContext(), "Done", Toast.LENGTH_SHORT).show();
+        if(!slide_two.getNameField().equals("")) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            //name & fare keys
+            editor.putString(getString(R.string.pref_key_name), slide_two.getNameField());
+            editor.putString(getString(R.string.pref_key_fare), slide_two.getFareType());
+            editor.putBoolean(getString(R.string.pref_key_has_been_run), true);
+            editor.apply();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else {
+            Toast.makeText(this, "Hey you! You forgot to tell us your name.", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
