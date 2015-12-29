@@ -64,6 +64,7 @@ public class Leap extends WebViewClient {
             public void onPageFinished(WebView view, String url) {
 
                 System.out.println("PERFORMING CHECK " + webView.getTitle());
+                Toast.makeText(context, "Retrieving currently active Leap balance...", Toast.LENGTH_LONG).show();
 
                 //check if logged in
                 if (webView.getTitle().equals("Sign In To My Account - Leap Card")) {
@@ -82,8 +83,6 @@ public class Leap extends WebViewClient {
                                         "document.getElementById('ContentPlaceHolder1_Password').value = '" + Globals.USER_PASS + "';" +
                                         "document.getElementById('ContentPlaceHolder1_btnlogin').click();" +
                                         "};");
-
-                                Toast.makeText(context, "Retrieving currently active Leap balance...", Toast.LENGTH_LONG).show();
 
                                 //now scrape redirect data on successful login
                                 if (webView.getTitle().equals("My Leap Card Overview")) {

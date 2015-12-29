@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -60,7 +59,7 @@ public class Realtime extends Fragment {
     public enum LuasDirections {
         TALLAGHT, SAGGART, POINT,
         BRIDES_GLEN, SANDYFORD, STEPHENS_GREEN,
-        CONNOLLY, HEUSTON
+        CONNOLLY, HEUSTON, NULL
     }
 
     private TransportationCategories currentCategory;
@@ -218,7 +217,7 @@ public class Realtime extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         globals.setIrish(sharedPreferences.getBoolean(getResources()
@@ -245,7 +244,7 @@ public class Realtime extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(!getStartPosition().equals("") && !getEndPosition().equals("")){
+                if (hasPair()) {
                     fetchRTPI(getStartPosition(), getEndPosition(),
                             getDirection(currentLuasLine, currentLuasDirection,
                                     getStartPositionComp(), getEndPositionComp()));
@@ -290,29 +289,7 @@ public class Realtime extends Fragment {
                     stage++;
 
                     switch (position) {
-                        /*case 0:
-                            //bus eireann
-                            setCurrentCategory(TransportationCategories.BUS_EIREANN);
-                            break;
-                        case 1:
-                            //DART
-                            setCurrentCategory(TransportationCategories.DART);
-                            break;
-                        case 2:
-                            //dublin bus
-                            setCurrentCategory(TransportationCategories.BUS);
-                            break;
-                        case 3:
-                            //luas
-                            setCurrentCategory(TransportationCategories.LUAS);
-                            break;
-                        case 4:
-                            //train
-                            setCurrentCategory(TransportationCategories.TRAIN);
-                            break;
-                            */
                         case 0:
-                            //luas
                             setCurrentCategory(TransportationCategories.LUAS);
                             break;
                     }
@@ -491,7 +468,12 @@ public class Realtime extends Fragment {
                         && position != getEndPositionComp()) {
                     gridView.setItemChecked(position, false);
                     System.out.println("trying to check item not already checked");
-                    addExpenditureFab.show();
+
+                    if(rightPanel.getText().equals(getString(R.string.no_times_found))){
+                        addExpenditureFab.hide();
+                    } else {
+                        addExpenditureFab.show();
+                    }
                 } else {
                     System.out.println("start true, end true!");
                     System.out.println(
@@ -665,6 +647,7 @@ public class Realtime extends Fragment {
 
     /**
      * Fetches the appropriate RTPI data given the parameters from RTPI.ie
+     *
      * @param lineDirection the direction in which the user is travelling
      */
     private void fetchRTPI(String depart, String arrive, Globals.LineDirection lineDirection) {
@@ -699,11 +682,19 @@ public class Realtime extends Fragment {
 
     /**
      * displays appropriate data polled asynchronously to the upper panel of the realtime fragment
+     *
      * @error during thread switching outside of asynchronously
      */
     private void displayRTPI(String leftPanelText, String rightPanelText) {
         leftPanel.setText(leftPanelText);
         rightPanel.setText(rightPanelText);
+
+        //prevent crashes by trying to add an expenditure that cannot exist
+        if(rightPanelText.equals(getString(R.string.no_times_found))){
+            addExpenditureFab.hide();
+        } else {
+            addExpenditureFab.show();
+        }
     }
 
     class TransportationAdapter extends BaseAdapter {
@@ -714,6 +705,7 @@ public class Realtime extends Fragment {
         /**
          * Default constructor for the transportation adapter which passes the current context
          * and instantiates an appropriate layout contextually
+         *
          * @param context the current application context
          */
         public TransportationAdapter(Context context) {
@@ -724,6 +716,7 @@ public class Realtime extends Fragment {
         /**
          * Counts the number of static elements within the enumeration's state array and adds it
          * to the count for the current state which the view returns
+         *
          * @return the count of items within the array to be displayed
          */
         @Override
@@ -778,6 +771,7 @@ public class Realtime extends Fragment {
 
         /**
          * Returns the current stage advanced or returned as a set of arguments within enumeration states
+         *
          * @return view returns the current contextual view
          */
         @Override
@@ -911,7 +905,7 @@ public class Realtime extends Fragment {
         Globals.LineDirection lineDirection;
         String depart, arrive;
 
-        public AsynchronousActivity(String depart, String arrive, Globals.LineDirection lineDirection){
+        public AsynchronousActivity(String depart, String arrive, Globals.LineDirection lineDirection) {
             this.lineDirection = lineDirection;
             this.depart = depart;
             this.arrive = arrive;
@@ -953,9 +947,8 @@ public class Realtime extends Fragment {
             baseAdapter.notifyDataSetChanged();
             infoPanel.invalidate();
             displayRTPI(sync.getNextDue(), sync.getArrivalInfo());
-            //Toast.makeText(getContext(), "You are using " + sync.getFarePayment() + " payment type under the fare class " + sync.getFareClass(), Toast.LENGTH_SHORT).show();
 
-            if(swipeRefreshLayout.isRefreshing()){
+            if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
             }
         }

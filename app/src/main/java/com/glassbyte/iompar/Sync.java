@@ -192,6 +192,10 @@ public class Sync {
 
                 setFareClass(fares.getFareType());
                 setFarePayment(fares.getFarePayment());
+            } else {
+                setEnumDirection(Realtime.LuasDirections.NULL);
+                setDepart("Unavailable");
+                setArrive("Unavilable");
             }
         }
     }
