@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
     InterstitialAd interstitialAd;
 
     TextView barName, barLeapCardNumber, currentState;
-    DrawerLayout drawer;
+    public static DrawerLayout drawer;
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        //ayyyy lmao our income
+        //ayyy lmao our income
         //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
         //asynchronousInterstitial.execute();
 
@@ -124,18 +124,33 @@ public class MainActivity extends AppCompatActivity
         setNavigationBarProfile();
     }
 
-    public void setNavigationBarProfile(){
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        setNavigationBarProfile();
+    }
+
+    private void setNavigationBarProfile(){
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
         String leapNumber;
 
-        if(cursor.getCount() > 0) {
+        if(cursor.getCount() > 0){
+            String balance = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "no_key");
             cursor.moveToFirst();
-            leapNumber = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER);
+            leapNumber = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + " (" + balance + ")";
+            if(balance.contains("-€")){
+                currentState.setText(getString(R.string.negative_leapcard_drawer));
+            } else if (!balance.contains("€") || balance.contains("no_key")){
+                currentState.setText("Unsynced");
+            } else {
+                currentState.setText(getString(R.string.positive_leapcard_drawer));
+            }
         } else {
-            leapNumber = getString(R.string.using_cash);
+            leapNumber = getString(R.string.cash_leapcard_drawer);
+            currentState.setText("Cannot sync Leap balance");
         }
 
         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
@@ -147,7 +162,6 @@ public class MainActivity extends AppCompatActivity
 
         //set appropriate state if leap is positive, if cash is being used or anything else
         currentState.invalidate();
-        currentState.setText(getString(R.string.positive_leapcard_drawer));
 
         sqLiteDatabase.close();
         cursor.close();

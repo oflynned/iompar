@@ -220,6 +220,8 @@ public class ManageLeapCards extends Fragment {
                                 checkBox.setChecked(false);
                             }
                         }
+
+                        MainActivity.drawer.invalidate();
                         tableLayout.invalidate();
                         databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                     }

@@ -2,8 +2,10 @@ package com.glassbyte.iompar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +36,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.prefs.Preferences;
 
 
 /**
@@ -47,6 +50,13 @@ public class Leap extends WebViewClient {
         this.context = context;
     }
 
+    /**
+     * launch a webview to auto login via a headless browser native to Android
+     * in order to retrieve session cookies, parse to JSoup, and scrape
+     * page acquired in order to retrieve the balance
+     * @note JavaScript interface on URL manipulation
+     * @note does not account for >1 Leap card on the account
+     */
     @SuppressLint("SetJavaScriptEnabled")
     public void scrape() {
         final WebView webView = new WebView(context);
@@ -135,6 +145,11 @@ public class Leap extends WebViewClient {
                                                 Database.LeapLogin.TABLE_NAME,
                                                 null, null, null, null, null, null, 0, returnedPost, 0, 0, 0, false,
                                                 Globals.USER_LEAP_NUMBER, Globals.USER_NAME, Globals.USER_EMAIL, Globals.USER_PASS, true);
+
+                                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString(context.getString(R.string.pref_key_last_synced_balance), returnedPost);
+                                        editor.apply();
 
                                         System.out.println("Reported Leap balance:");
                                         System.out.println(returnedPost);

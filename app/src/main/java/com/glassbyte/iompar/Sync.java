@@ -381,7 +381,7 @@ public class Sync {
             case "1 mins":
                 return context.getString(R.string.one_min_away);
             default:
-                return time.replaceAll("[^0-9]", "") + context.getString(R.string.mins_away);
+                return time.replaceAll("[^0-9]", "") + " " + context.getString(R.string.mins_away);
         }
     }
 

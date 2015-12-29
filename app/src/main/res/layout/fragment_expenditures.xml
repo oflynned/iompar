@@ -44,7 +44,7 @@
                     android:id="@+id/daily_expenditures_title_cash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total expenditures today:" />
+                    android:text="@string/expenditures_today" />
 
                 <TextView
                     android:id="@+id/weekly_expenditures_title_cash"
@@ -130,7 +130,7 @@
                     android:id="@+id/daily_expenditures_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total expenditures today:" />
+                    android:text="@string/expenditures_today" />
 
                 <TextView
                     android:id="@+id/weekly_expenditures_title"

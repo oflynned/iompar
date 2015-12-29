@@ -85,9 +85,9 @@
     <string name="slide_four_desc">iompar helps you track your public transport and expenditures intelligently.\n\nMonitor your spending and never miss that journey again.</string>
 
     <!-- general -->
-    <string name="fares_synced">Fares synced</string>
-    <string name="using_cash">Using cash</string>
-    <string name="positive_leapcard_drawer">This profile has a positive Leap balance</string>
+    <string name="positive_leapcard_drawer">This profile has a positive Leap balance.</string>
+    <string name="negative_leapcard_drawer">This profile has a negative Leap balance.</string>
+    <string name="cash_leapcard_drawer">This profile is using cash.</string>
     <string name="relatime_info">Realtime Information</string>
     <string name="manage_leap">Manage Leap Cards</string>
     <string name="fare_calc">Fare Calculator</string>
@@ -140,9 +140,9 @@
     <string name="type">Type</string>
     <string name="leap_number">Leap Number</string>
     <string name="cost">Cost</string>
-    <string name="expenditures_this_week">Total expenditure this week:</string>
-    <string name="expenditures_this_month">Total expenditure this month:</string>
-    <string name="best_option">Best Option for You:</string>
+    <string name="expenditures_today">Total today:</string>
+    <string name="expenditures_this_week">Total this week:</string>
+    <string name="expenditures_this_month">Total this month:</string>
     <string name="remove_expenditure">Remove Expenditure</string>
     <string name="remove">Remove</string>
     <string name="remove_expenditure_clause_one">The chosen expenditure (</string>

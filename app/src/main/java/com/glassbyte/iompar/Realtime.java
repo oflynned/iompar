@@ -484,7 +484,12 @@ public class Realtime extends Fragment {
                     fetchRTPI(getStartPosition(), getEndPosition(),
                             getDirection(currentLuasLine, currentLuasDirection, getStartPositionComp(), getEndPositionComp()));
                     //animate in fab only now
-                    addExpenditureFab.show();
+                    if(rightPanel.getText().equals(getString(R.string.loading_stations)) ||
+                            rightPanel.getText().equals(getString(R.string.loading_times))) {
+                        addExpenditureFab.hide();
+                    } else {
+                        addExpenditureFab.show();
+                    }
 
                     infoPanelParams.height = getDp(90);
                     infoPanel.invalidate();
