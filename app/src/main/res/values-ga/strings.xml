@@ -7,7 +7,7 @@
     <!--> Options <-->
     <string name="action_settings">Socruithe</string>
     <string name="about_us_option">Fúinn</string>
-    <string name="visit_website">Tabhair Cuairt Dúinn!</string>
+    <string name="visit_website">Tabhair Cuairt Dúinn</string>
 
     <!--> About Us <-->
     <string name="about_us">GlassByte - is comhlacht bhogearraí sinn atá bunaithe i mBaile Átha Cliath, Éirinn. Déanann ár bhfoireann bheag uaillmhianach iarracht bogearraí nuálacha agus úsáideacha a fhorbairt as ríomhchéimeanna.</string>
@@ -112,7 +112,6 @@
     <string name="cost">Costas</string>
     <string name="expenditures_this_week">Lán-Chaitheamh an tSeachtain seo:</string>
     <string name="expenditures_this_month">Lán-Chaitheamh an Mhí seo:</string>
-    <string name="best_option">An Rogha is Fearr Duit:</string>
     <string name="active">Gníomhach</string>
     <string name="balance">Iarmhéid</string>
 

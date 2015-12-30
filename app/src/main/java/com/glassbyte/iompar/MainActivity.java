@@ -1,5 +1,6 @@
 package com.glassbyte.iompar;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -50,13 +51,14 @@ public class MainActivity extends AppCompatActivity
 
     public final static String ON_BACK_PRESSED_EVENT = "on_back_pressed_event";
 
-    //fragment classes
+    //helper classes
     Realtime realtime = new Realtime();
     Fares fares = new Fares();
     ManageLeapCards manageLeapCards = new ManageLeapCards();
     Expenditures expenditures = new Expenditures();
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     Globals globals;
+    LeapSyncAlarmReceiver leapSyncAlarmReceiver = new LeapSyncAlarmReceiver();
 
     InterstitialAd interstitialAd;
 
@@ -105,6 +107,23 @@ public class MainActivity extends AppCompatActivity
         //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
         //asynchronousInterstitial.execute();
 
+        //arm an alarm to update leap balance key hourly
+        boolean alarmUp = (PendingIntent.getBroadcast(this, 0,
+                new Intent(this, LeapSyncAlarmReceiver.class),
+                PendingIntent.FLAG_NO_CREATE) != null);
+
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        if(cursor.getCount() > 0) {
+            if (alarmUp) {
+                System.out.println("alarm already armed for active leap card");
+            } else {
+                leapSyncAlarmReceiver.setAlarm(this);
+            }
+        }
+        cursor.close();
+        sqLiteDatabase.close();
+
         setFragment();
     }
 
@@ -143,7 +162,8 @@ public class MainActivity extends AppCompatActivity
         String leapNumber;
 
         if(cursor.getCount() > 0){
-            String balance = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "no_key");
+            String balance = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),
+                    getString(R.string.unsynced));
             cursor.moveToFirst();
             leapNumber = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + " (" + balance + ")";
             if(balance.contains("-€")){
@@ -193,8 +213,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, AboutUs.class));
         } else if(id == R.id.visit_us){
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.glassbyte.com/")));
-        } else if(id == R.id.intro){
-            startActivity(new Intent(this, IntroActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

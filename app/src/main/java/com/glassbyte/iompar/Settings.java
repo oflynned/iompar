@@ -53,52 +53,26 @@ public class Settings extends PreferenceActivity {
 
                 //individual settings for more from glassbyte
                 Preference moreFromGlassByte = new Preference(getActivity());
-                Preference librariesUsed = new Preference(getActivity());
-                Preference apacheLicence = new Preference(getActivity());
+                Preference facebook = new Preference(getActivity());
+                Preference twitter = new Preference(getActivity());
+                Preference rateListing = new Preference(getActivity());
 
                 moreFromGlassByte.setTitle(R.string.more_apps);
                 moreFromGlassByte.setSummary(R.string.click_here_for_more_apps);
                 moreFromGlassByte.setIntent(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://play.google.com/store/apps/developer?id=GlassByte")));
 
-                librariesUsed.setTitle(R.string.libraries_used);
-                librariesUsed.setSummary(R.string.list_libraries_used);
-                librariesUsed.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle(getString(R.string.libraries_used))
-                                .setMessage(getString(R.string.list_libraries_used))
-                                .setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                facebook.setTitle("Follow Us on Facebook");
+                facebook.setIntent(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://www.facebook.com/glassbyte")));
 
-                                    }
-                                })
-                                .show();
-                        return true;
-                    }
-                });
+                twitter.setTitle("Follow Us on Twitter");
+                twitter.setIntent(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://www.twitter.com/glassbyte")));
 
-                apacheLicence.setTitle(getResources().getString(R.string.apache_title));
-                apacheLicence.setSummary(getString(R.string.apache_summary));
-                apacheLicence.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle(getResources().getString(R.string.apache_title))
-                                .setMessage(getResources().getString(R.string.apache_body))
-                                .setPositiveButton(getResources().getString(R.string.OK),
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-
-                                            }
-                                        })
-                                .show();
-                        return true;
-                    }
-                });
+                rateListing.setTitle("Rate iompar");
+                rateListing.setIntent(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=com.glassbyte.iompar")));
 
                 String name = sharedPreferences.getString(getString(R.string.pref_key_name), "");
 
@@ -111,13 +85,10 @@ public class Settings extends PreferenceActivity {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         preference.setSummary(String.valueOf(newValue));
-
                         editor = sharedPreferences.edit();
                         editor.putString(preference.getKey(), String.valueOf(newValue));
                         editor.apply();
-
                         preference.setSummary(String.valueOf(newValue));
-
                         return true;
                     }
                 });
@@ -150,8 +121,9 @@ public class Settings extends PreferenceActivity {
 
                 //child preferences
                 moreCategory.addPreference(moreFromGlassByte);
-                moreCategory.addPreference(librariesUsed);
-                moreCategory.addPreference(apacheLicence);
+                moreCategory.addPreference(facebook);
+                moreCategory.addPreference(twitter);
+                moreCategory.addPreference(rateListing);
 
                 appSettings.addPreference(namePreference);
                 appSettings.addPreference(farePreference);

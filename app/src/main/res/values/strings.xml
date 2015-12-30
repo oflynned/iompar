@@ -5,7 +5,7 @@
     <!--> Options <-->
     <string name="action_settings">Settings</string>
     <string name="about_us_option">About Us</string>
-    <string name="visit_website">Visit Our Website!</string>
+    <string name="visit_website">Visit Our Website</string>
 
     <!--> About Us <-->
     <string name="about_us">GlassByte is a software development start-up company headquartered in Dublin, Ireland. Our small, ambitious team strives to create innovative and useful software for computing platforms.</string>
