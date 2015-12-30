@@ -27,6 +27,9 @@
     <string name="modify_fare">Modify Fare Type</string>
     <string name="irish_language">Irish Language</string>
     <string name="irish_language_summary">Choose this option to use this app with an Irish Gaelic interface.</string>
+    <string name="follow_on_fb">Follow Us on Facebook</string>
+    <string name="follow_on_twitter">Follow Us on Twitter</string>
+    <string name="rate_app">Rate iompar</string>
 
     <string name="adult">Adult</string>
     <string name="student">Student</string>
@@ -51,6 +54,7 @@
 
     <!-- first run setup -->
     <string name="pref_key_has_been_run" translatable="false">pref_key_has_been_run</string>
+    <string name="pref_key_first_sync" translatable="false">pref_key_first_sync</string>
 
     <!-- leap keys for expenditure management -->
     <string name="pref_key_last_synced_balance" translatable="false">pref_key_last_synced_balance</string>

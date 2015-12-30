@@ -40,7 +40,6 @@ public class Globals extends ContextWrapper {
     //timeouts
     public static final int ONE_SECOND = 1000;
     public static final int TEN_SECONDS = ONE_SECOND * 10;
-    public static final int ONE_HOUR = 60 * 60 * ONE_SECOND;
 
     //zone IDs
     public static final int DOCKLANDS_ID = 1;

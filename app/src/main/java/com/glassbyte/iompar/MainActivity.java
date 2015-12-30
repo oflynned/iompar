@@ -1,6 +1,8 @@
 package com.glassbyte.iompar;
 
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,11 +15,14 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -58,7 +63,6 @@ public class MainActivity extends AppCompatActivity
     Expenditures expenditures = new Expenditures();
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     Globals globals;
-    LeapSyncAlarmReceiver leapSyncAlarmReceiver = new LeapSyncAlarmReceiver();
 
     InterstitialAd interstitialAd;
 
@@ -67,8 +71,10 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
+    String fragName;
 
     SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,22 +113,14 @@ public class MainActivity extends AppCompatActivity
         //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
         //asynchronousInterstitial.execute();
 
-        //arm an alarm to update leap balance key hourly
-        boolean alarmUp = (PendingIntent.getBroadcast(this, 0,
-                new Intent(this, LeapSyncAlarmReceiver.class),
-                PendingIntent.FLAG_NO_CREATE) != null);
-
-        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        SQLiteDatabase sqliteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqliteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
         if(cursor.getCount() > 0) {
-            if (alarmUp) {
-                System.out.println("alarm already armed for active leap card");
-            } else {
-                leapSyncAlarmReceiver.setAlarm(this);
-            }
+            AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking(this);
+            asynchronousLeapChecking.execute();
         }
         cursor.close();
-        sqLiteDatabase.close();
+        sqliteDatabase.close();
 
         setFragment();
     }
@@ -132,8 +130,12 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            Intent broadcastIntent = new Intent(ON_BACK_PRESSED_EVENT);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+            if(getSelected().equals("Realtime")){
+                Intent broadcastIntent = new Intent(ON_BACK_PRESSED_EVENT);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -168,7 +170,7 @@ public class MainActivity extends AppCompatActivity
             leapNumber = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + " (" + balance + ")";
             if(balance.contains("-€")){
                 currentState.setText(getString(R.string.negative_leapcard_drawer));
-            } else if (!balance.contains("€") || balance.contains("no_key")){
+            } else if (!balance.contains("€") || balance.contains(getString(R.string.unsynced))){
                 currentState.setText(R.string.unsynced);
             } else {
                 currentState.setText(getString(R.string.positive_leapcard_drawer));
@@ -224,12 +226,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_realtime) {
+            setSelected("Realtime");
             changeFragment(this.realtime);
         } else if (id == R.id.nav_fare_calculator) {
+            setSelected("Fares");
             changeFragment(this.fares);
         } else if (id == R.id.nav_manage_leap_cards) {
+            setSelected("Manage");
             changeFragment(this.manageLeapCards);
         } else if (id == R.id.nav_expenditures) {
+            setSelected("Expenditures");
             changeFragment(this.expenditures);
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -237,6 +243,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setFragment() {
+        setSelected("Realtime");
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, this.realtime)
@@ -251,6 +258,9 @@ public class MainActivity extends AppCompatActivity
                 .addToBackStack(null)
                 .commit();
     }
+
+    public void setSelected(String fragName){this.fragName=fragName;}
+    public String getSelected(){return fragName;}
 
     class AsynchronousInterstitial extends AsyncTask<Void, Void, Void> {
 
@@ -275,6 +285,71 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
             });
+        }
+    }
+
+    class AsynchronousLeapChecking extends AsyncTask<Void, Void, Void> {
+
+        Leap leap;
+        Context context;
+
+        public AsynchronousLeapChecking(Context context){this.context=context;}
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            leap = new Leap(context)  ;
+            leap.scrape();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            while(!leap.isSynced()){
+                System.out.println("NOT synced and sleeping for 1s");
+                try {
+                    Thread.sleep(Globals.ONE_SECOND);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(leap.isSynced()){
+                System.out.println("is synced");
+                if (leap.isSynced() && !(sharedPreferences.getBoolean(getString(R.string.pref_key_first_sync), false))) {
+                    new AlertDialog.Builder(context)
+                            .setTitle("First Time Sync")
+                            .setMessage("This is your first time syncing this Leap card. Your online account shows that this Leap card has a balance of " + leap.getBalance() + ", is this correct?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(getApplicationContext(), "Reported balance " + leap.getBalance(), Toast.LENGTH_LONG).show();
+                                    editor = sharedPreferences.edit();
+                                    editor.putBoolean(getString(R.string.pref_key_first_sync), true);
+                                    editor.apply();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //amend this value as it's not correct
+                                    final CorrectBalanceDialog correctBalanceDialog = new CorrectBalanceDialog();
+                                    correctBalanceDialog.show(MainActivity.this.getFragmentManager(), "AmendBalance");
+                                    correctBalanceDialog.setSetBalanceDialogListener(new CorrectBalanceDialog.SetBalanceListener() {
+                                        @Override
+                                        public void onDoneClick(android.app.DialogFragment dialog) {
+                                            Toast.makeText(getApplicationContext(), "Amended balance " + correctBalanceDialog.getBalance(), Toast.LENGTH_LONG).show();
+                                            editor = sharedPreferences.edit();
+                                            editor.putBoolean(getString(R.string.pref_key_first_sync), true);
+                                            editor.apply();
+                                        }
+                                    });
+                                }
+                            })
+                            .show();
+                }
+            }
         }
     }
 }

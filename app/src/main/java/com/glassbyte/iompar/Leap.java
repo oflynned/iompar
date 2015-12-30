@@ -1,11 +1,16 @@
 package com.glassbyte.iompar;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +50,8 @@ import java.util.prefs.Preferences;
 public class Leap extends WebViewClient {
 
     Context context;
+    String balance;
+    boolean synced;
 
     public Leap(Context context) {
         this.context = context;
@@ -54,15 +61,19 @@ public class Leap extends WebViewClient {
      * launch a webview to auto login via a headless browser native to Android
      * in order to retrieve session cookies, parse to JSoup, and scrape
      * page acquired in order to retrieve the balance
+     *
      * @note JavaScript interface on URL manipulation
      * @note does not account for >1 Leap card on the account
      */
     @SuppressLint("SetJavaScriptEnabled")
     public void scrape() {
+        setSynced(false);
         final WebView webView = new WebView(context);
         webView.loadUrl(Globals.LEAP_LOGIN);
         webView.setVisibility(View.INVISIBLE);
         final Fares fares = new Fares();
+
+        Toast.makeText(context, R.string.connecting, Toast.LENGTH_LONG).show();
 
         //add following two lines
         final WebSettings webSettings = webView.getSettings();
@@ -153,7 +164,9 @@ public class Leap extends WebViewClient {
 
                                         System.out.println("Reported Leap balance:");
                                         System.out.println(returnedPost);
-                                        Toast.makeText(context, returnedPost, Toast.LENGTH_LONG).show();
+
+                                        setBalance(returnedPost);
+                                        setSynced(true);
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -220,7 +233,9 @@ public class Leap extends WebViewClient {
 
                             System.out.println("Reported Leap balance:");
                             System.out.println(returnedPost);
-                            Toast.makeText(context, returnedPost, Toast.LENGTH_LONG).show();
+
+                            setBalance(returnedPost);
+                            setSynced(true);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -231,5 +246,16 @@ public class Leap extends WebViewClient {
         webView.setVisibility(View.VISIBLE);
         webView.clearCache(true);
         webView.clearHistory();
-        }
     }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public boolean isSynced(){return synced;}
+    public void setSynced(boolean synced){this.synced=synced;}
+}

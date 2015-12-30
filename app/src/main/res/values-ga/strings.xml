@@ -220,5 +220,8 @@
     <string name="unsynced">Míshioncronaithe</string>
     <string name="weekly_cap_reached">Teorainn na seachtaine sroichte, €</string>
     <string name="weekly_cap_reached_free_transit">Teorainn na seachtaine sroichte, taisteal saor in aisce don chuid eile den tseachtain</string>
+    <string name="rate_app">Grádaigh iompar</string>
+    <string name="follow_on_fb">Lean Orainn ar Facebook</string>
+    <string name="follow_on_twitter">Lean Orainn ar Twitter</string>
 
 </resources>

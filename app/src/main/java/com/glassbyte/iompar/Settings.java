@@ -1,6 +1,5 @@
 package com.glassbyte.iompar;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -14,8 +13,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
-import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
 
 /**
  * Created by ed on 18/12/15.
@@ -62,15 +59,15 @@ public class Settings extends PreferenceActivity {
                 moreFromGlassByte.setIntent(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://play.google.com/store/apps/developer?id=GlassByte")));
 
-                facebook.setTitle("Follow Us on Facebook");
+                facebook.setTitle(R.string.follow_on_fb);
                 facebook.setIntent(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://www.facebook.com/glassbyte")));
 
-                twitter.setTitle("Follow Us on Twitter");
+                twitter.setTitle(R.string.follow_on_twitter);
                 twitter.setIntent(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://www.twitter.com/glassbyte")));
 
-                rateListing.setTitle("Rate iompar");
+                rateListing.setTitle(R.string.rate_app);
                 rateListing.setIntent(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("https://play.google.com/store/apps/details?id=com.glassbyte.iompar")));
 
