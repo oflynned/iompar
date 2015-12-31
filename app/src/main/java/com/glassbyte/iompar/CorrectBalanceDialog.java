@@ -61,7 +61,7 @@ public class CorrectBalanceDialog extends DialogFragment {
         euro.setGravity(Gravity.CENTER);
         RelativeLayout.LayoutParams dotParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dotParams.setMarginStart(getDp(16));
+        dotParams.setMarginStart(getDp(24));
         euro.setLayoutParams(dotParams);
         euro.setId(View.generateViewId());
 

@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    class AsynchronousLeapChecking extends AsyncTask<Void, Void, Void> {
+    public class AsynchronousLeapChecking extends AsyncTask<Void, Void, Void> {
 
         Leap leap;
         Context context;
@@ -329,6 +329,9 @@ public class MainActivity extends AppCompatActivity
                                     editor = sharedPreferences.edit();
                                     editor.putBoolean(getString(R.string.pref_key_first_sync), true);
                                     editor.apply();
+
+                                    //STORE BALANCE IN TABLE
+                                    editor.putString(getString(R.string.pref_key_last_synced_balance), leap.getBalance().replace("€", ""));
                                 }
                             })
                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -339,10 +342,18 @@ public class MainActivity extends AppCompatActivity
                                     correctBalanceDialog.setSetBalanceDialogListener(new CorrectBalanceDialog.SetBalanceListener() {
                                         @Override
                                         public void onDoneClick(android.app.DialogFragment dialog) {
-                                            Toast.makeText(getApplicationContext(), "Amended balance " + correctBalanceDialog.getBalance(), Toast.LENGTH_LONG).show();
+                                            if (correctBalanceDialog.getBalance().contains("-")) {
+                                                Toast.makeText(getApplicationContext(), "Amended balance -€" + correctBalanceDialog.getBalance().replace("-", ""), Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Amended balance €" + correctBalanceDialog.getBalance(), Toast.LENGTH_LONG).show();
+                                            }
+
                                             editor = sharedPreferences.edit();
                                             editor.putBoolean(getString(R.string.pref_key_first_sync), true);
                                             editor.apply();
+
+                                            //STORE BALANCE IN TABLE
+                                            editor.putString(getString(R.string.pref_key_last_synced_balance), correctBalanceDialog.getBalance());
                                         }
                                     });
                                 }

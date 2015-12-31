@@ -248,4 +248,12 @@
     <string name="add_leap_cheaper_fares">Add a Leap card to check your balance and get cheaper fares</string>
     <string name="fares_synced">Fared synced</string>
     <string name="using_cash">Using cash</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="first_time_sync">First Time Sync</string>
+    <string name="first_sync_confirmation_dialog">"This is your first time syncing this Leap card. Your online account shows that this Leap card has a balance of "</string>
+    <string name="first_sync_dialog_part_two">, is this correct? You can check your current balance at a ticket machine or in a shop.</string>
+    <string name="reported_balance">"Reported balance "</string>
+    <string name="amended_balance_neg">Amended balance -€</string>
+    <string name="amended_balance_pos">Amended balance €</string>
 </resources>
