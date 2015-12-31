@@ -54,6 +54,7 @@ public class ManageLeapCards extends Fragment {
         view = inflater.inflate(R.layout.fragment_manage_leap, null);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        editor = sharedPreferences.edit();
 
         tableLayout = (TableLayout) view.findViewById(R.id.leap_list_table);
         checkBoxes = new ArrayList<>();
@@ -140,6 +141,8 @@ public class ManageLeapCards extends Fragment {
                                                 databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                                                 populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                                                 Toast.makeText(getContext(), R.string.cards_cleared_successfully, Toast.LENGTH_SHORT).show();
+                                                editor.putString(getString(R.string.pref_key_curr_synced_balance), "Unsynced").apply();
+                                                editor.putString(getString(R.string.pref_key_last_synced_balance), "Unsynced").apply();
                                             }
                                         })
                                         .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -256,11 +259,6 @@ public class ManageLeapCards extends Fragment {
                                     AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
                                     asynchronousLeapChecking.execute();
                                 }
-
-                                //sync
-                                AsynchronousLeapChecking asynchronousLeapChecking =
-                                        new AsynchronousLeapChecking();
-                                asynchronousLeapChecking.execute();
                             }
                             cursor.close();
                             sqliteDatabase.close();
@@ -437,6 +435,7 @@ public class ManageLeapCards extends Fragment {
     public class AsynchronousLeapChecking extends AsyncTask<Void, Void, Void> {
 
         Leap leap;
+        boolean isIncomplete = false;
 
         @Override
         protected void onPreExecute() {
@@ -447,10 +446,17 @@ public class ManageLeapCards extends Fragment {
 
         @Override
         protected Void doInBackground(Void... params) {
+            long timer = 0;
             while(!leap.isSynced()){
                 System.out.println("NOT synced and sleeping for 1s");
                 try {
+                    timer += Globals.ONE_SECOND;
                     Thread.sleep(Globals.ONE_SECOND);
+                    if(timer > Globals.TWENTY_SECONDS){
+                        isIncomplete = true;
+                        leap.setSynced(true);
+                        break;
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -460,98 +466,30 @@ public class ManageLeapCards extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if(leap.isSynced()){
-                editor = sharedPreferences.edit();
-                System.out.println("is synced");
-                SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-                Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-                if(cursor.getCount() == 0){
-                    editor.putBoolean(getString(R.string.pref_key_first_sync), false).apply();
-                    editor.putString(getString(R.string.pref_key_last_synced_balance), "").apply();
-                    editor.putString(getString(R.string.pref_key_curr_synced_balance),"").apply();
-                }
-                sqLiteDatabase.close();
-                cursor.close();
+            if(!isIncomplete) {
+                if (leap.isSynced()) {
+                    editor = sharedPreferences.edit();
+                    System.out.println("is synced");
+                    SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+                    Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                    if (cursor.getCount() == 0) {
+                        editor.putBoolean(getString(R.string.pref_key_first_sync), false).apply();
+                        editor.putString(getString(R.string.pref_key_last_synced_balance), "").apply();
+                        editor.putString(getString(R.string.pref_key_curr_synced_balance), "").apply();
+                    }
+                    sqLiteDatabase.close();
+                    cursor.close();
 
-                if(!sharedPreferences.getBoolean(getString(R.string.pref_key_first_sync), false)){
-                    System.out.println("first time run - sync balances via dialog");
-                    new AlertDialog.Builder(getContext())
-                            .setTitle(getString(R.string.first_time_sync))
-                            .setMessage(getString(R.string.first_sync_confirmation_dialog) + leap.getBalance() + getString(R.string.first_sync_dialog_part_two))
-                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Toast.makeText(getContext(), getString(R.string.reported_balance) + leap.getBalance(), Toast.LENGTH_LONG).show();
-                                    editor.putBoolean(getString(R.string.pref_key_first_sync), true).apply();
-                                    editor.putString(getString(R.string.pref_key_last_synced_balance), leap.getBalance()).apply();
-                                    editor.putString(getString(R.string.pref_key_curr_synced_balance), leap.getBalance()).apply();
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //amend this value as it's not correct
-                                    final CorrectBalanceDialog correctBalanceDialog = new CorrectBalanceDialog();
-                                    correctBalanceDialog.show(getActivity().getFragmentManager(), "AmendBalance");
-                                    correctBalanceDialog.setSetBalanceDialogListener(new CorrectBalanceDialog.SetBalanceListener() {
-                                        @Override
-                                        public void onDoneClick(android.app.DialogFragment dialog) {
-                                            if (correctBalanceDialog.getBalance().contains("-")) {
-                                                Toast.makeText(getContext(), getString(R.string.amended_balance_neg) + correctBalanceDialog.getBalance().replace("-", ""), Toast.LENGTH_LONG).show();
-                                            } else {
-                                                Toast.makeText(getContext(), getString(R.string.amended_balance_pos) + correctBalanceDialog.getBalance(), Toast.LENGTH_LONG).show();
-                                            }
-
-                                            String balance;
-                                            if (correctBalanceDialog.getBalance().contains("-")) {
-                                                balance = "-€" + correctBalanceDialog.getBalance().replace("-", "");
-                                            } else {
-                                                balance = "€" + correctBalanceDialog.getBalance();
-                                            }
-
-                                            //STORE BALANCE IN TABLE
-                                            if (!sharedPreferences.getBoolean(getString(R.string.pref_key_first_sync), false)) {
-                                                editor.putString(getString(R.string.pref_key_last_synced_balance), balance);
-                                                editor.apply();
-                                                System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
-
-                                                //prevent initial sync on next iterations
-                                                editor.putBoolean(getString(R.string.pref_key_first_sync), true).apply();
-                                            } else {
-                                                editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
-                                                editor.putString(getString(R.string.pref_key_curr_synced_balance), balance).apply();
-                                                System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_curr_synced_balance), ""));
-                                            }
-
-                                        }
-                                    });
-                                }
-                            })
-                            .show();
-                } else {
-                    //if synced values are the same, all's good, values coincide
-                    String oldSync = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "");
-                    String newSync = leap.getBalance();
-                    System.out.println("balances are the same");
-                    System.out.println("last synced balance " + oldSync);
-                    System.out.println("new synced balance " + newSync);
-                    if(oldSync.equals(newSync)){
-                        String balance;
-                        if(leap.getBalance().contains("-")){
-                            balance = "-€" + leap.getBalance().replace("-","").replace("€","");
-                        } else {
-                            balance = "€" + leap.getBalance().replace("-","").replace("€", "");
-                        }
-                        editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
-                        editor.putString(getString(R.string.pref_key_curr_synced_balance), balance).apply();
-                    } else {
-                        System.out.println("balances are different");
-                        //problem - balances aren't the same, ask the user which to use and allow for input if online is wrong
+                    if (!sharedPreferences.getBoolean(getString(R.string.pref_key_first_sync), false)) {
+                        System.out.println("first time run - sync balances via dialog");
                         new AlertDialog.Builder(getContext())
-                                .setTitle("Differing Synced Balances")
-                                .setMessage("The online balance from Leap.ie is reported to be " + leap.getBalance() + ", but the local balance is " +
-                                        sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "") + ". Is the online balance from Leap.ie correct?")
+                                .setTitle(getString(R.string.first_time_sync))
+                                .setMessage(getString(R.string.first_sync_confirmation_dialog) + leap.getBalance() + getString(R.string.first_sync_dialog_part_two))
                                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(getContext(), "Balance updated successfully (" + leap.getBalance() + ")", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getContext(), getString(R.string.reported_balance) + leap.getBalance(), Toast.LENGTH_LONG).show();
+                                        editor.putBoolean(getString(R.string.pref_key_first_sync), true).apply();
+                                        editor.putString(getString(R.string.pref_key_last_synced_balance), leap.getBalance()).apply();
                                         editor.putString(getString(R.string.pref_key_curr_synced_balance), leap.getBalance()).apply();
                                     }
                                 })
@@ -575,16 +513,89 @@ public class ManageLeapCards extends Fragment {
                                                 } else {
                                                     balance = "€" + correctBalanceDialog.getBalance();
                                                 }
-                                                editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
-                                                editor.putString(getString(R.string.pref_key_curr_synced_balance), balance).apply();
-                                                System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_curr_synced_balance), ""));
+
+                                                //STORE BALANCE IN TABLE
+                                                if (!sharedPreferences.getBoolean(getString(R.string.pref_key_first_sync), false)) {
+                                                    editor.putString(getString(R.string.pref_key_last_synced_balance), balance);
+                                                    editor.apply();
+                                                    System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
+
+                                                    //prevent initial sync on next iterations
+                                                    editor.putBoolean(getString(R.string.pref_key_first_sync), true).apply();
+                                                } else {
+                                                    editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
+                                                    editor.putString(getString(R.string.pref_key_curr_synced_balance), balance).apply();
+                                                    System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_curr_synced_balance), ""));
+                                                }
+
                                             }
                                         });
                                     }
                                 })
                                 .show();
+                    } else {
+                        //if synced values are the same, all's good, values coincide
+                        String oldSync = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "");
+                        String newSync = leap.getBalance();
+                        System.out.println("balances are the same");
+                        System.out.println("last synced balance " + oldSync);
+                        System.out.println("new synced balance " + newSync);
+                        if (oldSync.equals(newSync)) {
+                            String balance;
+                            if (leap.getBalance().contains("-")) {
+                                balance = "-€" + leap.getBalance().replace("-", "").replace("€", "");
+                            } else {
+                                balance = "€" + leap.getBalance().replace("-", "").replace("€", "");
+                            }
+                            editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
+                            editor.putString(getString(R.string.pref_key_curr_synced_balance), balance).apply();
+                        } else {
+                            System.out.println("balances are different");
+                            //problem - balances aren't the same, ask the user which to use and allow for input if online is wrong
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("Differing Synced Balances")
+                                    .setMessage("The online balance from Leap.ie is reported to be " + leap.getBalance() + ", but the local balance is " +
+                                            sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "") + ". Is the online balance from Leap.ie correct?")
+                                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Toast.makeText(getContext(), "Balance updated successfully (" + leap.getBalance() + ")", Toast.LENGTH_LONG).show();
+                                            editor.putString(getString(R.string.pref_key_curr_synced_balance), leap.getBalance()).apply();
+                                        }
+                                    })
+                                    .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //amend this value as it's not correct
+                                            final CorrectBalanceDialog correctBalanceDialog = new CorrectBalanceDialog();
+                                            correctBalanceDialog.show(getActivity().getFragmentManager(), "AmendBalance");
+                                            correctBalanceDialog.setSetBalanceDialogListener(new CorrectBalanceDialog.SetBalanceListener() {
+                                                @Override
+                                                public void onDoneClick(android.app.DialogFragment dialog) {
+                                                    if (correctBalanceDialog.getBalance().contains("-")) {
+                                                        Toast.makeText(getContext(), getString(R.string.amended_balance_neg) + correctBalanceDialog.getBalance().replace("-", ""), Toast.LENGTH_LONG).show();
+                                                    } else {
+                                                        Toast.makeText(getContext(), getString(R.string.amended_balance_pos) + correctBalanceDialog.getBalance(), Toast.LENGTH_LONG).show();
+                                                    }
+
+                                                    String balance;
+                                                    if (correctBalanceDialog.getBalance().contains("-")) {
+                                                        balance = "-€" + correctBalanceDialog.getBalance().replace("-", "");
+                                                    } else {
+                                                        balance = "€" + correctBalanceDialog.getBalance();
+                                                    }
+                                                    editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
+                                                    editor.putString(getString(R.string.pref_key_curr_synced_balance), balance).apply();
+                                                    System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_curr_synced_balance), ""));
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .show();
+                        }
                     }
                 }
+            } else {
+                Toast.makeText(getContext(), "Unable to sync balance", Toast.LENGTH_LONG).show();
+                isIncomplete = false;
             }
         }
     }

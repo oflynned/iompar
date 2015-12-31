@@ -147,18 +147,6 @@ public class Leap extends WebViewClient {
                                             returnedPost = "€" + returnedPost;
                                         }
 
-                                        DatabaseHelper databaseHelper = new DatabaseHelper(context);
-                                        databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
-                                        databaseHelper.insertRecord(
-                                                Database.LeapLogin.TABLE_NAME,
-                                                null, null, null, null, null, null, 0, returnedPost, 0, 0, 0, false,
-                                                Globals.USER_LEAP_NUMBER, Globals.USER_NAME, Globals.USER_EMAIL, Globals.USER_PASS, true);
-
-                                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString(context.getString(R.string.pref_key_last_synced_balance), returnedPost);
-                                        editor.apply();
-
                                         System.out.println("Reported Leap balance:");
                                         System.out.println(returnedPost);
 
@@ -220,13 +208,6 @@ public class Leap extends WebViewClient {
                             } else {
                                 returnedPost = "€" + returnedPost;
                             }
-
-                            DatabaseHelper databaseHelper = new DatabaseHelper(context);
-                            databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
-                            databaseHelper.insertRecord(
-                                    Database.LeapLogin.TABLE_NAME,
-                                    null, null, null, null, null, null, 0, returnedPost, 0, 0, 0, false,
-                                    Globals.USER_LEAP_NUMBER, Globals.USER_NAME, Globals.USER_EMAIL, Globals.USER_PASS, true);
 
                             System.out.println("Reported Leap balance:");
                             System.out.println(returnedPost);
