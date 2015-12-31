@@ -77,8 +77,8 @@ public class Leap extends WebViewClient {
 
         //add following two lines
         final WebSettings webSettings = webView.getSettings();
-        webSettings.setDomStorageEnabled(true);
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
 
         //are we logged in?
         webView.setWebViewClient(new WebViewClient() {
