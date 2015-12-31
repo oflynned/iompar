@@ -269,4 +269,7 @@
     <string name="bal_updated_successfully">Balance updated successfully (</string>
     <string name="unable_to_sync_bal">Unable to sync balance</string>
     <string name="retrieving_leap_data">Retrieving data from Leap.ie...</string>
+    <string name="amend_leap_bal">Amend a Leap Balance</string>
+    <string name="ensure_confirm_balance">Ensure you confirm your balance at a ticket machine or in a shop.</string>
+    <string name="retrieving_currently_active_leap">Retrieving currently active Leap balance...</string>
 </resources>

@@ -225,7 +225,7 @@
     <string name="follow_on_twitter">Lean Orainn ar Twitter</string>
     <string name="amended_balance_neg">Iarmhéid leasaithe -€</string>
     <string name="amended_balance_pos">Iarmhéid leasaithe €</string>
-    <string name="bal_may_not_be_accurate">Tá seans ann nach mbeidh an t–iarmhéid seo cruinn toisc go nuashonraítear iarmhéideanna ar líne ar Leap.ie gach aon 24-48 uair.</string>
+    <string name="bal_may_not_be_accurate">Tá seans ann nach mbeidh an t–iarmhéid seo cruinn toisc go nuashonraítear iarmhéideanna ar líne ar Leap.ie gach aon 24–48 uair.</string>
     <string name="bal_updated_successfully">Nuashonraíodh an t-iarmhéid go rathúil (</string>
     <string name="connection_timed_out">Am istigh an cheangail</string>
     <string name="differing_balances">Iarmhéideanna Difriúla i Sioncronú</string>
@@ -240,11 +240,14 @@
     <string name="online_bal_reported">"Tuairiscítear gurb é an t-iarmhéid ar líne ná "</string>
     <string name="only_one_leap_warning">Ní féidir níos mó ná aon chárta Leap a bheith in úsáid ag aon am </string>
     <string name="reported_balance">"An t-iarmhéid tuairiscithe "</string>
-    <string name="retrieving_leap_data">Sonraí á bhfáil ó Leap.ie...</string>
+    <string name="retrieving_leap_data">Sonraí á bhfáil ó Leap.ie…</string>
     <string name="top_up_leap">Breisigh an Creidmheas</string>
     <string name="topped_up_by">Fuarthas breis de €</string>
     <string name="unable_to_sync_bal">Níorbh fhéidir an t-iarmhéid a shioncronú</string>
     <string name="yes">Tá</string>
     <string name="no">Níl</string>
+    <string name="amend_leap_bal">Leasaigh Iarmhéid Leap</string>
+    <string name="ensure_confirm_balance">Cuir i gcuimhne d\'iarmhéid a dhearbhú ag measín ticéad nó i mear-shiopa.</string>
+    <string name="retrieving_currently_active_leap">Iarmhéid reatha gníomhach Leap á fháil…</string>
 
 </resources>

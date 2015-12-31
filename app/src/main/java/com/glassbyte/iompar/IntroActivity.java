@@ -21,6 +21,18 @@ public class IntroActivity extends AppIntro2 {
     Slide_Three slide_three;
     Slide_Four slide_four;
 
+    SharedPreferences sharedPreferences;
+    Globals globals;
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        globals.setIrish(sharedPreferences.getBoolean(getResources()
+                .getString(R.string.pref_key_irish), false), getResources());
+    }
+
     @Override
     public void init(Bundle bundle) {
         //set fullscreen effect
@@ -40,6 +52,8 @@ public class IntroActivity extends AppIntro2 {
                     | View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
 
+        globals = new Globals(getApplicationContext());
+
         //fragment objects
         slide_one = new Slide_One();
         slide_two = new Slide_Two();
@@ -54,7 +68,6 @@ public class IntroActivity extends AppIntro2 {
 
         //transition animation
         setFlowAnimation();
-        slide_two.setNotified(false);
     }
 
     @Override

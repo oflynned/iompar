@@ -1,47 +1,18 @@
 package com.glassbyte.iompar;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Message;
-import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.util.Log;
-import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.prefs.Preferences;
 
 
 /**
@@ -85,7 +56,7 @@ public class Leap extends WebViewClient {
             public void onPageFinished(WebView view, String url) {
 
                 System.out.println("PERFORMING CHECK " + webView.getTitle());
-                Toast.makeText(context, "Retrieving currently active Leap balance...", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.retrieving_currently_active_leap, Toast.LENGTH_LONG).show();
 
                 //check if logged in
                 if (webView.getTitle().equals("Sign In To My Account - Leap Card")) {
