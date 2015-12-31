@@ -113,14 +113,14 @@ public class MainActivity extends AppCompatActivity
         //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
         //asynchronousInterstitial.execute();
 
-        SQLiteDatabase sqliteDatabase = databaseHelper.getReadableDatabase();
+        /*SQLiteDatabase sqliteDatabase = databaseHelper.getReadableDatabase();
         Cursor cursor = sqliteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
         if(cursor.getCount() > 0) {
             AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking(this);
             asynchronousLeapChecking.execute();
         }
         cursor.close();
-        sqliteDatabase.close();
+        sqliteDatabase.close();*/
 
         setFragment();
     }

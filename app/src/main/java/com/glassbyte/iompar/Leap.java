@@ -127,9 +127,6 @@ public class Leap extends WebViewClient {
                                                 .cookie(cookiesGenerated[2], cookiesGenerated[3])
                                                 .cookie(cookiesGenerated[4], cookiesGenerated[5])
                                                 .cookie(cookiesGenerated[6], cookiesGenerated[7])
-                                                .cookie(cookiesGenerated[8], cookiesGenerated[9])
-                                                .cookie(cookiesGenerated[10], cookiesGenerated[11])
-                                                .cookie(cookiesGenerated[13], cookiesGenerated[14])
                                                 .timeout(Globals.TEN_SECONDS)
                                                 .post();
 

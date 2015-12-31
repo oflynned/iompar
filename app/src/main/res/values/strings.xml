@@ -59,8 +59,6 @@
     <!-- leap keys for expenditure management -->
     <string name="pref_key_last_synced_balance" translatable="false">pref_key_last_synced_balance</string>
     <string name="pref_key_curr_synced_balance" translatable="false">pref_key_curr_synced_balance</string>
-    <string name="pref_key_last_local_balance" translatable="false">pref_key_last_local_balance</string>
-    <string name="pref_key_curr_local_balance" translatable="false">pref_key_curr_local_balance</string>
 
     <!-- Miscellaneous -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -256,4 +254,7 @@
     <string name="reported_balance">"Reported balance "</string>
     <string name="amended_balance_neg">Amended balance -€</string>
     <string name="amended_balance_pos">Amended balance €</string>
+    <string name="only_one_leap_warning">Only one Leap card can be used at a time</string>
+    <string name="topped_up_by">Topped up by €</string>
+    <string name="top_up_leap">Top Up a Leap Card</string>
 </resources>
