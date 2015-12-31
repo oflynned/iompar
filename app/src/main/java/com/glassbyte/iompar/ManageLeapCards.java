@@ -83,7 +83,7 @@ public class ManageLeapCards extends Fragment {
                             //open dialog to add leap to table
                             case 0:
                                 SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-                                Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                                final Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
                                 if (cursor.getCount() == 0) {
                                     final AddLeapCard addLeapCard = new AddLeapCard();
                                     addLeapCard.show(ManageLeapCards.this.getFragmentManager(), "addLeapCard");
@@ -141,8 +141,8 @@ public class ManageLeapCards extends Fragment {
                                                 databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                                                 populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                                                 Toast.makeText(getContext(), R.string.cards_cleared_successfully, Toast.LENGTH_SHORT).show();
-                                                editor.putString(getString(R.string.pref_key_curr_synced_balance), "Unsynced").apply();
-                                                editor.putString(getString(R.string.pref_key_last_synced_balance), "Unsynced").apply();
+                                                editor.putString(getString(R.string.pref_key_curr_synced_balance), "unsynced").apply();
+                                                editor.putString(getString(R.string.pref_key_last_synced_balance), "unsynced").apply();
                                             }
                                         })
                                         .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -154,8 +154,8 @@ public class ManageLeapCards extends Fragment {
                                 break;
                             //breakdown of costs
                             case 2:
-                                Leap leap = new Leap(getContext());
-                                leap.scrape();
+                                AsynchronousLeapBalance asynchronousLeapBalance = new AsynchronousLeapBalance(getContext());
+                                asynchronousLeapBalance.execute();
                                 break;
                             //top up
                             case 3:
@@ -432,6 +432,75 @@ public class ManageLeapCards extends Fragment {
         cursor.close();
     }
 
+    public class AsynchronousLeapBalance extends AsyncTask<Void, Void, Void> {
+
+        Leap leap;
+        Context context;
+        boolean isTimeout = false;
+
+        public AsynchronousLeapBalance(Context context){
+            this.context = context;
+            leap = new Leap(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Toast.makeText(context, "Retrieving data from Leap.ie...", Toast.LENGTH_LONG).show();
+            leap.scrape();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            long timeout = 0;
+                while (!leap.isSynced()) {
+                    try {
+                        System.out.println("sleeping");
+                        timeout += Globals.ONE_SECOND;
+                        Thread.sleep(Globals.ONE_SECOND);
+
+                        if(timeout > Globals.TWENTY_SECONDS){
+                            leap.setSynced(true);
+                            isTimeout = true;
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (!isTimeout) {
+                if (leap.isSynced()) {
+                    System.out.println("synced");
+                    SQLiteDatabase readDB = databaseHelper.getReadableDatabase();
+                    Cursor cursorNumber = readDB.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                    if (cursorNumber.getCount() > 0) {
+                        cursorNumber.moveToFirst();
+                        if (leap.isSynced()) {
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("Online Balance from Leap.ie")
+                                    .setMessage("The online balance is reported to be " + leap.getBalance()
+                                            + " for " + cursorNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + ".\n\n" +
+                                            "This balance may not be accurate as online balances available on Leap.ie are updated every 24-48 hours.")
+                                    .setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            }).show();
+                        }
+                    }
+                    cursorNumber.close();
+                    readDB.close();
+                }
+            } else {
+                isTimeout = false;
+                Toast.makeText(context, "Connection timed out", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     public class AsynchronousLeapChecking extends AsyncTask<Void, Void, Void> {
 
         Leap leap;
@@ -559,6 +628,7 @@ public class ManageLeapCards extends Fragment {
                                     .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             Toast.makeText(getContext(), "Balance updated successfully (" + leap.getBalance() + ")", Toast.LENGTH_LONG).show();
+                                            editor.putString(getString(R.string.pref_key_last_synced_balance), leap.getBalance()).apply();
                                             editor.putString(getString(R.string.pref_key_curr_synced_balance), leap.getBalance()).apply();
                                         }
                                     })

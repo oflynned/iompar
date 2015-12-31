@@ -35,7 +35,7 @@ public class CorrectBalanceDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Amend a Leap Balance")
-                .setMessage("Ensure the balance you confirm your balance at a ticket machine or in a shop.")
+                .setMessage("Ensure you confirm your balance at a ticket machine or in a shop.")
                 .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (listener != null) {
