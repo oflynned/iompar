@@ -1,5 +1,6 @@
 package com.glassbyte.iompar;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -45,10 +46,9 @@ public class AddExpenditure extends DialogFragment {
     Fares fares = new Fares();
     Expenditures expenditures;
 
-    public AddExpenditure() {
+    public AddExpenditure() {}
 
-    }
-
+    @SuppressLint("ValidFragment")
     public AddExpenditure(String depart, String arrive, Realtime.LuasDirections enumDirection) {
         this.depart = depart;
         this.arrive = arrive;
@@ -56,6 +56,7 @@ public class AddExpenditure extends DialogFragment {
     }
 
     //listener that the corresponding button implements
+    //void in our case as everything is handled in this class for determining caps
     public interface setAddExpenditureListener {
         void onDoneClick(DialogFragment dialogFragment);
     }

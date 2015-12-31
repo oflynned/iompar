@@ -51,7 +51,7 @@ public class Realtime extends Fragment {
     private BaseAdapter baseAdapter;
     private GridView gridView;
 
-    public enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
+    public enum TransportationCategories {LUAS, TRAIN, DART, DUBLIN_BUS, BUS_EIREANN}
 
     public enum LuasLines {GREEN, RED}
 
@@ -118,7 +118,7 @@ public class Realtime extends Fragment {
                             gridView.setAdapter(new TransportationAdapter(context));
                         else if (currentCategory == TransportationCategories.DART)
                             gridView.setAdapter(new TransportationAdapter(context));
-                        else if (currentCategory == TransportationCategories.BUS)
+                        else if (currentCategory == TransportationCategories.DUBLIN_BUS)
                             gridView.setAdapter(new TransportationAdapter(context));
                         else if (currentCategory == TransportationCategories.BUS_EIREANN)
                             gridView.setAdapter(new TransportationAdapter(context));

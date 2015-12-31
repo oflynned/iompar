@@ -442,7 +442,7 @@ public class ManageLeapCards extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            Toast.makeText(context, "Retrieving data from Leap.ie...", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.retrieving_leap_data, Toast.LENGTH_LONG).show();
             leap.scrape();
         }
 
@@ -477,10 +477,10 @@ public class ManageLeapCards extends Fragment {
                         cursorNumber.moveToFirst();
                         if (leap.isSynced()) {
                             new AlertDialog.Builder(getContext())
-                                    .setTitle("Online Balance from Leap.ie")
-                                    .setMessage("The online balance is reported to be " + leap.getBalance()
-                                            + " for " + cursorNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + ".\n\n" +
-                                            "This balance may not be accurate as online balances available on Leap.ie are updated every 24-48 hours.")
+                                    .setTitle(context.getString(R.string.online_bal_leap_dialog))
+                                    .setMessage(context.getString(R.string.online_bal_reported) + leap.getBalance()
+                                            + context.getString(R.string.for_connective_report) + cursorNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + ".\n\n" +
+                                            context.getString(R.string.bal_may_not_be_accurate))
                                     .setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
 
@@ -493,7 +493,7 @@ public class ManageLeapCards extends Fragment {
                 }
             } else {
                 isTimeout = false;
-                Toast.makeText(context, "Connection timed out", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.connection_timed_out, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -620,12 +620,12 @@ public class ManageLeapCards extends Fragment {
                             System.out.println("balances are different");
                             //problem - balances aren't the same, ask the user which to use and allow for input if online is wrong
                             new AlertDialog.Builder(getContext())
-                                    .setTitle("Differing Synced Balances")
-                                    .setMessage("The online balance from Leap.ie is reported to be " + leap.getBalance() + ", but the local balance is " +
-                                            sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "") + ". Is the online balance from Leap.ie correct?")
+                                    .setTitle(getString(R.string.differing_balances))
+                                    .setMessage(getString(R.string.online_bal_leap_reported) + leap.getBalance() + getString(R.string.local_bal_is) +
+                                            sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "") + getString(R.string.is_leap_correct))
                                     .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Toast.makeText(getContext(), "Balance updated successfully (" + leap.getBalance() + ")", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), getString(R.string.bal_updated_successfully) + leap.getBalance() + ")", Toast.LENGTH_LONG).show();
                                             editor.putString(getString(R.string.pref_key_last_synced_balance), leap.getBalance()).apply();
                                             editor.putString(getString(R.string.pref_key_curr_synced_balance), leap.getBalance()).apply();
                                         }
@@ -662,7 +662,7 @@ public class ManageLeapCards extends Fragment {
                     }
                 }
             } else {
-                Toast.makeText(getContext(), "Unable to sync balance", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.unable_to_sync_bal, Toast.LENGTH_LONG).show();
                 isIncomplete = false;
             }
         }

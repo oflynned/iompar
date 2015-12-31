@@ -201,7 +201,7 @@
     <string name="slide_three_desc_leap">Déanann cartaí Leap iompar níos tapúla, níos éasca, agus níos saoire.\n\nBíodh cinnte é a chlárú ar líne ionas go mbeidh tú in ann d\'iarmhéid a rochtain anseo.</string>
     <string name="slide_three_desc_cash">Tá airgead tirim níos moille agus níos costasaí ná cárta Leap.\n\nCeannaigh cárta Leap as €5 chun airgead a shabháil san iompraíocht.</string>
     <string name="add_leap_cheaper_fares">Cuir cárta Leap leis chun d\'iarmhéid a sheiceáil ar líne agus táillí níos saoire a aimsiú</string>
-    <string name="cannot_sync_leap_balance">Ní féidir an iarmhéid Leap a shioncronú</string>
+    <string name="cannot_sync_leap_balance">Ní féidir an t-iarmhéid Leap a shioncronú</string>
     <string name="cash_leapcard_drawer">Tá airgid tirim á úsáid</string>
     <string name="complete_all_fields">Críochnaigh gach aon réimse led\' thoil</string>
     <string name="connecting">Á cheangail…</string>
@@ -223,5 +223,28 @@
     <string name="rate_app">Grádaigh iompar</string>
     <string name="follow_on_fb">Lean Orainn ar Facebook</string>
     <string name="follow_on_twitter">Lean Orainn ar Twitter</string>
+    <string name="amended_balance_neg">Iarmhéid leasaithe -€</string>
+    <string name="amended_balance_pos">Iarmhéid leasaithe €</string>
+    <string name="bal_may_not_be_accurate">Tá seans ann nach mbeidh an t–iarmhéid seo cruinn toisc go nuashonraítear iarmhéideanna ar líne ar Leap.ie gach aon 24-48 uair.</string>
+    <string name="bal_updated_successfully">Nuashonraíodh an t-iarmhéid go rathúil (</string>
+    <string name="connection_timed_out">Am istigh an cheangail</string>
+    <string name="differing_balances">Iarmhéideanna Difriúla i Sioncronú</string>
+    <string name="first_sync_confirmation_dialog">"Is é seo an chéad am a shioncronaigh tú an cárta Leap seo. Taispeánann do chúntas ar líne gurb é iarmhéid an chárta Leap seo ná "</string>
+    <string name="first_sync_dialog_part_two">, an bhfuil é seo i gceart? Tig leat d\'iarmhéid reatha a sheiceáil ag meaisín ticéad nó i mear-shiopa.</string>
+    <string name="first_time_sync">An Chéad Sioncronú</string>
+    <string name="for_connective_report">" as "</string>
+    <string name="is_leap_correct">. An bhfuil an t-iarmhéid ar líne ó Leap.ie i gceart?</string>
+    <string name="local_bal_is">", ach is é an t-iarmhéid áitiúil ná "</string>
+    <string name="online_bal_leap_dialog">An tIarmhéid Ar Líne ó Leap.ie</string>
+    <string name="online_bal_leap_reported">"Tuairiscítear gurb é an t-iarmhéid ar líne ó Leap.ie ná "</string>
+    <string name="online_bal_reported">"Tuairiscítear gurb é an t-iarmhéid ar líne ná "</string>
+    <string name="only_one_leap_warning">Ní féidir níos mó ná aon chárta Leap a bheith in úsáid ag aon am </string>
+    <string name="reported_balance">"An t-iarmhéid tuairiscithe "</string>
+    <string name="retrieving_leap_data">Sonraí á bhfáil ó Leap.ie...</string>
+    <string name="top_up_leap">Breisigh an Creidmheas</string>
+    <string name="topped_up_by">Fuarthas breis de €</string>
+    <string name="unable_to_sync_bal">Níorbh fhéidir an t-iarmhéid a shioncronú</string>
+    <string name="yes">Tá</string>
+    <string name="no">Níl</string>
 
 </resources>
