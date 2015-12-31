@@ -114,7 +114,7 @@ public class ManageLeapCards extends Fragment {
                                                         !addLeapCard.getPasswordField().matches("")) {
                                                     databaseHelper.insertRecord(
                                                             Database.LeapLogin.TABLE_NAME,
-                                                            null, null, null, null, null, null, 0, null, 0, 0, 0, false,
+                                                            null, null, null, null, null, null, 0, 0, 0, 0, 0, false,
                                                             addLeapCard.getNumberField(), addLeapCard.getUsernameField(),
                                                             addLeapCard.getEmailField(), addLeapCard.getPasswordField(), false);
                                                     databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);

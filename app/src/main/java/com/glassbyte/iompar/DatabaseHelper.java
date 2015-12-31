@@ -150,8 +150,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.LeapBalance.TIME_ADDED + " INTEGER," +
                     Database.LeapBalance.TOP_UPS + " REAL," +
                     Database.LeapBalance.EXPENDITURE + "REAL," +
-                    Database.LeapBalance.BALANCE_CHANGE + " REAL," +
-                    Database.LeapBalance.BALANCE + " REAL," +
+                    Database.LeapBalance.OLD_BALANCE + " REAL," +
+                    Database.LeapBalance.NEW_BALANCE + " REAL," +
                     Database.LeapBalance.IS_NEGATIVE + " BOOLEAN);";
 
     public static final String CREATE_TABLE_EXPENDITURES =
@@ -355,13 +355,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertRecord(String tableName,
+                             //favourites -- unused
                              String stopNumber, String station, String line,
-                             String route, String direction,
-                             String destination, int frequency, String balance,
-                             double topUp, double expenditure,
-                             double balanceChange, boolean negative,
-                             String userName, String cardNumber, String userEmail,
-                             String userPassword, boolean isActive) {
+                             String route, String direction, String destination, int frequency,
+                             //leap balance
+                             double topUp, double expenditure, double oldBalance, double newBalance, boolean negative,
+                             //leap login
+                             String userName, String cardNumber, String userEmail, String userPassword, boolean isActive) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -400,8 +400,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put(Database.LeapBalance.TIME_ADDED, System.currentTimeMillis());
                 contentValues.put(Database.LeapBalance.TOP_UPS, topUp);
                 contentValues.put(Database.LeapBalance.EXPENDITURE, expenditure);
-                contentValues.put(Database.LeapBalance.BALANCE_CHANGE, balanceChange);
-                contentValues.put(Database.LeapBalance.BALANCE, balance);
+                contentValues.put(Database.LeapBalance.OLD_BALANCE, oldBalance);
+                contentValues.put(Database.LeapBalance.NEW_BALANCE, newBalance);
                 contentValues.put(Database.LeapBalance.IS_NEGATIVE, negative);
                 break;
             case Database.LeapLogin.TABLE_NAME:
@@ -428,12 +428,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void modifyRecord(String tableName, String colId, int id,
+                             //favourites -- unused
                              String stopNumber, String station, String line,
-                             String route, String direction,
-                             String destination,
-                             String cardNumber, String balance,
-                             String date, double topUp, double expenditure,
-                             double balanceChange, boolean negative,
+                             String route, String direction, String destination,
+                             //leap balance
+                             String cardNumber, double topUp, double expenditure, double oldBalance, double newBalance, boolean negative,
+                             //leap login
                              String userName, String userEmail, String userPassword, boolean isActive) {
 
         SQLiteDatabase writeDb = this.getWritableDatabase();
@@ -469,8 +469,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put(Database.LeapBalance.TIME_ADDED, System.currentTimeMillis());
                 contentValues.put(Database.LeapBalance.TOP_UPS, topUp);
                 contentValues.put(Database.LeapBalance.EXPENDITURE, expenditure);
-                contentValues.put(Database.LeapBalance.BALANCE_CHANGE, balanceChange);
-                contentValues.put(Database.LeapBalance.BALANCE, balance);
+                contentValues.put(Database.LeapBalance.OLD_BALANCE, oldBalance);
+                contentValues.put(Database.LeapBalance.NEW_BALANCE, newBalance);
                 contentValues.put(Database.LeapBalance.IS_NEGATIVE, negative);
                 break;
             case Database.LeapLogin.TABLE_NAME:

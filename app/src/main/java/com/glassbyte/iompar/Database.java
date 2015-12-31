@@ -62,8 +62,8 @@ public class Database {
         public static final String TIME_ADDED = "time_added";
         public static final String TOP_UPS = "top_ups";
         public static final String EXPENDITURE = "expenditure";
-        public static final String BALANCE_CHANGE = "balance_change";
-        public static final String BALANCE = "balance";
+        public static final String OLD_BALANCE = "old_balance";
+        public static final String NEW_BALANCE = "new_balance";
         public static final String IS_NEGATIVE = "is_negative";
     }
 
