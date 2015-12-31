@@ -253,12 +253,9 @@ public class ManageLeapCards extends Fragment {
 
                             SQLiteDatabase sqliteDatabase = databaseHelper.getReadableDatabase();
                             Cursor cursor = sqliteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-                            if(cursor.getCount() > 0) {
-                                if(!sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"")
-                                        .equals(getString(R.string.pref_key_curr_synced_balance))){
-                                    AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
-                                    asynchronousLeapChecking.execute();
-                                }
+                            if (cursor.getCount() > 0) {
+                                AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
+                                asynchronousLeapChecking.execute();
                             }
                             cursor.close();
                             sqliteDatabase.close();
@@ -438,7 +435,7 @@ public class ManageLeapCards extends Fragment {
         Context context;
         boolean isTimeout = false;
 
-        public AsynchronousLeapBalance(Context context){
+        public AsynchronousLeapBalance(Context context) {
             this.context = context;
             leap = new Leap(context);
         }
@@ -452,20 +449,20 @@ public class ManageLeapCards extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
             long timeout = 0;
-                while (!leap.isSynced()) {
-                    try {
-                        System.out.println("sleeping");
-                        timeout += Globals.ONE_SECOND;
-                        Thread.sleep(Globals.ONE_SECOND);
+            while (!leap.isSynced()) {
+                try {
+                    System.out.println("sleeping");
+                    timeout += Globals.ONE_SECOND;
+                    Thread.sleep(Globals.ONE_SECOND);
 
-                        if(timeout > Globals.TWENTY_SECONDS){
-                            leap.setSynced(true);
-                            isTimeout = true;
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    if (timeout > Globals.SIXTY_SECONDS) {
+                        leap.setSynced(true);
+                        isTimeout = true;
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+            }
             return null;
         }
 
@@ -485,10 +482,10 @@ public class ManageLeapCards extends Fragment {
                                             + " for " + cursorNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + ".\n\n" +
                                             "This balance may not be accurate as online balances available on Leap.ie are updated every 24-48 hours.")
                                     .setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            }).show();
+                                        }
+                                    }).show();
                         }
                     }
                     cursorNumber.close();
@@ -516,12 +513,13 @@ public class ManageLeapCards extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
             long timer = 0;
-            while(!leap.isSynced()){
-                System.out.println("NOT synced and sleeping for 1s");
+            while (!leap.isSynced()) {
+                System.out.println("NOT synced and has slept " + (timer / 1000) + "/60");
                 try {
                     timer += Globals.ONE_SECOND;
+                    Thread.currentThread();
                     Thread.sleep(Globals.ONE_SECOND);
-                    if(timer > Globals.TWENTY_SECONDS){
+                    if (timer > Globals.SIXTY_SECONDS) {
                         isIncomplete = true;
                         leap.setSynced(true);
                         break;
@@ -535,7 +533,7 @@ public class ManageLeapCards extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if(!isIncomplete) {
+            if (!isIncomplete) {
                 if (leap.isSynced()) {
                     editor = sharedPreferences.edit();
                     System.out.println("is synced");

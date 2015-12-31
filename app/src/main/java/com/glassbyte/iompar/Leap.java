@@ -70,7 +70,6 @@ public class Leap extends WebViewClient {
         setSynced(false);
         final WebView webView = new WebView(context);
         webView.loadUrl(Globals.LEAP_LOGIN);
-        webView.setVisibility(View.INVISIBLE);
         final Fares fares = new Fares();
 
         Toast.makeText(context, R.string.connecting, Toast.LENGTH_LONG).show();
@@ -91,6 +90,7 @@ public class Leap extends WebViewClient {
                 //check if logged in
                 if (webView.getTitle().equals("Sign In To My Account - Leap Card")) {
                     System.out.println("checking if logged in");
+                    webView.loadUrl("about:blank");
                     webView.loadUrl(Globals.LEAP_LOGIN_ACCOUNT_PAGE);
                     //logged out?
                     if (webView.getTitle().equals("Sign In To My Account - Leap Card")) {
@@ -222,7 +222,6 @@ public class Leap extends WebViewClient {
                 }
             }
         });
-        webView.setVisibility(View.VISIBLE);
         webView.clearCache(true);
         webView.clearHistory();
     }
