@@ -437,8 +437,11 @@ public class ManageLeapCards extends Fragment {
             case "add Leap":
                 databaseHelper.insertExpenditure("Leap", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(amount));
                 break;
+            case "add amend":
+                databaseHelper.insertExpenditure("amend", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(amount));
+                break;
             case "remove":
-                databaseHelper.removeRecord(Database.LeapBalance.TABLE_NAME, Database.LeapBalance.ID, id);
+                databaseHelper.removeRecord(Database.Expenditures.TABLE_NAME, Database.Expenditures.ID, id);
                 break;
         }
     }
