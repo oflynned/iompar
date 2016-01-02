@@ -292,10 +292,11 @@ public class ManageLeapCards extends Fragment {
 
                 //balance - need to work on this as it takes from other table
                 final TextView balanceField = new TextView(getContext());
-                //balanceField.setText(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_BALANCE));
                 TableRow.LayoutParams balanceParams =
                         new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT);
+                MainActivity.getCurrentBalance(databaseHelper, sharedPreferences, getContext());
+                balanceField.setText(sharedPreferences.getString(getString(R.string.pref_key_current_balance),""));
                 balanceParams.gravity = Gravity.CENTER;
                 balanceField.setLayoutParams(balanceParams);
 
@@ -425,8 +426,8 @@ public class ManageLeapCards extends Fragment {
         cursor.close();
     }
 
-    public static void updateLocalBalance(DatabaseHelper databaseHelper, String updateType, double amount, int id){
-        switch(updateType){
+    public static void updateLocalBalance(DatabaseHelper databaseHelper, String updateType, double amount, int id) {
+        switch (updateType) {
             case "add topup":
                 databaseHelper.insertExpenditure("topup", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(amount));
                 break;
@@ -609,60 +610,71 @@ public class ManageLeapCards extends Fragment {
                                 })
                                 .show();
                     } else {
-                        //if synced values are the same, all's good, values coincide
-                        String oldSync = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "");
-                        final String newSync = leap.getBalance();
-                        System.out.println("balances are the same");
-                        System.out.println("last synced balance " + oldSync);
-                        System.out.println("new synced balance " + newSync);
-                        if (oldSync.equals(newSync)) {
-                            //do nothing as the sync is okay
-                        } else {
-                            System.out.println("balances are different");
-                            //problem - balances aren't the same, ask the user which to use and allow for input if online is wrong
-                            new AlertDialog.Builder(getContext())
-                                    .setTitle(getString(R.string.differing_balances))
-                                    .setMessage(getString(R.string.online_bal_leap_reported) + leap.getBalance() + getString(R.string.local_bal_is) +
-                                            sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "") + getString(R.string.is_leap_correct))
-                                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Toast.makeText(getContext(), getString(R.string.bal_updated_successfully) + leap.getBalance() + ")", Toast.LENGTH_LONG).show();
-                                            databaseHelper.insertExpenditure("amend", MainActivity.getActiveLeapNumber(databaseHelper), newSync.replace("€", ""));
-                                        }
-                                    })
-                                    .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            //amend this value as it's not correct
-                                            final CorrectBalanceDialog correctBalanceDialog = new CorrectBalanceDialog();
-                                            correctBalanceDialog.show(getActivity().getFragmentManager(), "AmendBalance");
-                                            correctBalanceDialog.setSetBalanceDialogListener(new CorrectBalanceDialog.SetBalanceListener() {
-                                                @Override
-                                                public void onDoneClick(android.app.DialogFragment dialog) {
-                                                    if (correctBalanceDialog.getBalance().contains("-")) {
-                                                        Toast.makeText(getContext(), getString(R.string.amended_balance_neg) + correctBalanceDialog.getBalance().replace("-", ""), Toast.LENGTH_LONG).show();
-                                                    } else {
-                                                        Toast.makeText(getContext(), getString(R.string.amended_balance_pos) + correctBalanceDialog.getBalance(), Toast.LENGTH_LONG).show();
-                                                    }
+                        if (cursor.getCount() > 0) {
+                            MainActivity.getCurrentBalance(databaseHelper, sharedPreferences, getContext());
+                            String oldSyncCumulative = sharedPreferences.getString(getString(R.string.pref_key_current_balance), "");
+                            if (oldSyncCumulative.equals("")) {
+                                oldSyncCumulative = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "");
+                            }
+                            final String oldSync = oldSyncCumulative;
+                            final String newSync = leap.getBalance();
 
-                                                    String balance;
-                                                    if (correctBalanceDialog.getBalance().contains("-")) {
-                                                        balance = "-€" + correctBalanceDialog.getBalance().replace("-", "");
-                                                    } else {
-                                                        balance = "€" + correctBalanceDialog.getBalance();
+                            if (oldSync.equals(newSync)) {
+                                //do nothing -- balances coincide so we don't have to modify anything
+                            } else {
+                                System.out.println("balances are different");
+                                //problem - balances aren't the same, ask the user which to use and allow for input if online is wrong
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle(getString(R.string.differing_balances))
+                                        .setMessage(getString(R.string.online_bal_leap_reported) + newSync + getString(R.string.local_bal_is) +
+                                                oldSync + getString(R.string.is_leap_correct))
+                                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(getContext(), getString(R.string.bal_updated_successfully) + leap.getBalance() + ")", Toast.LENGTH_LONG).show();
+                                                //leap online is correct, get difference between two values to account as an amend
+                                                double balanceAmend = Double.parseDouble(newSync.replace("€", "")) - Double.parseDouble(oldSync.replace("€", ""));
+                                                databaseHelper.insertExpenditure("amend", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(balanceAmend));
+                                            }
+                                        })
+                                        .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //amend this value as it's not correct
+                                                final CorrectBalanceDialog correctBalanceDialog = new CorrectBalanceDialog();
+                                                correctBalanceDialog.show(getActivity().getFragmentManager(), "AmendBalance");
+                                                correctBalanceDialog.setSetBalanceDialogListener(new CorrectBalanceDialog.SetBalanceListener() {
+                                                    @Override
+                                                    public void onDoneClick(android.app.DialogFragment dialog) {
+                                                        if (correctBalanceDialog.getBalance().contains("-")) {
+                                                            Toast.makeText(getContext(), getString(R.string.amended_balance_neg) + correctBalanceDialog.getBalance().replace("-", ""), Toast.LENGTH_LONG).show();
+                                                        } else {
+                                                            Toast.makeText(getContext(), getString(R.string.amended_balance_pos) + correctBalanceDialog.getBalance(), Toast.LENGTH_LONG).show();
+                                                        }
+
+                                                        String balance;
+                                                        if (correctBalanceDialog.getBalance().contains("-")) {
+                                                            balance = "-€" + correctBalanceDialog.getBalance().replace("-", "");
+                                                        } else {
+                                                            balance = "€" + correctBalanceDialog.getBalance();
+                                                        }
+                                                        editor.putString(getString(R.string.pref_key_current_balance), balance).apply();
+                                                        System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_curr_synced_balance), ""));
+
+                                                        double balanceAmend = Double.parseDouble(correctBalanceDialog.getBalance().replace("€", "")) - Double.parseDouble(oldSync.replace("€", ""));
+                                                        databaseHelper.insertExpenditure("amend", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(balanceAmend));
                                                     }
-                                                    Toast.makeText(getContext(), balance, Toast.LENGTH_LONG).show();
-                                                    databaseHelper.insertExpenditure("amend", MainActivity.getActiveLeapNumber(databaseHelper), correctBalanceDialog.getBalance());
-                                                }
-                                            });
-                                        }
-                                    })
-                                    .show();
+                                                });
+                                            }
+                                        })
+                                        .show();
+                            }
                         }
+                        cursor.close();
+                        sqLiteDatabase.close();
                     }
+                } else {
+                    Toast.makeText(getContext(), R.string.unable_to_sync_bal, Toast.LENGTH_LONG).show();
+                    isIncomplete = false;
                 }
-            } else {
-                Toast.makeText(getContext(), R.string.unable_to_sync_bal, Toast.LENGTH_LONG).show();
-                isIncomplete = false;
             }
         }
     }
