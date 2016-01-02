@@ -26,7 +26,6 @@ import java.net.URL;
 public class SplashScreen extends Activity {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
-    Fares fares = new Fares();
 
     boolean synced = false;
 
@@ -38,7 +37,6 @@ public class SplashScreen extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         AsynchronousFareRetrieval asynchronousFareRetrieval = new AsynchronousFareRetrieval();
         asynchronousFareRetrieval.execute();
 
@@ -81,7 +79,7 @@ public class SplashScreen extends Activity {
         cursor.moveToFirst();
         int count = cursor.getCount();
 
-        //single fares table
+        //single Fares table
         if (count > 0) {
             try {
                 URL url = new URL(Globals.LUAS_FARES);
@@ -97,7 +95,7 @@ public class SplashScreen extends Activity {
                     splitFaresCheck = fare.split("€");
                 }
 
-                //check if fares have changed from last sync
+                //check if Fares have changed from last sync
                 if (!cursor.getString(DatabaseHelper.COL_LUAS_SINGLE_FARES_ADULT)
                         .equals(String.valueOf(Double.parseDouble(splitFaresCheck[1])))) {
                     //obliterate and repopulate
@@ -111,12 +109,12 @@ public class SplashScreen extends Activity {
                         String[] splitFares = fare.split("€");
 
                         databaseHelper.insertFares(Database.LuasSingleFares.TABLE_NAME,
-                                fares.formatDecimals(splitFares[1]),
-                                fares.formatDecimals(splitFares[2]),
-                                fares.formatDecimals(splitFares[3]),
-                                fares.formatDecimals(splitFares[4]),
-                                fares.formatDecimals(splitFares[5]),
-                                fares.formatDecimals(splitFares[6]),
+                                Fares.formatDecimals(splitFares[1]),
+                                Fares.formatDecimals(splitFares[2]),
+                                Fares.formatDecimals(splitFares[3]),
+                                Fares.formatDecimals(splitFares[4]),
+                                Fares.formatDecimals(splitFares[5]),
+                                Fares.formatDecimals(splitFares[6]),
                                 null, null, null, null, null, null);
                     }
 
@@ -127,8 +125,8 @@ public class SplashScreen extends Activity {
 
                         databaseHelper.insertFares(Database.LuasReturnFares.TABLE_NAME,
                                 null, null, null, null, null, null,
-                                fares.formatDecimals(splitFares[1]),
-                                fares.formatDecimals(splitFares[2]),
+                                Fares.formatDecimals(splitFares[1]),
+                                Fares.formatDecimals(splitFares[2]),
                                 null, null, null, null);
                     }
 
@@ -139,10 +137,10 @@ public class SplashScreen extends Activity {
 
                         databaseHelper.insertFares(Database.LeapCaps.TABLE_NAME,
                                 null, null, null, null, null, null, null, null,
-                                fares.formatDecimals(splitFares[1]),
-                                fares.formatDecimals(splitFares[2]),
-                                fares.formatDecimals(splitFares[3]),
-                                fares.formatDecimals(splitFares[4]));
+                                Fares.formatDecimals(splitFares[1]),
+                                Fares.formatDecimals(splitFares[2]),
+                                Fares.formatDecimals(splitFares[3]),
+                                Fares.formatDecimals(splitFares[4]));
                     }
 
                     databaseHelper.printTableContents(Database.LuasSingleFares.TABLE_NAME);
@@ -179,21 +177,21 @@ public class SplashScreen extends Activity {
                     String[] splitFares = fare.split("€");
 
                     databaseHelper.insertFares(Database.LuasSingleFares.TABLE_NAME,
-                            fares.formatDecimals(splitFares[1]),
-                            fares.formatDecimals(splitFares[2]),
-                            fares.formatDecimals(splitFares[3]),
-                            fares.formatDecimals(splitFares[4]),
-                            fares.formatDecimals(splitFares[5]),
-                            fares.formatDecimals(splitFares[6]),
+                            Fares.formatDecimals(splitFares[1]),
+                            Fares.formatDecimals(splitFares[2]),
+                            Fares.formatDecimals(splitFares[3]),
+                            Fares.formatDecimals(splitFares[4]),
+                            Fares.formatDecimals(splitFares[5]),
+                            Fares.formatDecimals(splitFares[6]),
                             null, null, null, null, null, null);
 
                     System.out.println("Single Zone " + (j - 1) + ": "
-                                    + fares.formatDecimals(splitFares[1]) + ", "
-                                    + fares.formatDecimals(splitFares[2]) + ", "
-                                    + fares.formatDecimals(splitFares[3]) + ", "
-                                    + fares.formatDecimals(splitFares[4]) + ", "
-                                    + fares.formatDecimals(splitFares[5]) + ", "
-                                    + fares.formatDecimals(splitFares[6])
+                                    + Fares.formatDecimals(splitFares[1]) + ", "
+                                    + Fares.formatDecimals(splitFares[2]) + ", "
+                                    + Fares.formatDecimals(splitFares[3]) + ", "
+                                    + Fares.formatDecimals(splitFares[4]) + ", "
+                                    + Fares.formatDecimals(splitFares[5]) + ", "
+                                    + Fares.formatDecimals(splitFares[6])
                     );
                     System.out.println("------------------------------------");
                 }
@@ -205,13 +203,13 @@ public class SplashScreen extends Activity {
 
                     databaseHelper.insertFares(Database.LuasReturnFares.TABLE_NAME,
                             null, null, null, null, null, null,
-                            fares.formatDecimals(splitFares[1]),
-                            fares.formatDecimals(splitFares[2]),
+                            Fares.formatDecimals(splitFares[1]),
+                            Fares.formatDecimals(splitFares[2]),
                             null, null, null, null);
 
                     System.out.println("Return Zone " + (j - 7) + ": "
-                            + fares.formatDecimals(splitFares[1]) + ", "
-                            + fares.formatDecimals(splitFares[2]));
+                            + Fares.formatDecimals(splitFares[1]) + ", "
+                            + Fares.formatDecimals(splitFares[2]));
                     System.out.println("------------------------------------");
                 }
 
@@ -222,16 +220,16 @@ public class SplashScreen extends Activity {
 
                     databaseHelper.insertFares(Database.LeapCaps.TABLE_NAME,
                             null, null, null, null, null, null, null, null,
-                            fares.formatDecimals(splitFares[1]),
-                            fares.formatDecimals(splitFares[2]),
-                            fares.formatDecimals(splitFares[3]),
-                            fares.formatDecimals(splitFares[4]));
+                            Fares.formatDecimals(splitFares[1]),
+                            Fares.formatDecimals(splitFares[2]),
+                            Fares.formatDecimals(splitFares[3]),
+                            Fares.formatDecimals(splitFares[4]));
 
                     System.out.println("Caps type #" + (j - 14) + ": "
-                            + fares.formatDecimals(splitFares[1]) + ", "
-                            + fares.formatDecimals(splitFares[2]) + ", "
-                            + fares.formatDecimals(splitFares[3]) + ", "
-                            + fares.formatDecimals(splitFares[4]));
+                            + Fares.formatDecimals(splitFares[1]) + ", "
+                            + Fares.formatDecimals(splitFares[2]) + ", "
+                            + Fares.formatDecimals(splitFares[3]) + ", "
+                            + Fares.formatDecimals(splitFares[4]));
                     System.out.println("------------------------------------");
                 }
             } catch (IOException e) {
@@ -251,7 +249,12 @@ public class SplashScreen extends Activity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            setFares();
+            try {
+                Thread.sleep(Globals.ONE_SECOND);
+                setFares();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 

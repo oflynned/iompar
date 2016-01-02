@@ -1,5 +1,6 @@
 package com.glassbyte.iompar;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -81,19 +82,21 @@ public class Expenditures extends Fragment {
             cursor.moveToFirst();
             if (fareType.equals(getString(R.string.adult))) {
                 cursor.moveToPosition(0);
-                setDailyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY)));
-                setWeeklyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY)));
-            } else if (fareType.equals(getString(R.string.child))) {
-                cursor.moveToPosition(1);
-                setDailyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY)));
-                setWeeklyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY)));
-            } else if (fareType.equals(getString(R.string.student))) {
-                cursor.moveToPosition(2);
-                setDailyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY)));
-                setWeeklyCap("€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY)));
+                setDailyCap("€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY)));
+                setWeeklyCap("€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY)));
             } else {
-                setDailyCap("€0.00");
-                setWeeklyCap("€0.00");
+                if (fareType.equals(getString(R.string.child))) {
+                    cursor.moveToPosition(1);
+                    setDailyCap("€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY)));
+                    setWeeklyCap("€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY)));
+                } else if (fareType.equals(getString(R.string.student))) {
+                    cursor.moveToPosition(2);
+                    setDailyCap("€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_DAILY)));
+                    setWeeklyCap("€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_LUAS_LEAP_CAPS_LUAS_WEEKLY)));
+                } else {
+                    setDailyCap("€0.00");
+                    setWeeklyCap("€0.00");
+                }
             }
         }
         cursor.close();
@@ -113,8 +116,9 @@ public class Expenditures extends Fragment {
 
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
-                firstTimeOfDay + " AND " + currentTime +
-                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber(databaseHelper) + ");";
+                firstTimeOfDay + " AND " + currentTime + ") AND (" +
+                Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber(databaseHelper) + ") AND (" +
+                Database.Expenditures.TYPE + " = 'Leap');";
 
         total = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -126,12 +130,15 @@ public class Expenditures extends Fragment {
                 cursor.moveToNext();
             }
         }
-        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)) + "/" + getDailyCap());
+        setSubTotal("€" + Fares.formatDecimals(String.valueOf(total)) + "/" + getDailyCap());
         dailySubTotal.setText(getSubTotal());
 
         query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
-                firstTimeOfDay + " AND " + currentTime + ");";
+                firstTimeOfDay + " AND " + currentTime + ") AND (" +
+                Database.Expenditures.TYPE + " = 'Leap' OR "
+                + Database.Expenditures.TYPE + " = 'cash');";
+
         total = 0;
         sqLiteDatabase = databaseHelper.getReadableDatabase();
         cursor = sqLiteDatabase.rawQuery(query, null);
@@ -142,7 +149,7 @@ public class Expenditures extends Fragment {
                 cursor.moveToNext();
             }
         }
-        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
+        setSubTotal("€" + Fares.formatDecimals(String.valueOf(total)));
         dailySubTotalCash.setText(getSubTotal());
 
         cursor.close();
@@ -164,8 +171,9 @@ public class Expenditures extends Fragment {
         firstDayOfMonth = calendar.getTimeInMillis();
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
-                firstDayOfMonth + " AND " + currentTime +
-                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber(databaseHelper) + ");";
+                firstDayOfMonth + " AND " + currentTime + ") AND (" +
+                Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber(databaseHelper) + ") AND (" +
+                Database.Expenditures.TYPE + " = 'Leap');";
 
         total = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -177,12 +185,14 @@ public class Expenditures extends Fragment {
                 cursor.moveToNext();
             }
         }
-        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
+        setSubTotal("€" + Fares.formatDecimals(String.valueOf(total)));
         monthlySubTotal.setText(getSubTotal());
 
         query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
-                firstDayOfMonth + " AND " + currentTime + ");";
+                firstDayOfMonth + " AND " + currentTime + ") AND (" +
+                Database.Expenditures.TYPE + " = 'Leap' OR "
+                + Database.Expenditures.TYPE + " = 'cash');";
 
         total = 0;
         sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -194,7 +204,7 @@ public class Expenditures extends Fragment {
                 cursor.moveToNext();
             }
         }
-        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
+        setSubTotal("€" + Fares.formatDecimals(String.valueOf(total)));
         monthlySubTotalCash.setText(getSubTotal());
 
         cursor.close();
@@ -216,8 +226,9 @@ public class Expenditures extends Fragment {
 
         String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
-                firstDayOfWeek + " AND " + currentTime +
-                ") AND (" + Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber(databaseHelper) + ");";
+                firstDayOfWeek + " AND " + currentTime + ") AND (" +
+                Database.Expenditures.CARD_NUMBER + " = " + getActiveLeapNumber(databaseHelper) + ") AND (" +
+                Database.Expenditures.TYPE + " = 'Leap');";
 
         total = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -229,13 +240,15 @@ public class Expenditures extends Fragment {
                 cursor.moveToNext();
             }
         }
-        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)) + "/" + getWeeklyCap());
+        setSubTotal("€" + Fares.formatDecimals(String.valueOf(total)) + "/" + getWeeklyCap());
         weeklySubTotal.setText(getSubTotal());
 
         //overall weekly
         query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                 " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
-                firstDayOfWeek + " AND " + currentTime + ");";
+                firstDayOfWeek + " AND " + currentTime + ") AND (" +
+                Database.Expenditures.TYPE + " = 'Leap' OR "
+                + Database.Expenditures.TYPE + " = 'cash');";
 
         total = 0;
         sqLiteDatabase = databaseHelper.getReadableDatabase();
@@ -247,7 +260,7 @@ public class Expenditures extends Fragment {
                 cursor.moveToNext();
             }
         }
-        setSubTotal("€" + fares.formatDecimals(String.valueOf(total)));
+        setSubTotal("€" + Fares.formatDecimals(String.valueOf(total)));
         weeklySubTotalCash.setText(getSubTotal());
 
         cursor.close();
@@ -281,15 +294,26 @@ public class Expenditures extends Fragment {
             timeAdded.setText(formatDate(cursor.getString(DatabaseHelper.COL_EXPENDITURES_TIME_ADDED)));
             timeAdded.setGravity(Gravity.CENTER);
 
-            //category
+            //category - database inserted type gets read here
             final TextView type = new TextView(getContext());
-            //set leap if number != cash, else set to cash
-            if(cursor.getString(DatabaseHelper.COL_EXPENDITURES_CARD_NUMBER).equals("cash")){
-                type.setText(getString(R.string.cash));
-            } else {
-                type.setText(getString(R.string.leap));
-            }
             type.setGravity(Gravity.CENTER);
+            switch (cursor.getString(DatabaseHelper.COL_EXPENDITURES_TYPE)){
+                case "cash":
+                    type.setText(getString(R.string.cash));
+                    break;
+                case "Leap":
+                    type.setText(getString(R.string.leap));
+                    break;
+                case "topup":
+                    type.setText(getString(R.string.topup));
+                    break;
+                case "amend":
+                    type.setText(getString(R.string.amend));
+                    break;
+                default:
+                    type.setText("check");
+                    break;
+            }
 
             //description
             final TextView leapNumber = new TextView(getContext());
@@ -302,7 +326,13 @@ public class Expenditures extends Fragment {
 
             //description
             final TextView costField = new TextView(getContext());
-            final String costText = "€" + fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
+            String cost;
+            if(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE).contains("-")){
+                cost = "-€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE).replace("-",""));
+            } else {
+                cost = "€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
+            }
+            final String costText = cost;
             costField.setText(costText);
             costField.setGravity(Gravity.CENTER);
 
@@ -324,8 +354,12 @@ public class Expenditures extends Fragment {
                     String messagePaymentType;
                     if(type.getText().toString().equals(getString(R.string.cash))){
                         messagePaymentType = getString(R.string.cash_lowercase);
-                    } else {
+                    } else if(type.getText().toString().equals(getString(R.string.leap))){
                         messagePaymentType = getString(R.string.leap);
+                    } else if(type.getText().toString().equals(getString(R.string.topup))){
+                        messagePaymentType = getString(R.string.topup);
+                    } else {
+                        messagePaymentType = getString(R.string.amend);
                     }
 
                     builder.setTitle(getString(R.string.remove_expenditure))
@@ -337,7 +371,8 @@ public class Expenditures extends Fragment {
                             .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            databaseHelper.removeRecord(Database.Expenditures.TABLE_NAME, Database.Expenditures.ID, row);
+                            ManageLeapCards.updateLocalBalance(databaseHelper, "remove", 0, row);
+
                             tableLayout.invalidate();
                             populateTable();
                             setCaps();
@@ -373,6 +408,7 @@ public class Expenditures extends Fragment {
         tableLayout.invalidate();
     }
 
+    @SuppressLint("SimpleDateFormat")
     public String formatDate(String time){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
         return simpleDateFormat.format(Long.parseLong(time));
@@ -384,7 +420,7 @@ public class Expenditures extends Fragment {
     public String getDailyCap(){return dailyCap;}
     public void setWeeklyCap(String weeklyCap){this.weeklyCap = weeklyCap;}
     public String getWeeklyCap(){return weeklyCap;}
-    public String getActiveLeapNumber(DatabaseHelper databaseHelper){
+    public static String getActiveLeapNumber(DatabaseHelper databaseHelper){
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
         if(cursor.getCount() > 0){

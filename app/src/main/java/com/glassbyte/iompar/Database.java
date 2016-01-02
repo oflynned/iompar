@@ -70,7 +70,7 @@ public class Database {
     public static abstract class Expenditures implements BaseColumns {
         public static final String TABLE_NAME = "expenditures";
         public static final String ID = "id";
-        public static final String IS_LEAP = "is_leap";
+        public static final String TYPE = "type";
         public static final String CARD_NUMBER = "card_number";
         public static final String TIME_ADDED = "time_added";
         public static final String EXPENDITURE = "expenditure";

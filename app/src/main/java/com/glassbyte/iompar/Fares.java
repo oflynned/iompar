@@ -1511,9 +1511,13 @@ public class Fares extends Fragment {
         return false;
     }
 
-    public String formatDecimals(String fare) {
+    public static String formatDecimals(String fare) {
         double castFare = Double.parseDouble(fare.replaceAll("[€]", ""));
         return String.format("%.2f", castFare);
+    }
+
+    public static String formatDecimals(double fare) {
+        return String.format("%.2f", fare);
     }
 
     public void setFare(String fare) {

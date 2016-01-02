@@ -61,12 +61,6 @@ public class ManageLeapCards extends Fragment {
 
         databaseHelper = new DatabaseHelper(getContext());
 
-        /*databaseHelper.clearTable(Database.LeapLogin.TABLE_NAME);
-        databaseHelper.insertRecord(
-                Database.LeapLogin.TABLE_NAME,
-                null, null, null, null, null, null, 0, null, 0, 0, 0, false,
-                Globals.USER_LEAP_NUMBER, Globals.USER_NAME, Globals.USER_EMAIL, Globals.USER_PASS, true);*/
-
         populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
 
         filterMenuLayout = (FilterMenuLayout) view.findViewById(R.id.filter_menu);
@@ -143,6 +137,7 @@ public class ManageLeapCards extends Fragment {
                                                 Toast.makeText(getContext(), R.string.cards_cleared_successfully, Toast.LENGTH_SHORT).show();
                                                 editor.putString(getString(R.string.pref_key_curr_synced_balance), "unsynced").apply();
                                                 editor.putString(getString(R.string.pref_key_last_synced_balance), "unsynced").apply();
+                                                editor.putString(getString(R.string.pref_key_current_balance), "unsynced").apply();
                                             }
                                         })
                                         .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -164,16 +159,17 @@ public class ManageLeapCards extends Fragment {
                                 topUpDialog.setSetTopUpDialogListener(new TopUpDialog.SetTopUpListener() {
                                     @Override
                                     public void onDoneClick(android.app.DialogFragment dialog) {
-                                        Fares fares = new Fares();
                                         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
                                         Cursor cursor = sqLiteDatabase.rawQuery(
                                                 DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
                                         if (cursor.getCount() > 0) {
                                             cursor.moveToFirst();
-                                            Toast.makeText(getActivity(), getString(R.string.topped_up_by) + fares.formatDecimals(String.valueOf(topUpDialog.getTopUp())) +
-                                                            " on " + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
+                                            Toast.makeText(getActivity(), getString(R.string.topped_up_by) + Fares.formatDecimals(String.valueOf(topUpDialog.getTopUp())) +
+                                                            getString(R.string.on) + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                     Toast.LENGTH_LONG).show();
+                                            updateLocalBalance(databaseHelper, "add topup", topUpDialog.getTopUp(), 0);
                                         }
+                                        databaseHelper.printTableContents(Database.LeapBalance.TABLE_NAME);
                                         cursor.close();
                                         sqLiteDatabase.close();
                                     }
@@ -429,6 +425,23 @@ public class ManageLeapCards extends Fragment {
         cursor.close();
     }
 
+    public static void updateLocalBalance(DatabaseHelper databaseHelper, String updateType, double amount, int id){
+        switch(updateType){
+            case "add topup":
+                databaseHelper.insertExpenditure("topup", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(amount));
+                break;
+            case "add cash":
+                databaseHelper.insertExpenditure("cash", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(amount));
+                break;
+            case "add Leap":
+                databaseHelper.insertExpenditure("Leap", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(amount));
+                break;
+            case "remove":
+                databaseHelper.removeRecord(Database.LeapBalance.TABLE_NAME, Database.LeapBalance.ID, id);
+                break;
+        }
+    }
+
     public class AsynchronousLeapBalance extends AsyncTask<Void, Void, Void> {
 
         Leap leap;
@@ -542,7 +555,6 @@ public class ManageLeapCards extends Fragment {
                     if (cursor.getCount() == 0) {
                         editor.putBoolean(getString(R.string.pref_key_first_sync), false).apply();
                         editor.putString(getString(R.string.pref_key_last_synced_balance), "").apply();
-                        editor.putString(getString(R.string.pref_key_curr_synced_balance), "").apply();
                     }
                     sqLiteDatabase.close();
                     cursor.close();
@@ -557,7 +569,6 @@ public class ManageLeapCards extends Fragment {
                                         Toast.makeText(getContext(), getString(R.string.reported_balance) + leap.getBalance(), Toast.LENGTH_LONG).show();
                                         editor.putBoolean(getString(R.string.pref_key_first_sync), true).apply();
                                         editor.putString(getString(R.string.pref_key_last_synced_balance), leap.getBalance()).apply();
-                                        editor.putString(getString(R.string.pref_key_curr_synced_balance), leap.getBalance()).apply();
                                     }
                                 })
                                 .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -583,18 +594,15 @@ public class ManageLeapCards extends Fragment {
 
                                                 //STORE BALANCE IN TABLE
                                                 if (!sharedPreferences.getBoolean(getString(R.string.pref_key_first_sync), false)) {
-                                                    editor.putString(getString(R.string.pref_key_last_synced_balance), balance);
-                                                    editor.apply();
+                                                    editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
                                                     System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
 
                                                     //prevent initial sync on next iterations
                                                     editor.putBoolean(getString(R.string.pref_key_first_sync), true).apply();
                                                 } else {
                                                     editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
-                                                    editor.putString(getString(R.string.pref_key_curr_synced_balance), balance).apply();
-                                                    System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_curr_synced_balance), ""));
+                                                    System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
                                                 }
-
                                             }
                                         });
                                     }
@@ -603,19 +611,12 @@ public class ManageLeapCards extends Fragment {
                     } else {
                         //if synced values are the same, all's good, values coincide
                         String oldSync = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "");
-                        String newSync = leap.getBalance();
+                        final String newSync = leap.getBalance();
                         System.out.println("balances are the same");
                         System.out.println("last synced balance " + oldSync);
                         System.out.println("new synced balance " + newSync);
                         if (oldSync.equals(newSync)) {
-                            String balance;
-                            if (leap.getBalance().contains("-")) {
-                                balance = "-€" + leap.getBalance().replace("-", "").replace("€", "");
-                            } else {
-                                balance = "€" + leap.getBalance().replace("-", "").replace("€", "");
-                            }
-                            editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
-                            editor.putString(getString(R.string.pref_key_curr_synced_balance), balance).apply();
+                            //do nothing as the sync is okay
                         } else {
                             System.out.println("balances are different");
                             //problem - balances aren't the same, ask the user which to use and allow for input if online is wrong
@@ -626,8 +627,7 @@ public class ManageLeapCards extends Fragment {
                                     .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             Toast.makeText(getContext(), getString(R.string.bal_updated_successfully) + leap.getBalance() + ")", Toast.LENGTH_LONG).show();
-                                            editor.putString(getString(R.string.pref_key_last_synced_balance), leap.getBalance()).apply();
-                                            editor.putString(getString(R.string.pref_key_curr_synced_balance), leap.getBalance()).apply();
+                                            databaseHelper.insertExpenditure("amend", MainActivity.getActiveLeapNumber(databaseHelper), newSync.replace("€", ""));
                                         }
                                     })
                                     .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -650,9 +650,8 @@ public class ManageLeapCards extends Fragment {
                                                     } else {
                                                         balance = "€" + correctBalanceDialog.getBalance();
                                                     }
-                                                    editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
-                                                    editor.putString(getString(R.string.pref_key_curr_synced_balance), balance).apply();
-                                                    System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_curr_synced_balance), ""));
+                                                    Toast.makeText(getContext(), balance, Toast.LENGTH_LONG).show();
+                                                    databaseHelper.insertExpenditure("amend", MainActivity.getActiveLeapNumber(databaseHelper), correctBalanceDialog.getBalance());
                                                 }
                                             });
                                         }

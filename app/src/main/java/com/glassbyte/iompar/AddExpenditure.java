@@ -238,9 +238,9 @@ public class AddExpenditure extends DialogFragment {
         builder.setTitle(context.getString(R.string.add_expenditure))
                 .setPositiveButton(context.getString(R.string.add), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        double cashCost = Double.parseDouble(fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
+                        double cashCost = Double.parseDouble(Fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
                                 context, "cash")));
-                        double leapCost = Double.parseDouble(fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
+                        double leapCost = Double.parseDouble(Fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
                                 context, "leap")));
                         double difference = cashCost - leapCost;
 
@@ -255,7 +255,6 @@ public class AddExpenditure extends DialogFragment {
 
                                     //check daily & weekly caps, if amount > daily, add difference
                                     //if weekly has been reached, free travel for this week
-                                    Expenditures expenditures = new Expenditures();
 
                                     double currentDailyExpenditure = 0, currentWeeklyExpenditure = 0;
                                     double overshoot, cumulative;
@@ -286,7 +285,7 @@ public class AddExpenditure extends DialogFragment {
                                             " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
                                             firstTimeOfDay + " AND " + currentTime +
                                             ") AND (" + Database.Expenditures.CARD_NUMBER + " = " +
-                                            expenditures.getActiveLeapNumber(databaseHelper) + ");";
+                                            Expenditures.getActiveLeapNumber(databaseHelper) + ");";
 
                                     SQLiteDatabase expensesDB = databaseHelper.getReadableDatabase();
                                     Cursor expensesCursor = expensesDB.rawQuery(query, null);
@@ -306,7 +305,7 @@ public class AddExpenditure extends DialogFragment {
                                             " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
                                             firstTimeOfWeek + " AND " + currentTime +
                                             ") AND (" + Database.Expenditures.CARD_NUMBER + " = " +
-                                            expenditures.getActiveLeapNumber(databaseHelper) + ");";
+                                            Expenditures.getActiveLeapNumber(databaseHelper) + ");";
 
                                     SQLiteDatabase weeklyExpensesDB = databaseHelper.getReadableDatabase();
                                     Cursor weeklyExpensesCursor = weeklyExpensesDB.rawQuery(weeklyQuery, null);
@@ -333,9 +332,9 @@ public class AddExpenditure extends DialogFragment {
                                             //if greater than or equal to daily cap -> free
                                             if (currentDailyExpenditure >= getDailyCap()) {
                                                 System.out.println("currently daily exp >= daily cap");
-                                                databaseHelper.insertExpenditure(true,
+                                                databaseHelper.insertExpenditure("Leap",
                                                         traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                                        fares.formatDecimals(String.valueOf(0)));
+                                                        Fares.formatDecimals(String.valueOf(0)));
                                                 Toast.makeText(getContext(), R.string.daily_cap_reached, Toast.LENGTH_LONG).show();
                                             } else {
                                                 System.out.println("currently daily exp < daily cap");
@@ -347,19 +346,19 @@ public class AddExpenditure extends DialogFragment {
                                                         overshoot = overshoot * -1;
                                                     }
 
-                                                    databaseHelper.insertExpenditure(true,
+                                                    databaseHelper.insertExpenditure("Leap",
                                                             traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                                            fares.formatDecimals(String.valueOf(overshoot)));
+                                                            Fares.formatDecimals(String.valueOf(overshoot)));
 
                                                     Toast.makeText(getContext(), context.getString(R.string.daily_cap_reached_paid) +
-                                                            fares.formatDecimals(String.valueOf(overshoot)) +
+                                                            Fares.formatDecimals(String.valueOf(overshoot)) +
                                                             context.getString(R.string.paid_for_transit), Toast.LENGTH_LONG).show();
                                                 } else {
                                                     //else under the cap and just add raw expenditure to table
                                                     System.out.println("Entered else loop? - inserting regular leap exp");
-                                                    databaseHelper.insertExpenditure(true,
+                                                    databaseHelper.insertExpenditure("Leap",
                                                             traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                                            fares.formatDecimals(String.valueOf(leapCost)));
+                                                            Fares.formatDecimals(String.valueOf(leapCost)));
                                                     Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_LONG).show();
                                                 }
                                             }
@@ -367,19 +366,19 @@ public class AddExpenditure extends DialogFragment {
                                             System.out.println("currently weekly exp + exp > weekly cap");
                                             //if cumulative is GREATER than currently weekly expenditure
                                             overshoot = getWeeklyCap() - currentWeeklyExpenditure;
-                                            databaseHelper.insertExpenditure(true,
+                                            databaseHelper.insertExpenditure("Leap",
                                                     traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                                    fares.formatDecimals(String.valueOf(overshoot)));
+                                                    Fares.formatDecimals(String.valueOf(overshoot)));
                                             Toast.makeText(getContext(), context.getString(R.string.weekly_cap_reached) +
-                                                    fares.formatDecimals(String.valueOf(overshoot)) +
+                                                    Fares.formatDecimals(String.valueOf(overshoot)) +
                                                     context.getString(R.string.paid_for_transit), Toast.LENGTH_LONG).show();
                                         }
                                     } else {
                                         System.out.println("currently weekly exp >= weekly cap");
                                         //else over weekly cap, therefore free transportation even if daily cap not reached
-                                        databaseHelper.insertExpenditure(true,
+                                        databaseHelper.insertExpenditure("Leap",
                                                 traverseCardNumber.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                                fares.formatDecimals(String.valueOf(0)));
+                                                Fares.formatDecimals(String.valueOf(0)));
                                         Toast.makeText(getContext(), R.string.weekly_cap_reached_free_transit, Toast.LENGTH_LONG).show();
                                     }
 
@@ -391,14 +390,13 @@ public class AddExpenditure extends DialogFragment {
                                     new AlertDialog.Builder(context)
                                             .setTitle(context.getString(R.string.no_active_leap))
                                             .setMessage(context.getString(R.string.no_active_leap_body) +
-                                                    fares.formatDecimals(String.valueOf(difference)) + " " + context.getString(R.string.more))
+                                                    Fares.formatDecimals(String.valueOf(difference)) + " " + context.getString(R.string.more))
                                             .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //cash payment, no active leap
-                                                    databaseHelper.insertExpenditure(false, "cash",
-                                                            fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
-                                                                    context, "cash")));
+                                                    databaseHelper.insertExpenditure("cash", "cash",
+                                                            Fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive, context, "cash")));
                                                     Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_LONG).show();
                                                 }
                                             })
@@ -415,9 +413,8 @@ public class AddExpenditure extends DialogFragment {
                                 traverseCardNumber.close();
                             } else {
                                 //cash payment
-                                databaseHelper.insertExpenditure(false, "cash",
-                                        fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive,
-                                                context, "cash")));
+                                databaseHelper.insertExpenditure("cash", "cash",
+                                        Fares.formatDecimals(fares.getZoneTraversal(enumDirection, depart, arrive, context, "cash")));
                                 Toast.makeText(context, R.string.expenditure_added_successfully, Toast.LENGTH_LONG).show();
                             }
                             databaseHelper.printTableContents(Database.Expenditures.TABLE_NAME);

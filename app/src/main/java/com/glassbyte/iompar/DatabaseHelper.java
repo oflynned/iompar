@@ -53,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int COL_LEAP_BALANCE_IS_NEGATIVE = 7;
 
     public static final int COL_EXPENDITURES_ID = 0;
-    public static final int COL_EXPENDITURES_IS_LEAP = 1;
+    public static final int COL_EXPENDITURES_TYPE = 1;
     public static final int COL_EXPENDITURES_CARD_NUMBER = 2;
     public static final int COL_EXPENDITURES_TIME_ADDED = 3;
     public static final int COL_EXPENDITURES_EXPENDITURE = 4;
@@ -158,7 +158,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " +
                     Database.Expenditures.TABLE_NAME + "(" +
                     Database.Expenditures.ID + " INTEGER PRIMARY KEY," +
-                    Database.Expenditures.IS_LEAP + " BOOLEAN," +
+                    Database.Expenditures.TYPE + " BOOLEAN," +
                     Database.Expenditures.CARD_NUMBER + " INTEGER," +
                     Database.Expenditures.TIME_ADDED + " INTEGER," +
                     Database.Expenditures.EXPENDITURE + " DECIMAL(5,2));";
@@ -340,12 +340,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void insertExpenditure(boolean isLeap, String cardNumber, String expenditure) {
+    public void insertExpenditure(String type, String cardNumber, String expenditure) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         Long time = System.currentTimeMillis();
-        contentValues.put(Database.Expenditures.IS_LEAP, isLeap);
+        contentValues.put(Database.Expenditures.TYPE, type);
         contentValues.put(Database.Expenditures.CARD_NUMBER, cardNumber);
         contentValues.put(Database.Expenditures.TIME_ADDED, time);
         contentValues.put(Database.Expenditures.EXPENDITURE, expenditure);
