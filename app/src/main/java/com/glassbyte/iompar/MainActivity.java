@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity
 
         if (cursor.getCount() > 0) {
             String balance;
-            if(sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").equals("")){
+            if(sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")){
                 balance = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),
                         getString(R.string.unsynced));
             } else {
@@ -355,7 +355,6 @@ public class MainActivity extends AppCompatActivity
                     System.out.println("NOT synced and has slept " + (timer / 1000) + "/60");
                     try {
                         timer += Globals.ONE_SECOND;
-                        Thread.currentThread();
                         Thread.sleep(Globals.ONE_SECOND);
                         if (timer > Globals.SIXTY_SECONDS) {
                             isIncomplete = true;

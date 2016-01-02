@@ -62,12 +62,12 @@
             android:layout_gravity="center">
 
             <TextView
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
                 android:id="@+id/irish_pref_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:paddingEnd="64dp"
                 android:text="@string/slide_one_irish_option"
                 android:textColor="#ffffff" />
 
@@ -75,7 +75,7 @@
                 android:id="@+id/switch_pref_irish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/irish_pref_text" />
+                android:layout_toEndOf="@+id/irish_pref_text"/>
 
         </RelativeLayout>
     </LinearLayout>

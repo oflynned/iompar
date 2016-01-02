@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -41,14 +42,14 @@ public class Leap extends WebViewClient {
         setSynced(false);
         final WebView webView = new WebView(context);
         webView.loadUrl(Globals.LEAP_LOGIN);
-        final Fares fares = new Fares();
 
         Toast.makeText(context, R.string.connecting, Toast.LENGTH_LONG).show();
 
         //add following two lines
-        final WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setDatabaseEnabled(true);
 
         //are we logged in?
         webView.setWebViewClient(new WebViewClient() {
@@ -109,7 +110,7 @@ public class Leap extends WebViewClient {
                                         //trim after and format
                                         returnedPost = returnedPost.replaceAll("\\u00a0\\u00a0\\u00a0\\u00a0\\u00a0\\u00a0\\u00a0.*", "");
                                         returnedPost = returnedPost.replaceAll("[^\\d.-]", "");
-                                        returnedPost = fares.formatDecimals(returnedPost);
+                                        returnedPost = Fares.formatDecimals(returnedPost);
 
                                         //if it's negative, format accordingly
                                         if (returnedPost.contains("-")) {
@@ -171,7 +172,7 @@ public class Leap extends WebViewClient {
                             //trim after and format
                             returnedPost = returnedPost.replaceAll("\\u00a0\\u00a0\\u00a0\\u00a0\\u00a0\\u00a0\\u00a0.*", "");
                             returnedPost = returnedPost.replaceAll("[^\\d.-]", "");
-                            returnedPost = fares.formatDecimals(returnedPost);
+                            returnedPost = Fares.formatDecimals(returnedPost);
 
                             //if it's negative, format accordingly
                             if (returnedPost.contains("-")) {

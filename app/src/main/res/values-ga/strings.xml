@@ -249,5 +249,8 @@
     <string name="amend_leap_bal">Leasaigh Iarmhéid Leap</string>
     <string name="ensure_confirm_balance">Cuir i gcuimhne d\'iarmhéid a dhearbhú ag measín ticéad nó i mear-shiopa.</string>
     <string name="retrieving_currently_active_leap">Iarmhéid reatha gníomhach Leap á fháil…</string>
+    <string name="amend">Leasú</string>
+    <string name="on">" ar "</string>
+    <string name="topup">Creidmheas</string>
 
 </resources>

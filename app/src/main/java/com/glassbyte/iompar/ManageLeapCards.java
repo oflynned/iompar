@@ -1,6 +1,5 @@
 package com.glassbyte.iompar;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -296,7 +295,11 @@ public class ManageLeapCards extends Fragment {
                         new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT);
                 MainActivity.getCurrentBalance(databaseHelper, sharedPreferences, getContext());
-                balanceField.setText(sharedPreferences.getString(getString(R.string.pref_key_current_balance),""));
+                if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")){
+                    balanceField.setText(sharedPreferences.getString(getString(R.string.pref_key_current_balance), ""));
+                } else {
+                    balanceField.setText(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
+                }
                 balanceParams.gravity = Gravity.CENTER;
                 balanceField.setLayoutParams(balanceParams);
 

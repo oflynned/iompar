@@ -276,4 +276,6 @@
     <string name="ensure_confirm_balance">Ensure you confirm your balance at a ticket machine or in a shop.</string>
     <string name="retrieving_currently_active_leap">Retrieving currently active Leap balance...</string>
     <string name="on">" on "</string>
+    <string name="overall_exp">Overall Expenditure</string>
+    <string name="active_leap_card">Active Leap Card</string>
 </resources>
