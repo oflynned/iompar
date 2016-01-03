@@ -254,5 +254,7 @@
     <string name="topup">Creidmheas</string>
     <string name="active_leap_card">Cárta Leap Gníomhach</string>
     <string name="overall_exp">Caitheamh Iomlán</string>
+    <string name="add_leap_cheaper_prices_warning">Cuir cárta Leap leis led\' thoil chun táillí níos saoire a aimsiú</string>
+    <string name="negative_balance_warning">Tá iarmhéid Leap diúltach agat anois, breisigh do chreidmheas chun taistil níos mó</string>
 
 </resources>

@@ -237,7 +237,7 @@ public class AddExpenditure extends DialogFragment {
                     } else {
                         System.out.println("loop 3");
                         //else the balance is negative and cash should be the only option
-                        Toast.makeText(getContext(), "Your Leap balance is negative, please top up in order to make more journeys", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), R.string.negative_balance_warning, Toast.LENGTH_LONG).show();
                         leapSwitch.setChecked(false);
                         cashSwitch.setChecked(true);
                         costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
@@ -294,9 +294,9 @@ public class AddExpenditure extends DialogFragment {
                         System.out.println("loop 6");
                         //else the balance is negative and cash should be the only option
                         if(cursor.getCount() > 0){
-                            Toast.makeText(getContext(), "Your Leap balance is negative, please top up in order to make more journeys", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), R.string.negative_balance_warning, Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(getContext(), "Please add a Leap card in order to avail of cheaper fares", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), R.string.add_leap_cheaper_prices_warning, Toast.LENGTH_LONG).show();
                         }
                         leapSwitch.setChecked(false);
                         cashSwitch.setChecked(true);

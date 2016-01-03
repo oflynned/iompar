@@ -278,4 +278,6 @@
     <string name="on">" on "</string>
     <string name="overall_exp">Overall Expenditure</string>
     <string name="active_leap_card">Active Leap Card</string>
+    <string name="negative_balance_warning">Your Leap balance is negative, please top up in order to make more journeys</string>
+    <string name="add_leap_cheaper_prices_warning">Please add a Leap card in order to avail of cheaper fares</string>
 </resources>
