@@ -245,7 +245,7 @@
     <string name="input_email">Please input an email</string>
     <string name="input_password">Please input a password</string>
     <string name="leap_modified_successfully">Leap card modified successfully!</string>
-    <string name="connecting">Connecting…</string>
+    <string name="connecting">Connecting to Leap.ie… This may take up to 1 minute to complete.</string>
     <string name="add_leap_cheaper_fares">Add a Leap card to check your balance and get cheaper fares</string>
     <string name="fares_synced">Fared synced</string>
     <string name="using_cash">Using cash</string>

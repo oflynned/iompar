@@ -43,15 +43,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int COL_TRAIN_DIRECTION = 3;
     public static final int COL_TRAIN_FREQUENCY = 4;
 
-    public static final int COL_LEAP_BALANCE_ID = 0;
-    public static final int COL_LEAP_BALANCE_CARD_NUMBER = 1;
-    public static final int COL_LEAP_BALANCE_TIME_ADDED = 2;
-    public static final int COL_LEAP_BALANCE_TOP_UPS = 3;
-    public static final int COL_LEAP_BALANCE_EXPENDITURE = 4;
-    public static final int COL_LEAP_BALANCE_BALANCE_CHANGE = 5;
-    public static final int COL_LEAP_BALANCE_BALANCE = 6;
-    public static final int COL_LEAP_BALANCE_IS_NEGATIVE = 7;
-
     public static final int COL_EXPENDITURES_ID = 0;
     public static final int COL_EXPENDITURES_TYPE = 1;
     public static final int COL_EXPENDITURES_CARD_NUMBER = 2;
@@ -201,39 +192,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Database.LeapCaps.DUBLIN_BUS_LUAS_DART_COMM_RAIL_DAILY_CAP + " REAL," +
                     Database.LeapCaps.DUBLIN_BUS_LUAS_DART_COMM_RAIL_WEEKLY_CAP + " REAL);";
 
-    public static final String DELETE_TABLE_SINGLE_FARES =
-            "DROP TABLE IF EXISTS " + Database.LuasSingleFares.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_RETURN_FARES =
-            "DROP TABLE IF EXISTS " + Database.LuasReturnFares.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_LEAP_CAPS =
-            "DROP TABLE IF EXISTS " + Database.LeapCaps.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_DUBLIN_BUS =
-            "DROP TABLE IF EXISTS " + Database.DublinBusFavourites.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_BUS_EIREANN =
-            "DROP TABLE IF EXISTS " + Database.BusEireannFavourites.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_LUAS =
-            "DROP TABLE IF EXISTS " + Database.LuasFavourites.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_DART =
-            "DROP TABLE IF EXISTS " + Database.DartFavourites.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_TRAIN =
-            "DROP TABLE IF EXISTS " + Database.TrainFavourites.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_LEAP_BALANCE =
-            "DROP TABLE IF EXISTS " + Database.LeapBalance.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_EXPENDITURES =
-            "DROP TABLE IF EXISTS " + Database.Expenditures.TABLE_NAME + ";";
-
-    public static final String DELETE_TABLE_LEAP_LOGIN =
-            "DROP TABLE IF EXISTS " + Database.LeapLogin.TABLE_NAME + ";";
-
     public static final String SELECT_ALL_LUAS_SINGLE_FARES =
             "SELECT * FROM " + Database.LuasSingleFares.TABLE_NAME + ";";
 
@@ -242,24 +200,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String SELECT_ALL_LEAP_CAPS =
             "SELECT * FROM " + Database.LeapCaps.TABLE_NAME + ";";
-
-    public static final String SELECT_ALL_DUBLIN_BUS =
-            "SELECT * FROM " + Database.DublinBusFavourites.TABLE_NAME + ";";
-
-    public static final String SELECT_ALL_BUS_EIREANN =
-            "SELECT * FROM " + Database.BusEireannFavourites.TABLE_NAME + ";";
-
-    public static final String SELECT_ALL_LUAS =
-            "SELECT * FROM " + Database.LuasFavourites.TABLE_NAME + ";";
-
-    public static final String SELECT_ALL_DART =
-            "SELECT * FROM " + Database.DartFavourites.TABLE_NAME + ";";
-
-    public static final String SELECT_ALL_TRAIN =
-            "SELECT * FROM " + Database.TrainFavourites.TABLE_NAME + ";";
-
-    public static final String SELECT_ALL_LEAP_BALANCE =
-            "SELECT * FROM " + Database.LeapBalance.TABLE_NAME + ";";
 
     public static final String SELECT_ALL_EXPENDITURES =
             "SELECT * FROM " + Database.Expenditures.TABLE_NAME + " ORDER BY " + Database.Expenditures.ID + " DESC;";

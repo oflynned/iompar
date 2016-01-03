@@ -38,7 +38,7 @@ public class SplashScreen extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         AsynchronousFareRetrieval asynchronousFareRetrieval = new AsynchronousFareRetrieval();
-        asynchronousFareRetrieval.execute();
+        asynchronousFareRetrieval.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

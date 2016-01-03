@@ -327,21 +327,21 @@ public class Sync {
 
     public Realtime.LuasDirections convertStringToEnum(String endStation) {
         System.out.println(endStation);
-        if(endStation.equals("Tallaght") || endStation.equals(context.getString(R.string.tallaght))) {
+        if(endStation.equals("Tallaght") || endStation.equals("Tamhlacht") || endStation.equals(context.getString(R.string.tallaght))) {
             return Realtime.LuasDirections.TALLAGHT;
-        } else if(endStation.equals("Saggart") || endStation.equals(context.getString(R.string.saggart))) {
+        } else if(endStation.equals("Saggart") || endStation.equals("Teach Sagard") || endStation.equals(context.getString(R.string.saggart))) {
             return Realtime.LuasDirections.SAGGART;
-        } else if(endStation.equals("Connolly") || endStation.equals(context.getString(R.string.connolly))) {
+        } else if(endStation.equals("Connolly") || endStation.equals("Stáisiúin Uí Chonghaile") || endStation.equals(context.getString(R.string.connolly))) {
             return Realtime.LuasDirections.CONNOLLY;
-        } else if(endStation.equals("The Point") || endStation.equals(context.getString(R.string.the_point))) {
+        } else if(endStation.equals("The Point") || endStation.equals("Iosta na Rinne") || endStation.equals(context.getString(R.string.the_point))) {
             return Realtime.LuasDirections.POINT;
-        } else if(endStation.equals("St. Stephen's Green") || endStation.equals(context.getString(R.string.stephens_green))) {
+        } else if(endStation.equals("St. Stephen's Green") || endStation.equals("Faiche Stiabhna") || endStation.equals(context.getString(R.string.stephens_green))) {
             return Realtime.LuasDirections.STEPHENS_GREEN;
-        } else if(endStation.equals("Sandyford") || endStation.equals(context.getString(R.string.sandyford))) {
+        } else if(endStation.equals("Sandyford") || endStation.equals("Áth an Ghainimh") || endStation.equals(context.getString(R.string.sandyford))) {
             return Realtime.LuasDirections.SANDYFORD;
-        } else if(endStation.equals("Bride's Glen") || endStation.equals(context.getString(R.string.brides_glen))) {
+        } else if(endStation.equals("Bride's Glen") || endStation.equals("Gleann Bhríde") || endStation.equals(context.getString(R.string.brides_glen))) {
             return Realtime.LuasDirections.BRIDES_GLEN;
-        } else if(endStation.equals("Heuston") || endStation.equals(context.getString(R.string.heuston))) {
+        } else if(endStation.equals("Heuston") || endStation.equals("Heuston") || endStation.equals(context.getString(R.string.heuston))) {
             return Realtime.LuasDirections.HEUSTON;
         } else {
             return null;

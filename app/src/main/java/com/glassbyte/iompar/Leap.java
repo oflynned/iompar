@@ -201,11 +201,9 @@ public class Leap extends WebViewClient {
     public void setBalance(String balance) {
         this.balance = balance;
     }
-
     public String getBalance() {
         return balance;
     }
-
     public boolean isSynced(){return synced;}
     public void setSynced(boolean synced){this.synced=synced;}
 }

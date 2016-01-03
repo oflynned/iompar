@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.TypedValue;
@@ -72,6 +74,7 @@ public class Fares extends Fragment {
     private GridView gridView;
     Switch leapSwitch, cashSwitch;
     TextView cost, zones;
+    FloatingActionButton addExpenditureFab;
 
     public enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
 
@@ -314,9 +317,12 @@ public class Fares extends Fragment {
                     type = "cash";
 
                 if (hasPair()) {
+                    addExpenditureFab.show();
                     cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
                             getStartPosition(), getEndPosition(), getContext(), type));
                     cost.invalidate();
+                } else {
+                    addExpenditureFab.hide();
                 }
             }
         });
@@ -338,9 +344,12 @@ public class Fares extends Fragment {
                     type = "cash";
 
                 if (hasPair()) {
+                    addExpenditureFab.show();
                     cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
                             getStartPosition(), getEndPosition(), getContext(), type));
                     cost.invalidate();
+                } else {
+                    addExpenditureFab.hide();
                 }
             }
         });
@@ -431,9 +440,11 @@ public class Fares extends Fragment {
             if (hasPair()) {
                 if (position != getStartPositionComp()
                         && position != getEndPositionComp()) {
+                    addExpenditureFab.hide();
                     gridView.setItemChecked(position, false);
                     System.out.println("trying to check item not already checked");
                 } else {
+                    addExpenditureFab.show();
                     System.out.println("start true, end true!");
                     System.out.println(
                             "start station: " + getStartPosition() + "\n" +

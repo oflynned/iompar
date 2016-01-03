@@ -58,14 +58,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
-        asynchronousLeapChecking.execute();
 
         //set appropriate language
         globals = new Globals(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         globals.setIrish(sharedPreferences.getBoolean(getResources()
                 .getString(R.string.pref_key_irish), false), getResources());
+
+        AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
+        asynchronousLeapChecking.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         //ayyy lmao our income
         //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
-        //asynchronousInterstitial.execute();
+        //asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         getCurrentBalance(databaseHelper, sharedPreferences, this);
         setFragment();
@@ -352,11 +353,11 @@ public class MainActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
                 while (!leap.isSynced()) {
-                    System.out.println("NOT synced and has slept " + (timer / 1000) + "/60");
+                    System.out.println("NOT synced and has slept " + (timer / 1000) + "/120");
                     try {
                         timer += Globals.ONE_SECOND;
                         Thread.sleep(Globals.ONE_SECOND);
-                        if (timer > Globals.SIXTY_SECONDS) {
+                        if (timer > Globals.SIXTY_SECONDS * 2) {
                             isIncomplete = true;
                             leap.setSynced(true);
                             break;
@@ -383,6 +384,9 @@ public class MainActivity extends AppCompatActivity
                             String oldSyncCumulative = sharedPreferences.getString(getString(R.string.pref_key_current_balance), "");
                             if(oldSyncCumulative.equals("")){
                                 oldSyncCumulative = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"");
+                            }
+                            if(oldSyncCumulative.equals("")){
+                                oldSyncCumulative = "0";
                             }
                             final String oldSync = oldSyncCumulative;
                             final String newSync = leap.getBalance();

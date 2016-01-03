@@ -250,7 +250,7 @@ public class ManageLeapCards extends Fragment {
                             Cursor cursor = sqliteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
                             if (cursor.getCount() > 0) {
                                 AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
-                                asynchronousLeapChecking.execute();
+                                asynchronousLeapChecking.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             }
                             cursor.close();
                             sqliteDatabase.close();
@@ -289,7 +289,6 @@ public class ManageLeapCards extends Fragment {
                 usernameParams.gravity = Gravity.CENTER;
                 usernameField.setLayoutParams(usernameParams);
 
-                //balance - need to work on this as it takes from other table
                 final TextView balanceField = new TextView(getContext());
                 TableRow.LayoutParams balanceParams =
                         new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -475,7 +474,7 @@ public class ManageLeapCards extends Fragment {
                     timeout += Globals.ONE_SECOND;
                     Thread.sleep(Globals.ONE_SECOND);
 
-                    if (timeout > Globals.SIXTY_SECONDS) {
+                    if (timeout > Globals.SIXTY_SECONDS * 2) {
                         leap.setSynced(true);
                         isTimeout = true;
                     }
@@ -534,12 +533,12 @@ public class ManageLeapCards extends Fragment {
         protected Void doInBackground(Void... params) {
             long timer = 0;
             while (!leap.isSynced()) {
-                System.out.println("NOT synced and has slept " + (timer / 1000) + "/60");
+                System.out.println("NOT synced and has slept " + (timer / 1000) + "/120");
                 try {
                     timer += Globals.ONE_SECOND;
                     Thread.currentThread();
                     Thread.sleep(Globals.ONE_SECOND);
-                    if (timer > Globals.SIXTY_SECONDS) {
+                    if (timer > Globals.SIXTY_SECONDS * 2) {
                         isIncomplete = true;
                         leap.setSynced(true);
                         break;
@@ -576,6 +575,7 @@ public class ManageLeapCards extends Fragment {
                                         Toast.makeText(getContext(), getString(R.string.reported_balance) + leap.getBalance(), Toast.LENGTH_LONG).show();
                                         editor.putBoolean(getString(R.string.pref_key_first_sync), true).apply();
                                         editor.putString(getString(R.string.pref_key_last_synced_balance), leap.getBalance()).apply();
+                                        populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                                     }
                                 })
                                 .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -603,12 +603,13 @@ public class ManageLeapCards extends Fragment {
                                                 if (!sharedPreferences.getBoolean(getString(R.string.pref_key_first_sync), false)) {
                                                     editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
                                                     System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
-
+                                                    populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                                                     //prevent initial sync on next iterations
                                                     editor.putBoolean(getString(R.string.pref_key_first_sync), true).apply();
                                                 } else {
                                                     editor.putString(getString(R.string.pref_key_last_synced_balance), balance).apply();
                                                     System.out.println("balance amended: " + sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
+                                                    populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                                                 }
                                             }
                                         });
@@ -621,6 +622,9 @@ public class ManageLeapCards extends Fragment {
                             String oldSyncCumulative = sharedPreferences.getString(getString(R.string.pref_key_current_balance), "");
                             if (oldSyncCumulative.equals("")) {
                                 oldSyncCumulative = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "");
+                            }
+                            if(oldSyncCumulative.equals("")){
+                                oldSyncCumulative = "0";
                             }
                             final String oldSync = oldSyncCumulative;
                             final String newSync = leap.getBalance();
@@ -640,6 +644,7 @@ public class ManageLeapCards extends Fragment {
                                                 //leap online is correct, get difference between two values to account as an amend
                                                 double balanceAmend = Double.parseDouble(newSync.replace("€", "")) - Double.parseDouble(oldSync.replace("€", ""));
                                                 databaseHelper.insertExpenditure("amend", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(balanceAmend));
+                                                populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                                             }
                                         })
                                         .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -667,6 +672,8 @@ public class ManageLeapCards extends Fragment {
 
                                                         double balanceAmend = Double.parseDouble(correctBalanceDialog.getBalance().replace("€", "")) - Double.parseDouble(oldSync.replace("€", ""));
                                                         databaseHelper.insertExpenditure("amend", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(balanceAmend));
+                                                        tableLayout.invalidate();
+                                                        populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                                                     }
                                                 });
                                             }

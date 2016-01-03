@@ -657,7 +657,7 @@ public class Realtime extends Fragment {
     private void fetchRTPI(String depart, String arrive, Globals.LineDirection lineDirection) {
         //RTPI Luas station parsing & syncing
         asynchronousActivity = new AsynchronousActivity(depart, arrive, lineDirection);
-        asynchronousActivity.execute();
+        asynchronousActivity.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void setCurrentCategory(TransportationCategories currentCategory) {

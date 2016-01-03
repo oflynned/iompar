@@ -110,8 +110,8 @@
     <string name="type">Cineál</string>
     <string name="leap_number">Uimhir Leap</string>
     <string name="cost">Costas</string>
-    <string name="expenditures_this_week">Lán-Chaitheamh an tSeachtain seo:</string>
-    <string name="expenditures_this_month">Lán-Chaitheamh an Mhí seo:</string>
+    <string name="expenditures_this_week">An tSeachtain seo:</string>
+    <string name="expenditures_this_month">An Mhí seo:</string>
     <string name="active">Gníomhach</string>
     <string name="balance">Iarmhéid</string>
 
@@ -164,7 +164,7 @@
     <string name="cherrywood">Coill na Silíní</string>
     <string name="brides_glen">Gleann Bhríde</string>
 
-    <string name="connolly">Conghaile</string>
+    <string name="connolly">Stáisiúin Uí Chonghaile</string>
     <string name="busaras">Busáras</string>
     <string name="abbey_street">Sráid na Mainistreach</string>
     <string name="jervis">Jervis</string>
@@ -204,7 +204,7 @@
     <string name="cannot_sync_leap_balance">Ní féidir an t-iarmhéid Leap a shioncronú</string>
     <string name="cash_leapcard_drawer">Tá airgid tirim á úsáid</string>
     <string name="complete_all_fields">Críochnaigh gach aon réimse led\' thoil</string>
-    <string name="connecting">Á cheangail…</string>
+    <string name="connecting">Á cheangail chuig Leap.ie… D\'fhéadfadh thart ar nóiméad a ghlacadh chun críochnú.</string>
     <string name="daily_cap_reached">Teorainn laethúil sroichte, tá taisteal saor in aisce don  chuid eile den lá</string>
     <string name="daily_cap_reached_paid">Teorainn laethúil sroichte, €</string>
     <string name="edit_leap_card">Cuir Cárta Leap in Eagar</string>
@@ -252,5 +252,7 @@
     <string name="amend">Leasú</string>
     <string name="on">" ar "</string>
     <string name="topup">Creidmheas</string>
+    <string name="active_leap_card">Cárta Leap Gníomhach</string>
+    <string name="overall_exp">Caitheamh Iomlán</string>
 
 </resources>
