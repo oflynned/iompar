@@ -2,6 +2,8 @@ package com.glassbyte.iompar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -39,6 +41,9 @@ public class Leap extends WebViewClient {
      */
     @SuppressLint("SetJavaScriptEnabled")
     public void scrape() {
+
+        //retrieve details of currently active leap card
+
         setSynced(false);
         final WebView webView = new WebView(context);
         webView.loadUrl(Globals.LEAP_LOGIN);
@@ -72,12 +77,19 @@ public class Leap extends WebViewClient {
                             @Override
                             public void onPageFinished(WebView view, String url) {
                                 super.onPageFinished(view, url);
+                                DatabaseHelper databaseHelper = new DatabaseHelper(context);
+                                SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+                                Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                                cursor.moveToFirst();
+
                                 webView.loadUrl("javascript: {" +
-                                        "document.getElementById('ContentPlaceHolder1_UserName').value = '" + Globals.USER_NAME + "';" +
-                                        "document.getElementById('ContentPlaceHolder1_Password').value = '" + Globals.USER_PASS + "';" +
+                                        "document.getElementById('ContentPlaceHolder1_UserName').value = '" + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_USER_NAME) + "';" +
+                                        "document.getElementById('ContentPlaceHolder1_Password').value = '" + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_PASSWORD) + "';" +
                                         "document.getElementById('ContentPlaceHolder1_btnlogin').click();" +
                                         "};");
 
+                                sqLiteDatabase.close();
+                                cursor.close();
                                 //now scrape redirect data on successful login
                                 if (webView.getTitle().equals("My Leap Card Overview")) {
                                     System.out.println("logged in");

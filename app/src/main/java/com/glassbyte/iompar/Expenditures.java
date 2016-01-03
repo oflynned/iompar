@@ -310,9 +310,6 @@ public class Expenditures extends Fragment {
                 case "amend":
                     type.setText(getString(R.string.amend));
                     break;
-                default:
-                    type.setText("check");
-                    break;
             }
 
             //description
@@ -331,6 +328,10 @@ public class Expenditures extends Fragment {
                 cost = "-€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE).replace("-",""));
             } else {
                 cost = "€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
+            }
+            if(cursor.getString(DatabaseHelper.COL_EXPENDITURES_TYPE).equals("cash") ||
+                    cursor.getString(DatabaseHelper.COL_EXPENDITURES_TYPE).equals("Leap")){
+                cost = "-€" + Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
             }
             final String costText = cost;
             costField.setText(costText);

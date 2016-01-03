@@ -29,7 +29,7 @@ public class Globals extends ContextWrapper {
     public static String LEAP_LOGIN_ACCOUNT_PAGE = "https://www.leapcard.ie/en/SelfServices/CardServices/CardOverView.aspx";
 
     //luas resources
-    public static String RTPI_LEAP = "https://www.luas.ie/luaspid.html?get=";
+    public static String RTPI_LUAS = "https://www.luas.ie/luaspid.html?get=";
     public static String LUAS_FARES = "https://www.luas.ie/single-and-return-tickets.html";
 
     //to be implemented on next releases - scraping from DB and Irish Rail
@@ -235,7 +235,7 @@ public class Globals extends ContextWrapper {
         brides_glen_to_stephens_green
     }
 
-    public String getLuasStation(String string) {
+    public String getLuasStationRTPIie(String string) {
         //green
         if(string.equals(this.getString(R.string.stephens_green))) {
             return "LUAS24";
@@ -348,6 +348,123 @@ public class Globals extends ContextWrapper {
             return "LUAS52";
         } else if(string.equals(this.getString(R.string.saggart))) {
             return "LUAS53";
+        }
+        return null;
+    }
+
+    public String getLuasStation(String string) {
+        //green
+        if(string.equals(this.getString(R.string.stephens_green))) {
+            return "St.+Stephen%27s+Green";
+        } else if(string.equals(this.getString(R.string.harcourt_st))) {
+            return "Harcourt";
+        } else if(string.equals(this.getString(R.string.charlemont))) {
+            return "Charlemont";
+        } else if(string.equals(this.getString(R.string.ranelagh))) {
+            return "Ranelagh";
+        } else if(string.equals(this.getString(R.string.beechwood))) {
+            return "Beechwood";
+        } else if(string.equals(this.getString(R.string.cowper))) {
+            return "Cowper";
+        } else if(string.equals(this.getString(R.string.milltown))) {
+            return "Milltown";
+        } else if(string.equals(this.getString(R.string.windy_arbour))) {
+            return "Windy+Arbour";
+        } else if(string.equals(this.getString(R.string.dundrum))) {
+            return "Dundrum";
+        } else if(string.equals(this.getString(R.string.balally))) {
+            return "Balally";
+        } else if(string.equals(this.getString(R.string.kilmacud))) {
+            return "Kilmacud";
+        } else if(string.equals(this.getString(R.string.stillorgan))) {
+            return "Stillorgan";
+        } else if(string.equals(this.getString(R.string.sandyford))) {
+            return "Sandyford";
+        } else if(string.equals(this.getString(R.string.central_park))) {
+            return "Central+Park";
+        } else if(string.equals(this.getString(R.string.glencairn))) {
+            return "Glencairn";
+        } else if(string.equals(this.getString(R.string.the_gallops))) {
+            return "The+Gallops";
+        } else if(string.equals(this.getString(R.string.leopardstown_valley))) {
+            return "Leopardstown+Valley";
+        } else if(string.equals(this.getString(R.string.ballyogan_wood))) {
+            return "Ballyogan+Wood";
+        } else if(string.equals(this.getString(R.string.carrickmines))) {
+            return "Carrickmines";
+        } else if(string.equals(this.getString(R.string.laughanstown))) {
+            return "Laughanstown";
+        } else if(string.equals(this.getString(R.string.cherrywood))) {
+            return "Cherrywood";
+        } else if(string.equals(this.getString(R.string.brides_glen))) {
+            return "Brides+Glen";
+        }
+
+        //red
+        else if(string.equals(this.getString(R.string.the_point))) {
+            return "The+Point";
+        } else if(string.equals(this.getString(R.string.spencer_dock))) {
+            return "Spencer+Dock";
+        } else if(string.equals(this.getString(R.string.mayor_square_nci))) {
+            return "Mayor+Square+-+NCI";
+        } else if(string.equals(this.getString(R.string.georges_dock))) {
+            return "George%27s+Dock";
+        } else if(string.equals(this.getString(R.string.connolly))) {
+            return "Connolly";
+        } else if(string.equals(this.getString(R.string.busaras))) {
+            return "Bus%E1ras";
+        } else if(string.equals(this.getString(R.string.abbey_street))) {
+            return "Abbey+Street";
+        } else if(string.equals(this.getString(R.string.jervis))) {
+            return "Jervis";
+        } else if(string.equals(this.getString(R.string.four_courts))) {
+            return "Four+Courts";
+        } else if(string.equals(this.getString(R.string.smithfield))) {
+            return "Smithfield";
+        } else if(string.equals(this.getString(R.string.museum))) {
+            return "Museum";
+        } else if(string.equals(this.getString(R.string.heuston))) {
+            return "Heuston";
+        } else if(string.equals(this.getString(R.string.jamess))) {
+            return "James%27s";
+        } else if(string.equals(this.getString(R.string.fatima))) {
+            return "Fatima";
+        } else if(string.equals(this.getString(R.string.rialto))) {
+            return "Rialto";
+        } else if(string.equals(this.getString(R.string.suir_road))) {
+            return "Suir+Road";
+        } else if(string.equals(this.getString(R.string.goldenbridge))) {
+            return "Goldenbridge";
+        } else if(string.equals(this.getString(R.string.drimnagh))) {
+            return "Drimnagh";
+        } else if(string.equals(this.getString(R.string.blackhorse))) {
+            return "Blackhorse";
+        } else if(string.equals(this.getString(R.string.bluebell))) {
+            return "Bluebell";
+        } else if(string.equals(this.getString(R.string.kylemore))) {
+            return "Kylemore";
+        } else if(string.equals(this.getString(R.string.red_cow))) {
+            return "Red+Cow";
+        } else if(string.equals(this.getString(R.string.kingswood))) {
+            return "Kingswood";
+        } else if(string.equals(this.getString(R.string.belgard))) {
+            return "Belgard";
+        } else if(string.equals(this.getString(R.string.cookstown))) {
+            return "Cookstown";
+        } else if(string.equals(this.getString(R.string.hospital))) {
+            return "Hospital";
+        } else if(string.equals(this.getString(R.string.tallaght))) {
+            return "Tallaght";
+        } else if(string.equals(this.getString(R.string.fettercairn))) {
+            return "Fettercairn";
+        } else if(string.equals(this.getString(R.string.cheeverstown))) {
+            return "Cheeverstown";
+        } else if(string.equals(this.getString(R.string.citywest_campus))) {
+            return "Citywest+Campus";
+        } else if(string.equals(this.getString(R.string.fortunestown))) {
+            return "Fortunestown";
+        } else if(string.equals(this.getString(R.string.saggart))) {
+            return "Saggart";
         }
         return null;
     }

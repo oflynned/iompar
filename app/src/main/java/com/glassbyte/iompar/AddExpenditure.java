@@ -82,13 +82,21 @@ public class AddExpenditure extends DialogFragment {
         String currBalance;
 
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        final Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
         if(cursor.getCount() > 0){
             cursor.moveToFirst();
             if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")){
-                currBalance = Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_current_balance), ""));
+                if(sharedPreferences.getString(getString(R.string.current_leap_balance), "").contains("-")) {
+                    currBalance = "-€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_current_balance), ""));
+                } else {
+                    currBalance = "€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_current_balance), ""));
+                }
             } else if(!sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").equals("")){
-                currBalance = Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
+                if(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").contains("-")) {
+                    currBalance = "-€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
+                } else {
+                    currBalance = "€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
+                }
             } else {
                 currBalance = getString(R.string.unsynced);
             }
@@ -205,9 +213,10 @@ public class AddExpenditure extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!cashSwitch.isChecked()) {
-                    if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")
-                        || !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")
+                    if((!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")
+                        || !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals(""))
                             && !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").contains("-")){
+                        System.out.println("loop 1");
                         //if first and subsequent syncs have occurred where the latest sync is not negative
                         leapSwitch.setChecked(true);
                         cashSwitch.setChecked(false);
@@ -217,6 +226,7 @@ public class AddExpenditure extends DialogFragment {
                         cost.invalidate();
                     } else if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").matches("")
                             && !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").contains("-")){
+                        System.out.println("loop 2");
                         //if on first sync and not negative and no subsequent syncs
                         leapSwitch.setChecked(true);
                         cashSwitch.setChecked(false);
@@ -225,12 +235,13 @@ public class AddExpenditure extends DialogFragment {
                         cost.setText(costBalanceText);
                         cost.invalidate();
                     } else {
+                        System.out.println("loop 3");
                         //else the balance is negative and cash should be the only option
                         Toast.makeText(getContext(), "Your Leap balance is negative, please top up in order to make more journeys", Toast.LENGTH_LONG).show();
                         leapSwitch.setChecked(false);
                         cashSwitch.setChecked(true);
                         costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
-                                context, "leap");
+                                context, "cash");
                         cost.setText(costBalanceText);
                         cost.invalidate();
                     }
@@ -261,29 +272,36 @@ public class AddExpenditure extends DialogFragment {
                     if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")
                             || !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")
                             && !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").contains("-")){
+                        System.out.println("loop 4");
                         //if first and subsequent syncs have occurred where the latest sync is not negative
-                        leapSwitch.setChecked(false);
-                        cashSwitch.setChecked(true);
+                        leapSwitch.setChecked(true);
+                        cashSwitch.setChecked(false);
                         costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
                                 context, "leap");
                         cost.setText(costBalanceText);
                         cost.invalidate();
                     } else if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").matches("")
                             && !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").contains("-")){
+                        System.out.println("loop 5");
                         //if on first sync and not negative and no subsequent syncs
-                        leapSwitch.setChecked(false);
-                        cashSwitch.setChecked(true);
+                        leapSwitch.setChecked(true);
+                        cashSwitch.setChecked(false);
                         costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
                                 context, "leap");
                         cost.setText(costBalanceText);
                         cost.invalidate();
                     } else {
+                        System.out.println("loop 6");
                         //else the balance is negative and cash should be the only option
-                        Toast.makeText(getContext(), "Your Leap balance is negative, please top up in order to make more journeys", Toast.LENGTH_LONG).show();
-                        leapSwitch.setChecked(true);
-                        cashSwitch.setChecked(false);
+                        if(cursor.getCount() > 0){
+                            Toast.makeText(getContext(), "Your Leap balance is negative, please top up in order to make more journeys", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getContext(), "Please add a Leap card in order to avail of cheaper fares", Toast.LENGTH_LONG).show();
+                        }
+                        leapSwitch.setChecked(false);
+                        cashSwitch.setChecked(true);
                         costBalanceText = "€" + fares.getZoneTraversal(enumDirection, depart, arrive,
-                                context, "leap");
+                                context, "cash");
                         cost.setText(costBalanceText);
                         cost.invalidate();
                     }

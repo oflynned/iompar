@@ -65,8 +65,14 @@ public class MainActivity extends AppCompatActivity
         globals.setIrish(sharedPreferences.getBoolean(getResources()
                 .getString(R.string.pref_key_irish), false), getResources());
 
-        AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
-        asynchronousLeapChecking.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        if(cursor.getCount() > 0) {
+            AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
+            asynchronousLeapChecking.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        cursor.close();
+        sqLiteDatabase.close();
 
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -95,7 +101,11 @@ public class MainActivity extends AppCompatActivity
         //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
         //asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        getCurrentBalance(databaseHelper, sharedPreferences, this);
+        if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("")){
+            getCurrentBalance(databaseHelper, sharedPreferences, this);
+        }
+
         setFragment();
     }
 
@@ -127,7 +137,8 @@ public class MainActivity extends AppCompatActivity
         globals.setIrish(sharedPreferences.getBoolean(getResources()
                 .getString(R.string.pref_key_irish), false), getResources());
 
-        if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")){
+        if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("")){
             getCurrentBalance(databaseHelper, sharedPreferences, this);
         }
         setNavigationBarProfile();
@@ -175,21 +186,49 @@ public class MainActivity extends AppCompatActivity
         cursor.close();
     }
 
+    public static int getCurrentActiveLeap(DatabaseHelper databaseHelper){
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        int ID;
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            ID = Integer.parseInt(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_ID));
+            sqLiteDatabase.close();
+            cursor.close();
+            return ID;
+        }
+        sqLiteDatabase.close();
+        cursor.close();
+        return -1;
+    }
+
     public static void getCurrentBalance(DatabaseHelper databaseHelper, SharedPreferences sharedPreferences, Context context){
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        if(!sharedPreferences.getString(context.getResources().getString(R.string.pref_key_current_balance), "").equals("")) {
+        if(!sharedPreferences.getString(context.getResources().getString(R.string.pref_key_last_synced_balance), "").equals("")) {
 
             SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
             Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_EXPENDITURES, null);
-            double initial = Double.parseDouble(sharedPreferences.getString(context.getResources().getString(R.string.pref_key_last_synced_balance), "").replace("€", ""));
+            double initial = Double.parseDouble(sharedPreferences.getString(context.getResources()
+                    .getString(R.string.pref_key_last_synced_balance), "0").replace("€", ""));
             double subtotal = initial;
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 for (int i = 0; i < cursor.getCount(); i++) {
-                    subtotal += Double.parseDouble(Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE)));
+                    if(cursor.getString(DatabaseHelper.COL_EXPENDITURES_TYPE).equals("Leap")){
+                        subtotal -= Double.parseDouble(Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE)));
+                    } else if(!cursor.getString(DatabaseHelper.COL_EXPENDITURES_TYPE).equals("cash")){
+                        subtotal += Double.parseDouble(Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE)));
+                    }
                     System.out.println(subtotal);
                     cursor.moveToNext();
+                }
+
+                cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                if(Fares.formatDecimals(subtotal).contains("-") && cursor.getCount() > 0){
+                    databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE,
+                            Database.LeapLogin.ID, getCurrentActiveLeap(databaseHelper), false);
+                    Toast.makeText(context, "You now have a negative Leap balance, please top up in order to make more journeys.", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -205,13 +244,11 @@ public class MainActivity extends AppCompatActivity
                 balance = "€" + balance.replace("€", "").replace("-", "");
             }
 
-            editor = sharedPreferences.edit();
             editor.putString(context.getResources().getString(R.string.pref_key_current_balance), balance).apply();
 
             System.out.println("initial bal " + initial);
             System.out.println("current bal " + balance);
         } else {
-            editor = sharedPreferences.edit();
             editor.putString(context.getResources().getString(R.string.current_leap_balance),
                     context.getResources().getString((R.string.pref_key_last_synced_balance))).apply();
         }
@@ -226,7 +263,7 @@ public class MainActivity extends AppCompatActivity
         }
         cursor.close();
         sqLiteDatabase.close();
-        return "no active leap";
+        return "N/A";
     }
 
     @Override

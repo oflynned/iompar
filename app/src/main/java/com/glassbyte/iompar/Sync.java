@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by ed on 28/10/15.
@@ -60,20 +61,20 @@ public class Sync {
                 setLoaded(false);
                 Document doc;
                 try {
-                    URL url = new URL(Globals.RTPI + globals.getLuasStation(depart));
+                    URL url = new URL(Globals.RTPI_LUAS + globals.getLuasStation(depart));
                     doc = Jsoup.connect(url.toString()).get();
 
-                    System.out.println("got URL");
+                    System.out.println("got URL " + url);
 
                     //green line
                     if (direction.equals(Globals.LineDirection.stephens_green_to_brides_glen) ||
                             direction.equals(Globals.LineDirection.stephens_green_to_sandyford)) {
                         if (stationBeforeSandyford(arrive, globals.greenLineBeforeSandyford)) {
                             System.out.println("towards Sandyford/Bride's Glen");
-                            scrapeData(doc, "Sandyford", "Bride's Glen", depart, arrive);
+                            scrapeData(doc, "Sandyford", "Brides Glen", depart, arrive);
                         } else {
                             System.out.println("towards Bride's Glen");
-                            scrapeData(doc, "Bride's Glen", depart, arrive);
+                            scrapeData(doc, "Brides Glen", depart, arrive);
                         }
                     } else if (direction.equals(Globals.LineDirection.sandyford_to_stephens_green) ||
                             direction.equals(Globals.LineDirection.brides_glen_to_stephens_green)) {
@@ -144,96 +145,33 @@ public class Sync {
      * @param arrive     station the user is going to
      */
     public void scrapeData(Document doc, String endStation, String depart, String arrive) {
-        Elements elements = doc.select("table");
-        endDestinationList.clear();
-        waitingTimeList.clear();
+        Elements location = doc.getElementsByClass("location");
+        Elements time = doc.getElementsByClass("time");
 
-        Elements tableRowElements = elements.select("tr");
-        Element rowCheckEmpty = tableRowElements.get(0);
-        Elements rowItemsCheckEmpty = rowCheckEmpty.select("td");
+        String[] RTPI = new String[location.size() * 2];
 
-        if (rowItemsCheckEmpty.text().equals("No departures found")) {
-            setNextDue(context.getString(R.string.no_departures_found));
-            setArrivalInfo(context.getString(R.string.no_times_found));
-        } else {
-            for (int i = 0; i < tableRowElements.size(); i++) {
-                Element row = tableRowElements.get(i);
-                Elements rowItems = row.select("td");
-
-                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                    if (rowItems.get(j).text().equals(endStation)) {
-                        setChosenEndStation(endStation);
-                        endDestinationList.add(rowItems.get(j).text());
-                        waitingTimeList.add(rowItems.get(j + 1).text());
-                        System.out.println(rowItems.get(j).text());
-                        System.out.println(rowItems.get(j + 1).text());
-                    } else {
-                        setNextDue(context.getString(R.string.unavailable_try_other_line));
-                        setArrivalInfo(context.getString(R.string.unavailable_try_other_line));
-                    }
-                }
-            }
-
-            if (!endDestinationList.isEmpty()) {
-                setNextDue(
-                        context.getString(R.string.origin) + "\n" + depart + "\n" +
-                                context.getString(R.string.destination) + "\n" + arrive);
-                setArrivalInfo(
-                        context.getString(R.string.terminus) + "\n" +  convertEndStation(String.valueOf(endDestinationList.get(0))) + "\n" +
-                                context.getString(R.string.eta) + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                                context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
-                                getChosenEndStation()), depart, arrive, context, "default"));
-
-                //accessing via dialogs
-                setEnumDirection(convertStringToEnum(getChosenEndStation()));
-                System.out.println(getEnumDirection());
-                setDepart(depart);
-                setArrive(arrive);
-
-                setFareClass(fares.getFareType());
-                setFarePayment(fares.getFarePayment());
-            } else {
-                setEnumDirection(Realtime.LuasDirections.NULL);
-                setDepart("Unavailable");
-                setArrive("Unavilable");
-            }
+        for (int i = 0; i < location.size(); i++) {
+            RTPI[i * 2] = location.get(i).text();
+            RTPI[(i * 2) + 1] = time.get(i).text();
         }
-    }
 
-    public void scrapeData(Document doc, String endStation, String endStationAlternate,
-                           String depart, String arrive) {
-        Elements elements = doc.select("table");
         endDestinationList.clear();
         waitingTimeList.clear();
 
-        Elements tableRowElements = elements.select("tr");
-        Element rowCheckEmpty = tableRowElements.get(0);
-        Elements rowItemsCheckEmpty = rowCheckEmpty.select("td");
-
-        if (rowItemsCheckEmpty.text().equals("No departures found")) {
+        if (location.toString().contains("No trams forecast") && location.size() == 1) {
             setNextDue(context.getString(R.string.no_departures_found));
             setArrivalInfo(context.getString(R.string.no_times_found));
         } else {
-            for (int i = 0; i < tableRowElements.size(); i++) {
-                Element row = tableRowElements.get(i);
-                Elements rowItems = row.select("td");
-                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                    if (rowItems.get(j).text().equals(endStation)) {
-                        setChosenEndStation(endStation);
-                        endDestinationList.add(rowItems.get(j).text());
-                        waitingTimeList.add(rowItems.get(j + 1).text());
-                        System.out.println(rowItems.get(j).text());
-                        System.out.println(rowItems.get(j + 1).text());
-                    } else if (rowItems.get(j).text().equals(endStationAlternate)) {
-                        setChosenEndStation(endStationAlternate);
-                        endDestinationList.add(rowItems.get(j).text());
-                        waitingTimeList.add(rowItems.get(j + 1).text());
-                        System.out.println(rowItems.get(j).text());
-                        System.out.println(rowItems.get(j + 1).text());
-                    } else {
-                        setNextDue(context.getString(R.string.unavailable_try_other_line));
-                        setArrivalInfo(context.getString(R.string.unavailable_try_other_line));
-                    }
+            for (int j = 0; j < RTPI.length; j = j + 2) {
+                if (RTPI[j].equals(endStation)) {
+                    setChosenEndStation(endStation);
+                    endDestinationList.add(RTPI[j]);
+                    waitingTimeList.add(RTPI[j + 1]);
+                    System.out.println(RTPI[j]);
+                    System.out.println(RTPI[j + 1]);
+                } else {
+                    setNextDue(context.getString(R.string.unavailable_try_other_line));
+                    setArrivalInfo(context.getString(R.string.unavailable_try_other_line));
                 }
             }
 
@@ -260,96 +198,158 @@ public class Sync {
     }
 
     public void scrapeData(Document doc, String endStation, String endStationAlternate,
-                           String endStationSecondAlternate, String depart, String arrive) {
-        Elements elements = doc.select("table");
+                           String depart, String arrive) {
+        Elements location = doc.getElementsByClass("location");
+        Elements time = doc.getElementsByClass("time");
+
+        String[] RTPI = new String[location.size() * 2];
+
+        for (int i = 0; i < location.size(); i++) {
+            RTPI[i * 2] = location.get(i).text();
+            RTPI[(i * 2) + 1] = time.get(i).text();
+        }
+
         endDestinationList.clear();
         waitingTimeList.clear();
 
-        Elements tableRowElements = elements.select("tr");
-        Element rowCheckEmpty = tableRowElements.get(0);
-        Elements rowItemsCheckEmpty = rowCheckEmpty.select("td");
-
-        if (rowItemsCheckEmpty.text().equals("No departures found")) {
+        if (location.toString().contains("No trams forecast") && location.size() == 1) {
             setNextDue(context.getString(R.string.no_departures_found));
             setArrivalInfo(context.getString(R.string.no_times_found));
         } else {
-            for (int i = 0; i < tableRowElements.size(); i++) {
-                Element row = tableRowElements.get(i);
-                Elements rowItems = row.select("td");
-
-                for (int j = 1; j < rowItems.size() - 1; j = j + 2) {
-                    if (rowItems.get(j).text().equals(endStation)) {
-                        setChosenEndStation(endStation);
-                        endDestinationList.add(rowItems.get(j).text());
-                        waitingTimeList.add(rowItems.get(j + 1).text());
-                        System.out.println(rowItems.get(j).text());
-                        System.out.println(rowItems.get(j + 1).text());
-                    } else if (rowItems.get(j).text().equals(endStationAlternate)) {
-                        setChosenEndStation(endStationAlternate);
-                        endDestinationList.add(rowItems.get(j).text());
-                        waitingTimeList.add(rowItems.get(j + 1).text());
-                        System.out.println(rowItems.get(j).text());
-                        System.out.println(rowItems.get(j + 1).text());
-                    } else if (rowItems.get(j).text().equals(endStationSecondAlternate)) {
-                        setChosenEndStation(endStationSecondAlternate);
-                        endDestinationList.add(rowItems.get(j).text());
-                        waitingTimeList.add(rowItems.get(j + 1).text());
-                        System.out.println(rowItems.get(j).text());
-                        System.out.println(rowItems.get(j + 1).text());
-                    } else {
-                        setNextDue(context.getString(R.string.unavailable_try_other_line));
-                        setArrivalInfo(context.getString(R.string.unavailable_try_other_line));
-                    }
+            for (int j = 0; j < RTPI.length; j = j + 2) {
+                if (RTPI[j].equals(endStation)) {
+                    setChosenEndStation(endStation);
+                    endDestinationList.add(RTPI[j]);
+                    waitingTimeList.add(RTPI[j + 1]);
+                    System.out.println(RTPI[j]);
+                    System.out.println(RTPI[j + 1]);
+                } else if (RTPI[j].equals(endStationAlternate)) {
+                    setChosenEndStation(endStationAlternate);
+                    endDestinationList.add(RTPI[j]);
+                    waitingTimeList.add(RTPI[j + 1]);
+                    System.out.println(RTPI[j]);
+                    System.out.println(RTPI[j + 1]);
+                } else {
+                    setNextDue(context.getString(R.string.unavailable_try_other_line));
+                    setArrivalInfo(context.getString(R.string.unavailable_try_other_line));
                 }
             }
-            if (!endDestinationList.isEmpty()) {
-                setNextDue(
-                        context.getString(R.string.origin) + ": " + "\n" + depart + "\n" +
-                                context.getString(R.string.destination) + ": " + "\n" + arrive);
-                setArrivalInfo(
-                        context.getString(R.string.terminus) + "\n" +  convertEndStation(String.valueOf(endDestinationList.get(0))) + "\n" +
-                                context.getString(R.string.eta) + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
-                                context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
-                                getChosenEndStation()), depart, arrive, context, "default"));
+        }
 
-                //accessing via dialogs
-                setEnumDirection(convertStringToEnum(getChosenEndStation()));
-                System.out.println(getChosenEndStation());
-                System.out.println(getEnumDirection());
-                setDepart(depart);
-                setArrive(arrive);
+        if (!endDestinationList.isEmpty()) {
+            setNextDue(
+                    context.getString(R.string.origin) + "\n" + depart + "\n" +
+                            context.getString(R.string.destination) + "\n" + arrive);
+            setArrivalInfo(
+                    context.getString(R.string.terminus) + "\n" + convertEndStation(String.valueOf(endDestinationList.get(0))) + "\n" +
+                            context.getString(R.string.eta) + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                            context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
+                            getChosenEndStation()), depart, arrive, context, "default"));
 
-                setFareClass(fares.getFareType());
-                setFarePayment(fares.getFarePayment());
+            //accessing via dialogs
+            setEnumDirection(convertStringToEnum(getChosenEndStation()));
+            System.out.println(getEnumDirection());
+            setDepart(depart);
+            setArrive(arrive);
+
+            setFareClass(fares.getFareType());
+            setFarePayment(fares.getFarePayment());
+        }
+    }
+
+
+    public void scrapeData(Document doc, String endStation, String endStationAlternate,
+                           String endStationSecondAlternate, String depart, String arrive) {
+        Elements location = doc.getElementsByClass("location");
+        Elements time = doc.getElementsByClass("time");
+
+        String[] RTPI = new String[location.size() * 2];
+
+        for (int i = 0; i < location.size(); i++) {
+            RTPI[i * 2] = location.get(i).text();
+            RTPI[(i * 2) + 1] = time.get(i).text();
+        }
+
+        endDestinationList.clear();
+        waitingTimeList.clear();
+
+        if (location.toString().contains("No trams forecast") && location.size() == 1) {
+            setNextDue(context.getString(R.string.no_departures_found));
+            setArrivalInfo(context.getString(R.string.no_times_found));
+        } else {
+            for (int j = 0; j < RTPI.length; j = j + 2) {
+                if (RTPI[j].equals(endStation)) {
+                    setChosenEndStation(endStation);
+                    endDestinationList.add(RTPI[j]);
+                    waitingTimeList.add(RTPI[j + 1]);
+                    System.out.println(RTPI[j]);
+                    System.out.println(RTPI[j + 1]);
+                } else if (RTPI[j].equals(endStationAlternate)) {
+                    setChosenEndStation(endStationAlternate);
+                    endDestinationList.add(RTPI[j]);
+                    waitingTimeList.add(RTPI[j + 1]);
+                    System.out.println(RTPI[j]);
+                    System.out.println(RTPI[j + 1]);
+                } else if (RTPI[j].equals(endStationSecondAlternate)) {
+                    setChosenEndStation(endStationSecondAlternate);
+                    endDestinationList.add(RTPI[j]);
+                    waitingTimeList.add(RTPI[j + 1]);
+                    System.out.println(RTPI[j]);
+                    System.out.println(RTPI[j + 1]);
+                } else {
+                    setNextDue(context.getString(R.string.unavailable_try_other_line));
+                    setArrivalInfo(context.getString(R.string.unavailable_try_other_line));
+                }
             }
+        }
+
+        if (!endDestinationList.isEmpty()) {
+            setNextDue(
+                    context.getString(R.string.origin) + ": " + "\n" + depart + "\n" +
+                            context.getString(R.string.destination) + ": " + "\n" + arrive);
+            setArrivalInfo(
+                    context.getString(R.string.terminus) + "\n" + convertEndStation(String.valueOf(endDestinationList.get(0))) + "\n" +
+                            context.getString(R.string.eta) + getTimeFormat(String.valueOf(waitingTimeList.get(0))) + "\n" +
+                            context.getString(R.string.cost) + ": €" + fares.getZoneTraversal(convertStringToEnum(
+                            getChosenEndStation()), depart, arrive, context, "default"));
+
+            //accessing via dialogs
+            setEnumDirection(convertStringToEnum(getChosenEndStation()));
+            System.out.println(getChosenEndStation());
+            System.out.println(getEnumDirection());
+            setDepart(depart);
+            setArrive(arrive);
+
+            setFareClass(fares.getFareType());
+            setFarePayment(fares.getFarePayment());
         }
     }
 
     public Realtime.LuasDirections convertStringToEnum(String endStation) {
         System.out.println(endStation);
-        if(endStation.equals("Tallaght") || endStation.equals("Tamhlacht") || endStation.equals(context.getString(R.string.tallaght))) {
+        if (endStation.equals("Tallaght") || endStation.equals("Tamhlacht") || endStation.equals(context.getString(R.string.tallaght))) {
             return Realtime.LuasDirections.TALLAGHT;
-        } else if(endStation.equals("Saggart") || endStation.equals("Teach Sagard") || endStation.equals(context.getString(R.string.saggart))) {
+        } else if (endStation.equals("Saggart") || endStation.equals("Teach Sagard") || endStation.equals(context.getString(R.string.saggart))) {
             return Realtime.LuasDirections.SAGGART;
-        } else if(endStation.equals("Connolly") || endStation.equals("Stáisiúin Uí Chonghaile") || endStation.equals(context.getString(R.string.connolly))) {
+        } else if (endStation.equals("Connolly") || endStation.equals("Stáisiúin Uí Chonghaile") || endStation.equals(context.getString(R.string.connolly))) {
             return Realtime.LuasDirections.CONNOLLY;
-        } else if(endStation.equals("The Point") || endStation.equals("Iosta na Rinne") || endStation.equals(context.getString(R.string.the_point))) {
+        } else if (endStation.equals("The Point") || endStation.equals("Iosta na Rinne") || endStation.equals(context.getString(R.string.the_point))) {
             return Realtime.LuasDirections.POINT;
-        } else if(endStation.equals("St. Stephen's Green") || endStation.equals("Faiche Stiabhna") || endStation.equals(context.getString(R.string.stephens_green))) {
+        } else if (endStation.equals("St. Stephen's Green") || endStation.equals("Faiche Stiabhna") || endStation.equals(context.getString(R.string.stephens_green))) {
             return Realtime.LuasDirections.STEPHENS_GREEN;
-        } else if(endStation.equals("Sandyford") || endStation.equals("Áth an Ghainimh") || endStation.equals(context.getString(R.string.sandyford))) {
+        } else if (endStation.equals("Sandyford") || endStation.equals("Áth an Ghainimh") || endStation.equals(context.getString(R.string.sandyford))) {
             return Realtime.LuasDirections.SANDYFORD;
-        } else if(endStation.equals("Bride's Glen") || endStation.equals("Gleann Bhríde") || endStation.equals(context.getString(R.string.brides_glen))) {
+        } else if (endStation.equals("Brides Glen") || endStation.equals("Gleann Bhríde") || endStation.equals(context.getString(R.string.brides_glen))) {
             return Realtime.LuasDirections.BRIDES_GLEN;
-        } else if(endStation.equals("Heuston") || endStation.equals("Heuston") || endStation.equals(context.getString(R.string.heuston))) {
+        } else if (endStation.equals("Heuston") || endStation.equals("Heuston") || endStation.equals(context.getString(R.string.heuston))) {
             return Realtime.LuasDirections.HEUSTON;
         } else {
             return null;
         }
     }
 
-    public String convertEndStation(String endStation){
-        switch (endStation){
+    public String convertEndStation(String endStation) {
+        switch (endStation) {
             case "Tallaght":
                 return context.getString(R.string.tallaght);
             case "Saggart":
@@ -362,7 +362,7 @@ public class Sync {
                 return context.getString(R.string.heuston);
             case "Sandyford":
                 return context.getString(R.string.sandyford);
-            case "Bride's Glen":
+            case "Brides Glen":
                 return context.getString(R.string.brides_glen);
             case "St. Stephen's Green":
                 return context.getString(R.string.stephens_green);
@@ -376,9 +376,9 @@ public class Sync {
         switch (time) {
             case "Unavailable":
                 return context.getString(R.string.unavailable);
-            case "Due":
+            case "DUE":
                 return context.getString(R.string.arriving_soon);
-            case "1 mins":
+            case "1":
                 return context.getString(R.string.one_min_away);
             default:
                 return time.replaceAll("[^0-9]", "") + " " + context.getString(R.string.mins_away);
