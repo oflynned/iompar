@@ -98,11 +98,13 @@ public class MainActivity extends AppCompatActivity
         StrictMode.setThreadPolicy(policy);
 
         //ayyy lmao our income
-        //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
-        //asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
+        asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
-                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("")){
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").equals("unsynced") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("unsynced")){
             getCurrentBalance(databaseHelper, sharedPreferences, this);
         }
 
@@ -138,7 +140,9 @@ public class MainActivity extends AppCompatActivity
                 .getString(R.string.pref_key_irish), false), getResources());
 
         if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
-                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("")){
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").equals("unsynced") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("unsynced")){
             getCurrentBalance(databaseHelper, sharedPreferences, this);
         }
         setNavigationBarProfile();
@@ -205,12 +209,17 @@ public class MainActivity extends AppCompatActivity
     public static void getCurrentBalance(DatabaseHelper databaseHelper, SharedPreferences sharedPreferences, Context context){
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        if(!sharedPreferences.getString(context.getResources().getString(R.string.pref_key_last_synced_balance), "").equals("")) {
+        if(!sharedPreferences.getString(context.getResources().getString(R.string.pref_key_last_synced_balance), "").equals("") ||
+                !sharedPreferences.getString(context.getResources().getString(R.string.pref_key_last_synced_balance), "").equals("unsynced")) {
 
             SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
             Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_EXPENDITURES, null);
+            //if(sharedPreferences.getString(context.getString(R.string.pref_key_last_synced_balance),"").equals("unsynced") ||
+            //        sharedPreferences.getString(context.getString(R.string.pref_key_current_balance),"").equals(""))
+
+
             double initial = Double.parseDouble(sharedPreferences.getString(context.getResources()
-                    .getString(R.string.pref_key_last_synced_balance), "0").replace("€", ""));
+                    .getString(R.string.pref_key_last_synced_balance), "unsynced").replace("€", ""));
             double subtotal = initial;
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();

@@ -41,20 +41,25 @@ public class Leap extends WebViewClient {
      */
     @SuppressLint("SetJavaScriptEnabled")
     public void scrape() {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        cursor.moveToFirst();
+        final String username = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_USER_NAME);
+        final String password = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_PASSWORD);
+        databaseHelper.close();
+        sqLiteDatabase.close();
+        cursor.close();
 
         //retrieve details of currently active leap card
-
         setSynced(false);
         final WebView webView = new WebView(context);
         webView.loadUrl(Globals.LEAP_LOGIN);
 
         Toast.makeText(context, R.string.connecting, Toast.LENGTH_LONG).show();
 
-        //add following two lines
-        webView.getSettings().setAppCacheEnabled(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setDatabaseEnabled(true);
 
         //are we logged in?
         webView.setWebViewClient(new WebViewClient() {
@@ -77,19 +82,15 @@ public class Leap extends WebViewClient {
                             @Override
                             public void onPageFinished(WebView view, String url) {
                                 super.onPageFinished(view, url);
-                                DatabaseHelper databaseHelper = new DatabaseHelper(context);
-                                SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-                                Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-                                cursor.moveToFirst();
+
+                                System.out.println(username + " " + password);
 
                                 webView.loadUrl("javascript: {" +
-                                        "document.getElementById('ContentPlaceHolder1_UserName').value = '" + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_USER_NAME) + "';" +
-                                        "document.getElementById('ContentPlaceHolder1_Password').value = '" + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_PASSWORD) + "';" +
+                                        "document.getElementById('ContentPlaceHolder1_UserName').value = '" + username + "';" +
+                                        "document.getElementById('ContentPlaceHolder1_Password').value = '" + password + "';" +
                                         "document.getElementById('ContentPlaceHolder1_btnlogin').click();" +
                                         "};");
 
-                                sqLiteDatabase.close();
-                                cursor.close();
                                 //now scrape redirect data on successful login
                                 if (webView.getTitle().equals("My Leap Card Overview")) {
                                     System.out.println("logged in");
@@ -141,6 +142,7 @@ public class Leap extends WebViewClient {
                                         e.printStackTrace();
                                     }
                                 } else {
+                                    System.out.println("REPORTED TITLE " + webView.getTitle());
                                     System.out.println("not logged in");
                                 }
                             }

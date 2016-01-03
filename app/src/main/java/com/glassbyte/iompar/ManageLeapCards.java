@@ -108,7 +108,7 @@ public class ManageLeapCards extends Fragment {
                                                     databaseHelper.insertRecord(
                                                             Database.LeapLogin.TABLE_NAME,
                                                             null, null, null, null, null, null, 0, 0, 0, 0, 0, false,
-                                                            addLeapCard.getNumberField(), addLeapCard.getUsernameField(),
+                                                            addLeapCard.getUsernameField(), addLeapCard.getNumberField(),
                                                             addLeapCard.getEmailField(), addLeapCard.getPasswordField(), false);
                                                     databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                                                     populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);

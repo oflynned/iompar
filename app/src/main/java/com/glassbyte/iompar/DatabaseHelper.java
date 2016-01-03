@@ -50,8 +50,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int COL_EXPENDITURES_EXPENDITURE = 4;
 
     public static final int COL_LEAP_LOGIN_ID = 0;
-    public static final int COL_LEAP_LOGIN_USER_NAME = 1;
-    public static final int COL_LEAP_LOGIN_CARD_NUMBER = 2;
+    public static final int COL_LEAP_LOGIN_CARD_NUMBER = 1;
+    public static final int COL_LEAP_LOGIN_USER_NAME = 2;
     public static final int COL_LEAP_LOGIN_EMAIL = 3;
     public static final int COL_LEAP_LOGIN_PASSWORD = 4;
     public static final int COL_LEAP_LOGIN_IS_ACTIVE = 5;

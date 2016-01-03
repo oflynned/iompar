@@ -35,8 +35,6 @@ public class Realtime extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
     FloatingActionButton addExpenditureFab;
 
-    DatabaseHelper databaseHelper;
-
     AsynchronousActivity asynchronousActivity;
 
     TextView leftPanel, rightPanel;
@@ -252,8 +250,6 @@ public class Realtime extends Fragment {
                 }
             }
         });
-
-        databaseHelper = new DatabaseHelper(getContext());
 
         addExpenditureFab = (FloatingActionButton) view.findViewById(R.id.add_expenditure_fab);
         addExpenditureFab.hide();

@@ -637,6 +637,7 @@ public class Fares extends Fragment {
                 } else {
                     setFarePayment(FarePayment.CASH);
                 }
+                databaseHelper.close();
                 sqLiteDatabase.close();
                 cursor.close();
                 break;
@@ -1476,6 +1477,7 @@ public class Fares extends Fragment {
                 break;
         }
 
+        databaseHelper.close();
         sqLiteDatabase.close();
         if (cursor != null)
             cursor.close();

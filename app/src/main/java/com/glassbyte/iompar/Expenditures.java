@@ -404,6 +404,7 @@ public class Expenditures extends Fragment {
             cursor.moveToNext();
         }
 
+        databaseHelper.close();
         cursor.close();
         readDb.close();
         tableLayout.invalidate();

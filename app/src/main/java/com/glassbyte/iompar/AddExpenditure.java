@@ -519,7 +519,7 @@ public class AddExpenditure extends DialogFragment {
             leapSwitch.setChecked(false);
             cashSwitch.setChecked(true);
         }
-
+        databaseHelper.close();
         return builder.create();
     }
 
@@ -548,6 +548,7 @@ public class AddExpenditure extends DialogFragment {
                 setWeeklyCap(0);
             }
         }
+        databaseHelper.close();
         cursor.close();
         sqLiteDatabase.close();
     }
