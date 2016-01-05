@@ -226,7 +226,7 @@
     <string name="amended_balance_neg">Iarmhéid leasaithe -€</string>
     <string name="amended_balance_pos">Iarmhéid leasaithe €</string>
     <string name="bal_may_not_be_accurate">Tá seans ann nach mbeidh an t–iarmhéid seo cruinn toisc go nuashonraítear iarmhéideanna ar líne ar Leap.ie gach aon 24–48 uair.</string>
-    <string name="bal_updated_successfully">Nuashonraíodh an t-iarmhéid go rathúil (</string>
+    <string name="bal_updated_successfully">Nuashonraíodh an t-iarmhéid go rathúil</string>
     <string name="connection_timed_out">Am istigh an cheangail</string>
     <string name="differing_balances">Iarmhéideanna Difriúla i Sioncronú</string>
     <string name="first_sync_confirmation_dialog">"Is é seo an chéad am a shioncronaigh tú an cárta Leap seo. Taispeánann do chúntas ar líne gurb é iarmhéid an chárta Leap seo ná "</string>

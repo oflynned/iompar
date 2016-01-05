@@ -111,9 +111,16 @@ public class ManageLeapCards extends Fragment {
                                                             null, null, null, null, null, null, 0, 0, 0, 0, 0, false,
                                                             addLeapCard.getUsernameField(), addLeapCard.getNumberField(),
                                                             addLeapCard.getEmailField(), addLeapCard.getPasswordField(), false);
-                                                    databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
+                                                    databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE,
+                                                            Database.LeapLogin.ID, 0, true);
+
                                                     populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
+                                                    databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
                                                     Toast.makeText(getContext(), R.string.leap_added_successfully, Toast.LENGTH_SHORT).show();
+
+                                                    AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
+                                                    asynchronousLeapChecking.execute();
+
                                                 }
                                             }
                                         }
@@ -305,7 +312,7 @@ public class ManageLeapCards extends Fragment {
 
                         new AlertDialog.Builder(getContext())
                                 .setTitle(getString(R.string.what_would_you_like_to_do))
-                                .setMessage(getString(R.string.edit_current_leap) + MainActivity.getCurrentActiveLeap(databaseHelper) + getString(R.string.enter_top_up_amount))
+                                .setMessage(getString(R.string.edit_current_leap) + MainActivity.getActiveLeapNumber(databaseHelper) + getString(R.string.enter_top_up_amount))
                                 .setPositiveButton(getString(R.string.topup), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
