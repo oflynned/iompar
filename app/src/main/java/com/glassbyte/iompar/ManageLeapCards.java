@@ -287,8 +287,8 @@ public class ManageLeapCards extends Fragment {
                     public boolean onLongClick(View v) {
 
                         new AlertDialog.Builder(getContext())
-                                .setTitle("What would you like to do?")
-                                .setMessage("Here you can top up or edit the currently selected card?")
+                                .setTitle(getString(R.string.what_would_you_like_to_do))
+                                .setMessage(getString(R.string.edit_current_leap) + MainActivity.getCurrentActiveLeap(databaseHelper) + getString(R.string.enter_top_up_amount))
                                 .setPositiveButton(getString(R.string.topup), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -305,7 +305,7 @@ public class ManageLeapCards extends Fragment {
                                                     Toast.makeText(getActivity(), getString(R.string.topped_up_by) + Fares.formatDecimals(String.valueOf(topUpDialog.getTopUp())) +
                                                                     getString(R.string.on) + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                             Toast.LENGTH_LONG).show();
-                                                    if(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_IS_ACTIVE).equals("0")){
+                                                    if (cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_IS_ACTIVE).equals("0")) {
                                                         databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE,
                                                                 Database.LeapLogin.ID, row, true);
                                                     }
@@ -314,12 +314,12 @@ public class ManageLeapCards extends Fragment {
                                                     updateLocalBalance(databaseHelper, "add topup", topUpDialog.getTopUp(), 0);
 
                                                     System.out.println(sharedPreferences.getString(getString(R.string.pref_key_current_balance), ""));
-                                                    System.out.println(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),""));
+                                                    System.out.println(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
 
                                                     tableLayout.invalidate();
                                                     populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
                                                     Toast.makeText(getActivity(), getString(R.string.bal_updated_successfully) +
-                                                                    " (" +  cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + ")",
+                                                                    " (" + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + ")",
                                                             Toast.LENGTH_SHORT).show();
 
                                                 }
@@ -564,6 +564,11 @@ public class ManageLeapCards extends Fragment {
                     timer += Globals.ONE_SECOND;
                     Thread.currentThread();
                     Thread.sleep(Globals.ONE_SECOND);
+                    if(leap.getIncorrectDetails() >= 3){
+                        isIncomplete = true;
+                        leap.setSynced(true);
+                        break;
+                    }
                     if (timer > Globals.SIXTY_SECONDS * 2) {
                         isIncomplete = true;
                         leap.setSynced(true);

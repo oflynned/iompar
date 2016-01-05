@@ -256,5 +256,10 @@
     <string name="overall_exp">Caitheamh Iomlán</string>
     <string name="add_leap_cheaper_prices_warning">Cuir cárta Leap leis led\' thoil chun táillí níos saoire a aimsiú</string>
     <string name="negative_balance_warning">Tá iarmhéid Leap diúltach agat anois, breisigh do chreidmheas chun taistil níos mó</string>
+    <string name="edit">Cuir in Eagar</string>
+    <string name="edit_current_leap">Is féidir leat an cárta Leap reatha roghnaithe a chur in eagar (</string>
+    <string name="enter_top_up_amount">) nó an méid creidmheasa a iontráil a bhreisíodh do chárta.</string>
+    <string name="no_active_leap_add_enable">Easpa chárta Leap gníomhaigh - cuir ar chumas nó leis led\' thoil</string>
+    <string name="what_would_you_like_to_do">Céard is mian leat a dhéanamh?</string>
 
 </resources>

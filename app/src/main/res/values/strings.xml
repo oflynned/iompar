@@ -282,4 +282,8 @@
     <string name="negative_balance_warning">Your Leap balance is negative, please top up in order to make more journeys</string>
     <string name="add_leap_cheaper_prices_warning">Please add a Leap card in order to avail of cheaper fares</string>
     <string name="edit">Edit</string>
+    <string name="no_active_leap_add_enable">No active Leap cards - please enable or add one</string>
+    <string name="what_would_you_like_to_do">What would you like to do?</string>
+    <string name="edit_current_leap">You can edit the currently selected Leap card (</string>
+    <string name="enter_top_up_amount">) or enter the amount of money topped up by.</string>
 </resources>

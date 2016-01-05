@@ -428,6 +428,11 @@ public class MainActivity extends AppCompatActivity
                     try {
                         timer += Globals.ONE_SECOND;
                         Thread.sleep(Globals.ONE_SECOND);
+                        if(leap.getIncorrectDetails() >= 3){
+                            isIncomplete = true;
+                            leap.setSynced(true);
+                            break;
+                        }
                         if (timer > Globals.SIXTY_SECONDS * 2) {
                             isIncomplete = true;
                             leap.setSynced(true);

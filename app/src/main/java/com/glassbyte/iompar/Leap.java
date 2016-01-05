@@ -146,6 +146,7 @@ public class Leap extends WebViewClient {
                                     } else {
                                         System.out.println("REPORTED TITLE " + webView.getTitle());
                                         System.out.println("not logged in");
+                                        incorrectDetails++;
                                     }
                                 }
                             });
@@ -213,7 +214,7 @@ public class Leap extends WebViewClient {
             webView.clearCache(true);
             webView.clearHistory();
         } else {
-            Toast.makeText(context, "No active Leap cards - please enable or add one", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.no_active_leap_add_enable, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -225,4 +226,5 @@ public class Leap extends WebViewClient {
     }
     public boolean isSynced(){return synced;}
     public void setSynced(boolean synced){this.synced=synced;}
+    public int getIncorrectDetails(){return incorrectDetails;}
 }
