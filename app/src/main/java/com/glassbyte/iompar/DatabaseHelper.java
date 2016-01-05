@@ -292,6 +292,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         writeDb.insert(Database.Expenditures.TABLE_NAME, null, contentValues);
         writeDb.close();
+
+        System.out.println("Inserted into table " + Database.Expenditures.TABLE_NAME);
+        printTableContents(Database.Expenditures.TABLE_NAME);
     }
 
     public void insertRecord(String tableName,

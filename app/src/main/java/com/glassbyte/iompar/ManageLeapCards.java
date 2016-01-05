@@ -67,7 +67,7 @@ public class ManageLeapCards extends Fragment {
                 .addItem(R.drawable.ic_add_white_18dp)
                 .addItem(R.drawable.ic_clear_white_18dp)
                 .addItem(R.drawable.ic_input_white_18dp)
-                .addItem(R.drawable.ic_attach_money_white_18dp)
+                .addItem(R.drawable.ic_autorenew_white_18dp)
                 .attach(filterMenuLayout)
                 .withListener(new FilterMenu.OnMenuChangeListener() {
                     @Override
@@ -151,29 +151,10 @@ public class ManageLeapCards extends Fragment {
                                 AsynchronousLeapBalance asynchronousLeapBalance = new AsynchronousLeapBalance(getContext());
                                 asynchronousLeapBalance.execute();
                                 break;
-                            //top up
+                            //force sync
                             case 3:
-                                final TopUpDialog topUpDialog = new TopUpDialog();
-                                topUpDialog.show(getActivity().getFragmentManager(), "TopUpListener");
-                                topUpDialog.setSetTopUpDialogListener(new TopUpDialog.SetTopUpListener() {
-                                    @Override
-                                    public void onDoneClick(android.app.DialogFragment dialog) {
-                                        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-                                        Cursor cursor = sqLiteDatabase.rawQuery(
-                                                DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-                                        if (cursor.getCount() > 0) {
-                                            cursor.moveToFirst();
-                                            Toast.makeText(getActivity(), getString(R.string.topped_up_by) + Fares.formatDecimals(String.valueOf(topUpDialog.getTopUp())) +
-                                                            getString(R.string.on) + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
-                                                    Toast.LENGTH_LONG).show();
-                                            updateLocalBalance(databaseHelper, "add topup", topUpDialog.getTopUp(), 0);
-                                        }
-                                        databaseHelper.printTableContents(Database.LeapBalance.TABLE_NAME);
-                                        cursor.close();
-                                        sqLiteDatabase.close();
-                                    }
-                                });
-                                break;
+                                AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
+                                asynchronousLeapChecking.execute();
                         }
                     }
 
@@ -313,69 +294,122 @@ public class ManageLeapCards extends Fragment {
                 tableRow.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        //create a dialog here to modify leap details for given row
-                        final EditLeapCard editLeapCard = new EditLeapCard();
 
-                        setData(row, DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER);
-                        editLeapCard.setNumberField(getData());
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("What would you like to do?")
+                                .setMessage("Here you can top up or edit the currently selected card?")
+                                .setPositiveButton(getString(R.string.topup), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        final TopUpDialog topUpDialog = new TopUpDialog();
+                                        topUpDialog.show(getActivity().getFragmentManager(), "TopUpListener");
+                                        topUpDialog.setSetTopUpDialogListener(new TopUpDialog.SetTopUpListener() {
+                                            @Override
+                                            public void onDoneClick(android.app.DialogFragment dialog) {
+                                                SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+                                                Cursor cursor = sqLiteDatabase.rawQuery(
+                                                        DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                                                if (cursor.getCount() > 0) {
+                                                    cursor.moveToFirst();
+                                                    Toast.makeText(getActivity(), getString(R.string.topped_up_by) + Fares.formatDecimals(String.valueOf(topUpDialog.getTopUp())) +
+                                                                    getString(R.string.on) + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
+                                                            Toast.LENGTH_LONG).show();
+                                                    if(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_IS_ACTIVE).equals("0")){
+                                                        databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE,
+                                                                Database.LeapLogin.ID, row, true);
+                                                    }
+                                                    System.out.println("TOPUP " + topUpDialog.getTopUp());
+                                                    databaseHelper.printTableContents(Database.Expenditures.TABLE_NAME);
+                                                    updateLocalBalance(databaseHelper, "add topup", topUpDialog.getTopUp(), 0);
 
-                        setData(row, DatabaseHelper.COL_LEAP_LOGIN_USER_NAME);
-                        editLeapCard.setUsernameField(getData());
+                                                    System.out.println(sharedPreferences.getString(getString(R.string.pref_key_current_balance), ""));
+                                                    System.out.println(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),""));
 
-                        setData(row, DatabaseHelper.COL_LEAP_LOGIN_EMAIL);
-                        editLeapCard.setEmailField(getData());
+                                                    tableLayout.invalidate();
+                                                    populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
+                                                    Toast.makeText(getActivity(), getString(R.string.bal_updated_successfully) +
+                                                                    " (" +  cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER) + ")",
+                                                            Toast.LENGTH_SHORT).show();
 
-                        setData(row, DatabaseHelper.COL_LEAP_LOGIN_PASSWORD);
-                        editLeapCard.setPasswordField(getData());
-
-                        editLeapCard.show(ManageLeapCards.this.getFragmentManager(), "setEditDialogListener");
-                        editLeapCard.setEditLeapDialogListener(new EditLeapCard.setEditLeapListener() {
-                            @Override
-                            public void onDoneClick(DialogFragment dialogFragment) {
-
-                                if (editLeapCard.getNumberField().matches("") &&
-                                        editLeapCard.getUsernameField().matches("") &&
-                                        editLeapCard.getEmailField().matches("") &&
-                                        editLeapCard.getPasswordField().matches("")) {
-                                    Toast.makeText(getActivity(), R.string.complete_all_fields,
-                                            Toast.LENGTH_SHORT).show();
-                                } else {
-                                    if (editLeapCard.getNumberField().matches("")) {
-                                        Toast.makeText(getActivity(), R.string.input_leap_number,
-                                                Toast.LENGTH_SHORT).show();
+                                                }
+                                                MainActivity.getCurrentBalance(databaseHelper, sharedPreferences, getContext());
+                                                databaseHelper.close();
+                                                cursor.close();
+                                                sqLiteDatabase.close();
+                                            }
+                                        });
                                     }
-                                    if (editLeapCard.getUsernameField().matches("")) {
-                                        Toast.makeText(getActivity(), R.string.input_username,
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                    if (editLeapCard.getEmailField().matches("")) {
-                                        Toast.makeText(getActivity(), R.string.input_email,
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                    if (editLeapCard.getPasswordField().matches("")) {
-                                        Toast.makeText(getActivity(), R.string.input_password,
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                    if (!editLeapCard.getNumberField().matches("")
-                                            && !editLeapCard.getUsernameField().matches("")
-                                            && !editLeapCard.getEmailField().matches("")
-                                            && !editLeapCard.getPasswordField().matches("")) {
+                                })
+                                .setNegativeButton(getString(R.string.edit), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //create a dialog here to modify leap details for given row
+                                        final EditLeapCard editLeapCard = new EditLeapCard();
 
-                                        databaseHelper.modifyLeapCard(
-                                                row,
-                                                editLeapCard.getNumberField(),
-                                                editLeapCard.getUsernameField(),
-                                                editLeapCard.getEmailField(),
-                                                editLeapCard.getPasswordField());
-                                        databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
-                                        tableLayout.invalidate();
-                                        populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
-                                        Toast.makeText(getActivity(), R.string.leap_modified_successfully,
-                                                Toast.LENGTH_SHORT).show();
+                                        setData(row, DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER);
+                                        editLeapCard.setNumberField(getData());
+
+                                        setData(row, DatabaseHelper.COL_LEAP_LOGIN_USER_NAME);
+                                        editLeapCard.setUsernameField(getData());
+
+                                        setData(row, DatabaseHelper.COL_LEAP_LOGIN_EMAIL);
+                                        editLeapCard.setEmailField(getData());
+
+                                        setData(row, DatabaseHelper.COL_LEAP_LOGIN_PASSWORD);
+                                        editLeapCard.setPasswordField(getData());
+
+                                        editLeapCard.show(ManageLeapCards.this.getFragmentManager(), "setEditDialogListener");
+                                        editLeapCard.setEditLeapDialogListener(new EditLeapCard.setEditLeapListener() {
+                                            @Override
+                                            public void onDoneClick(DialogFragment dialogFragment) {
+
+                                                if (editLeapCard.getNumberField().matches("") &&
+                                                        editLeapCard.getUsernameField().matches("") &&
+                                                        editLeapCard.getEmailField().matches("") &&
+                                                        editLeapCard.getPasswordField().matches("")) {
+                                                    Toast.makeText(getActivity(), R.string.complete_all_fields,
+                                                            Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    if (editLeapCard.getNumberField().matches("")) {
+                                                        Toast.makeText(getActivity(), R.string.input_leap_number,
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    if (editLeapCard.getUsernameField().matches("")) {
+                                                        Toast.makeText(getActivity(), R.string.input_username,
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    if (editLeapCard.getEmailField().matches("")) {
+                                                        Toast.makeText(getActivity(), R.string.input_email,
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    if (editLeapCard.getPasswordField().matches("")) {
+                                                        Toast.makeText(getActivity(), R.string.input_password,
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    if (!editLeapCard.getNumberField().matches("")
+                                                            && !editLeapCard.getUsernameField().matches("")
+                                                            && !editLeapCard.getEmailField().matches("")
+                                                            && !editLeapCard.getPasswordField().matches("")) {
+
+                                                        databaseHelper.modifyLeapCard(
+                                                                row,
+                                                                editLeapCard.getNumberField(),
+                                                                editLeapCard.getUsernameField(),
+                                                                editLeapCard.getEmailField(),
+                                                                editLeapCard.getPasswordField());
+                                                        databaseHelper.printTableContents(Database.LeapLogin.TABLE_NAME);
+                                                        tableLayout.invalidate();
+                                                        populateTable(DatabaseHelper.SELECT_ALL_LEAP_LOGIN);
+                                                        Toast.makeText(getActivity(), R.string.leap_modified_successfully,
+                                                                Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            }
+                                        });
                                     }
-                                }
-                            }
-                        });
+                                })
+                                .create()
+                                .show();
                         return true;
                     }
                 });
@@ -431,6 +465,7 @@ public class ManageLeapCards extends Fragment {
     public static void updateLocalBalance(DatabaseHelper databaseHelper, String updateType, double amount, int id) {
         switch (updateType) {
             case "add topup":
+                System.out.println("adding topup");
                 databaseHelper.insertExpenditure("topup", MainActivity.getActiveLeapNumber(databaseHelper), Fares.formatDecimals(amount));
                 break;
             case "add cash":

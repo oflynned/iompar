@@ -126,6 +126,7 @@ public class Expenditures extends Fragment {
         if(cursor.getCount() > 0){
             cursor.moveToFirst();
             for(int i = 0; i < cursor.getCount(); i++){
+                System.out.println(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
                 total += Double.parseDouble(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE));
                 cursor.moveToNext();
             }

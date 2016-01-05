@@ -366,9 +366,10 @@ public class AddExpenditure extends DialogFragment {
 
                                     String query = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                                             " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
-                                            firstTimeOfDay + " AND " + currentTime +
-                                            ") AND (" + Database.Expenditures.CARD_NUMBER + " = " +
-                                            Expenditures.getActiveLeapNumber(databaseHelper) + ");";
+                                            firstTimeOfDay + " AND " + currentTime + ") AND (" +
+                                            Database.Expenditures.CARD_NUMBER + " = " +
+                                            MainActivity.getActiveLeapNumber(databaseHelper) + ") AND (" +
+                                            Database.Expenditures.TYPE + " = 'Leap');";
 
                                     SQLiteDatabase expensesDB = databaseHelper.getReadableDatabase();
                                     Cursor expensesCursor = expensesDB.rawQuery(query, null);
@@ -386,9 +387,10 @@ public class AddExpenditure extends DialogFragment {
 
                                     String weeklyQuery = "SELECT * FROM " + Database.Expenditures.TABLE_NAME +
                                             " WHERE (" + Database.Expenditures.TIME_ADDED + " BETWEEN " +
-                                            firstTimeOfWeek + " AND " + currentTime +
-                                            ") AND (" + Database.Expenditures.CARD_NUMBER + " = " +
-                                            Expenditures.getActiveLeapNumber(databaseHelper) + ");";
+                                            firstTimeOfWeek + " AND " + currentTime + ") AND (" +
+                                            Database.Expenditures.CARD_NUMBER + " = " +
+                                            MainActivity.getActiveLeapNumber(databaseHelper) + ") AND (" +
+                                            Database.Expenditures.TYPE + " = 'Leap');";
 
                                     SQLiteDatabase weeklyExpensesDB = databaseHelper.getReadableDatabase();
                                     Cursor weeklyExpensesCursor = weeklyExpensesDB.rawQuery(weeklyQuery, null);

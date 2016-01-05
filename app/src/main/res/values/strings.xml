@@ -51,6 +51,7 @@
     <string name="pref_key_fare" translatable="false">pref_key_fare</string>
     <string name="pref_key_prefer_leap" translatable="false">pref_key_prefer_leap</string>
     <string name="pref_key_irish" translatable="false">pref_key_irish</string>
+    <string name="pref_key_leap_sync" translatable="false">pref_key_leap_sync</string>
 
     <!-- first run setup -->
     <string name="pref_key_has_been_run" translatable="false">pref_key_has_been_run</string>
@@ -280,4 +281,5 @@
     <string name="active_leap_card">Active Leap Card</string>
     <string name="negative_balance_warning">Your Leap balance is negative, please top up in order to make more journeys</string>
     <string name="add_leap_cheaper_prices_warning">Please add a Leap card in order to avail of cheaper fares</string>
+    <string name="edit">Edit</string>
 </resources>

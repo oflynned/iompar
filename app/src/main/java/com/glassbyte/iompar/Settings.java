@@ -1,5 +1,6 @@
 package com.glassbyte.iompar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -60,12 +61,12 @@ public class Settings extends PreferenceActivity {
                         Uri.parse("http://play.google.com/store/apps/developer?id=GlassByte")));
 
                 facebook.setTitle(R.string.follow_on_fb);
-                facebook.setIntent(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://www.facebook.com/glassbyte")));
+                facebook.setIntent(getOpenAppIntent(getApplicationContext(), "com.facebook.katana",
+                        "fb://facewebmodal/f?href=http://www.facebook.com/GlassByte", "http://www.facebook.com/GlassByte"));
 
                 twitter.setTitle(R.string.follow_on_twitter);
-                twitter.setIntent(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://www.twitter.com/glassbyte")));
+                twitter.setIntent(getOpenAppIntent(getApplicationContext(), "com.twitter.android",
+                        "twitter://user?user_id=id_num", "http://www.twitter.com/GlassByte"));
 
                 rateListing.setTitle(R.string.rate_app);
                 rateListing.setIntent(new Intent(Intent.ACTION_VIEW,
@@ -104,6 +105,12 @@ public class Settings extends PreferenceActivity {
                     }
                 });
 
+                final SwitchPreference syncOnStart = new SwitchPreference(getActivity());
+                syncOnStart.setTitle("Sync Leap Card on App Start");
+                syncOnStart.setSummary("Select this if you want constant Leap.ie balance updates. There may be a 24-48 hour delay in the balance reported.");
+                syncOnStart.setKey(getString(R.string.pref_key_leap_sync));
+                syncOnStart.setDefaultValue(false);
+
                 //language settings
                 final SwitchPreference irishLanguage = new SwitchPreference(getActivity());
                 irishLanguage.setTitle(R.string.irish_language);
@@ -113,8 +120,8 @@ public class Settings extends PreferenceActivity {
 
                 //parent categories
                 preferenceScreen.addPreference(moreCategory);
-                preferenceScreen.addPreference(appSettings);
                 preferenceScreen.addPreference(languageSettings);
+                preferenceScreen.addPreference(appSettings);
 
                 //child preferences
                 moreCategory.addPreference(moreFromGlassByte);
@@ -122,10 +129,11 @@ public class Settings extends PreferenceActivity {
                 moreCategory.addPreference(twitter);
                 moreCategory.addPreference(rateListing);
 
+                languageSettings.addPreference(irishLanguage);
+
                 appSettings.addPreference(namePreference);
                 appSettings.addPreference(farePreference);
-
-                languageSettings.addPreference(irishLanguage);
+                appSettings.addPreference(syncOnStart);
 
                 setPreferenceScreen(preferenceScreen);
             }
@@ -135,5 +143,14 @@ public class Settings extends PreferenceActivity {
                 super.onActivityCreated(savedInstanceState);
             }
         }).commit();
+    }
+
+    public Intent getOpenAppIntent(Context context, String app, String linkApp, String linkWeb) {
+        try {
+            context.getPackageManager().getPackageInfo(app, 0);
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(linkApp));
+        } catch (Exception e) {
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(linkWeb));
+        }
     }
 }

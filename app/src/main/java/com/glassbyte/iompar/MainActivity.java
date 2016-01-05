@@ -67,9 +67,12 @@ public class MainActivity extends AppCompatActivity
 
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-        if(cursor.getCount() > 0) {
-            AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
-            asynchronousLeapChecking.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        if (sharedPreferences.getBoolean(getString(R.string.pref_key_leap_sync), false)) {
+            if (cursor.getCount() > 0) {
+                AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
+                asynchronousLeapChecking.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
         cursor.close();
         sqLiteDatabase.close();
@@ -98,13 +101,13 @@ public class MainActivity extends AppCompatActivity
         StrictMode.setThreadPolicy(policy);
 
         //ayyy lmao our income
-        AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
-        asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
+        //asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
-                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("") &&
-                !sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").equals("unsynced") &&
-                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("unsynced")){
+        if (!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").equals("") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("unsynced") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").equals("unsynced")) {
             getCurrentBalance(databaseHelper, sharedPreferences, this);
         }
 
@@ -139,10 +142,10 @@ public class MainActivity extends AppCompatActivity
         globals.setIrish(sharedPreferences.getBoolean(getResources()
                 .getString(R.string.pref_key_irish), false), getResources());
 
-        if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
-                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("") &&
-                !sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").equals("unsynced") &&
-                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").equals("unsynced")){
+        if (!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").equals("") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("unsynced") &&
+                !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").equals("unsynced")) {
             getCurrentBalance(databaseHelper, sharedPreferences, this);
         }
         setNavigationBarProfile();
@@ -155,9 +158,12 @@ public class MainActivity extends AppCompatActivity
         Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
         String leapNumber;
 
+        System.out.println(sharedPreferences.getString(getString(R.string.pref_key_current_balance),""));
+        System.out.println(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),""));
+
         if (cursor.getCount() > 0) {
             String balance;
-            if(sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")){
+            if (sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")) {
                 balance = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),
                         getString(R.string.unsynced));
             } else {
@@ -190,11 +196,11 @@ public class MainActivity extends AppCompatActivity
         cursor.close();
     }
 
-    public static int getCurrentActiveLeap(DatabaseHelper databaseHelper){
+    public static int getCurrentActiveLeap(DatabaseHelper databaseHelper) {
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
         int ID;
-        if(cursor.getCount() > 0) {
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             ID = Integer.parseInt(cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_ID));
             sqLiteDatabase.close();
@@ -206,67 +212,86 @@ public class MainActivity extends AppCompatActivity
         return -1;
     }
 
-    public static void getCurrentBalance(DatabaseHelper databaseHelper, SharedPreferences sharedPreferences, Context context){
+    public static void getCurrentBalance(DatabaseHelper databaseHelper, SharedPreferences sharedPreferences, Context context) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        System.out.println("IN CURRENT BAL FUNC");
 
-        if(!sharedPreferences.getString(context.getResources().getString(R.string.pref_key_last_synced_balance), "").equals("") ||
-                !sharedPreferences.getString(context.getResources().getString(R.string.pref_key_last_synced_balance), "").equals("unsynced")) {
-
-            SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-            Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_EXPENDITURES, null);
-            //if(sharedPreferences.getString(context.getString(R.string.pref_key_last_synced_balance),"").equals("unsynced") ||
-            //        sharedPreferences.getString(context.getString(R.string.pref_key_current_balance),"").equals(""))
-
-
-            double initial = Double.parseDouble(sharedPreferences.getString(context.getResources()
-                    .getString(R.string.pref_key_last_synced_balance), "unsynced").replace("€", ""));
-            double subtotal = initial;
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    if(cursor.getString(DatabaseHelper.COL_EXPENDITURES_TYPE).equals("Leap")){
-                        subtotal -= Double.parseDouble(Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE)));
-                    } else if(!cursor.getString(DatabaseHelper.COL_EXPENDITURES_TYPE).equals("cash")){
-                        subtotal += Double.parseDouble(Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE)));
-                    }
-                    System.out.println(subtotal);
-                    cursor.moveToNext();
-                }
-
-                cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-                if(Fares.formatDecimals(subtotal).contains("-") && cursor.getCount() > 0){
-                    databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE,
-                            Database.LeapLogin.ID, getCurrentActiveLeap(databaseHelper), false);
-                    Toast.makeText(context, "You now have a negative Leap balance, please top up in order to make more journeys.", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            databaseHelper.printTableContents(Database.Expenditures.TABLE_NAME);
-
-            sqLiteDatabase.close();
-            cursor.close();
-
-            String balance = Fares.formatDecimals(subtotal);
-            if (balance.contains("-")) {
-                balance = "-€" + balance.replace("€", "").replace("-", "");
-            } else {
-                balance = "€" + balance.replace("€", "").replace("-", "");
-            }
-
-            editor.putString(context.getResources().getString(R.string.pref_key_current_balance), balance).apply();
-
-            System.out.println("initial bal " + initial);
-            System.out.println("current bal " + balance);
+        if (!sharedPreferences.getBoolean(context.getString(R.string.pref_key_first_sync), false)) {
+            //sync first time round - poll balance from online
+            Leap leap = new Leap(context);
+            leap.scrape();
+            databaseHelper.close();
         } else {
-            editor.putString(context.getResources().getString(R.string.current_leap_balance),
-                    context.getResources().getString((R.string.pref_key_last_synced_balance))).apply();
+            //else we have synced before - find balance online and ask user which to use
+
+            //if synced before but balance is unsynced somehow or blank, resync
+            if (sharedPreferences.getString(context.getString(R.string.pref_key_last_synced_balance), "").equals("unsynced")
+                    || sharedPreferences.getString(context.getString(R.string.pref_key_last_synced_balance), "").equals("")
+                    || sharedPreferences.getString(context.getString(R.string.pref_key_current_balance), "").equals("unsynced")
+                    || sharedPreferences.getString(context.getString(R.string.pref_key_current_balance), "").equals("")
+                    || sharedPreferences.getString(context.getString(R.string.pref_key_current_balance), "").contains("€")
+                    || sharedPreferences.getString(context.getString(R.string.pref_key_last_synced_balance), "").contains("€")){
+
+                System.out.println("in update balance loop!!");
+
+                SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+                Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_EXPENDITURES, null);
+                double initial = Double.parseDouble(sharedPreferences.getString(context.getResources()
+                        .getString(R.string.pref_key_last_synced_balance), "").replace("€", ""));
+                double subtotal = initial;
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    for (int i = 0; i < cursor.getCount(); i++) {
+                        if (cursor.getString(DatabaseHelper.COL_EXPENDITURES_TYPE).equals("Leap")) {
+                            subtotal -= Double.parseDouble(Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE)));
+                        } else if (!cursor.getString(DatabaseHelper.COL_EXPENDITURES_TYPE).equals("cash")) {
+                            subtotal += Double.parseDouble(Fares.formatDecimals(cursor.getString(DatabaseHelper.COL_EXPENDITURES_EXPENDITURE)));
+                        }
+                        System.out.println(subtotal);
+                        cursor.moveToNext();
+                    }
+
+                    cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                    if (Fares.formatDecimals(subtotal).contains("-") && cursor.getCount() > 0) {
+                        databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE,
+                                Database.LeapLogin.ID, getCurrentActiveLeap(databaseHelper), false);
+                        Toast.makeText(context, "You now have a negative Leap balance, please top up in order to make more journeys.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                databaseHelper.printTableContents(Database.Expenditures.TABLE_NAME);
+                databaseHelper.close();
+                sqLiteDatabase.close();
+                cursor.close();
+
+                String balance = Fares.formatDecimals(subtotal);
+                if (balance.contains("-")) {
+                    balance = "-€" + balance.replace("€", "").replace("-", "");
+                } else {
+                    balance = "€" + balance.replace("€", "").replace("-", "");
+                }
+
+                editor.putString(context.getResources().getString(R.string.pref_key_current_balance), balance).apply();
+
+                System.out.println("initial bal " + initial);
+                System.out.println("current bal " + balance);
+            } else {
+                //else if these keys are equal to something and not on first sync...
+                System.out.println("In ELSE loop for current bal");
+                System.out.println(sharedPreferences.getString(context.getString(R.string.pref_key_current_balance), ""));
+                System.out.println(sharedPreferences.getString(context.getString(R.string.pref_key_last_synced_balance), ""));
+
+                editor.putString(sharedPreferences.getString(context.getString(R.string.pref_key_current_balance), ""),
+                        sharedPreferences.getString(context.getString(R.string.pref_key_last_synced_balance), "")).apply();
+                databaseHelper.close();
+            }
         }
     }
 
-    public static String getActiveLeapNumber(DatabaseHelper databaseHelper){
+    public static String getActiveLeapNumber(DatabaseHelper databaseHelper) {
         SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-        if(cursor.getCount() > 0){
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             return cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER);
         }
@@ -428,10 +453,10 @@ public class MainActivity extends AppCompatActivity
                         if (cursor.getCount() > 0) {
                             getCurrentBalance(databaseHelper, sharedPreferences, getApplicationContext());
                             String oldSyncCumulative = sharedPreferences.getString(getString(R.string.pref_key_current_balance), "");
-                            if(oldSyncCumulative.equals("")){
-                                oldSyncCumulative = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"");
+                            if (oldSyncCumulative.equals("")) {
+                                oldSyncCumulative = sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "");
                             }
-                            if(oldSyncCumulative.equals("")){
+                            if (oldSyncCumulative.equals("")) {
                                 oldSyncCumulative = "0";
                             }
                             final String oldSync = oldSyncCumulative;
