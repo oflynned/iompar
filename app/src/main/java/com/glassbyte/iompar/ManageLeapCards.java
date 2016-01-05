@@ -226,15 +226,6 @@ public class ManageLeapCards extends Fragment {
                             databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME,
                                     Database.LeapLogin.IS_ACTIVE, Database.LeapLogin.ID, row, isChecked);
                             checkBox.setChecked(true);
-
-                            SQLiteDatabase sqliteDatabase = databaseHelper.getReadableDatabase();
-                            Cursor cursor = sqliteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
-                            if (cursor.getCount() > 0) {
-                                AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
-                                asynchronousLeapChecking.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            }
-                            cursor.close();
-                            sqliteDatabase.close();
                         } else {
                             for (CheckBox cb : checkBoxes) {
                                 cb.setChecked(false);

@@ -86,14 +86,14 @@ public class AddExpenditure extends DialogFragment {
         if(cursor.getCount() > 0){
             cursor.moveToFirst();
             if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")){
-                if(sharedPreferences.getString(getString(R.string.current_leap_balance), "").contains("-")) {
-                    currBalance = "-€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_current_balance), ""));
+                if(sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").contains("-")) {
+                    currBalance = "-€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_current_balance), "")).replace("-","");
                 } else {
                     currBalance = "€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_current_balance), ""));
                 }
             } else if(!sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").equals("")){
                 if(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").contains("-")) {
-                    currBalance = "-€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
+                    currBalance = "-€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "")).replace("-", "");
                 } else {
                     currBalance = "€" + Fares.formatDecimals(sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), ""));
                 }
@@ -131,6 +131,10 @@ public class AddExpenditure extends DialogFragment {
         leapSwitch.setChecked(false);
         leapSwitch.setLayoutParams(leapSwitchParams);
         leapSwitch.setId(View.generateViewId());
+
+        if(sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").contains("-")){
+            leapSwitch.setClickable(false);
+        }
 
         cashText = new TextView(context);
         RelativeLayout.LayoutParams cashTextParams =
@@ -224,8 +228,9 @@ public class AddExpenditure extends DialogFragment {
                                 context, "leap");
                         cost.setText(costBalanceText);
                         cost.invalidate();
-                    } else if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").matches("")
-                            && !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").contains("-")){
+                    } else if((!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")
+                            || !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals(""))
+                            && !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").contains("-")){
                         System.out.println("loop 2");
                         //if on first sync and not negative and no subsequent syncs
                         leapSwitch.setChecked(true);
@@ -269,8 +274,8 @@ public class AddExpenditure extends DialogFragment {
                 } else {
                     //leap was selected where cash was unselected, but Leap may be
                     //negative where the switch must be frozen and cash enabled
-                    if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")
-                            || !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")
+                    if((!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("")
+                            || !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals(""))
                             && !sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").contains("-")){
                         System.out.println("loop 4");
                         //if first and subsequent syncs have occurred where the latest sync is not negative
@@ -281,6 +286,7 @@ public class AddExpenditure extends DialogFragment {
                         cost.setText(costBalanceText);
                         cost.invalidate();
                     } else if(!sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").matches("")
+                            && !sharedPreferences.getString(getString(R.string.pref_key_current_balance),"").contains("-")
                             && !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance),"").contains("-")){
                         System.out.println("loop 5");
                         //if on first sync and not negative and no subsequent syncs
