@@ -72,11 +72,12 @@ public class ManageLeapCards extends Fragment {
                 .withListener(new FilterMenu.OnMenuChangeListener() {
                     @Override
                     public void onMenuItemClick(View view, final int position) {
+                        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+                        final Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
                         switch (position) {
                             //open dialog to add leap to table
                             case 0:
-                                SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-                                final Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+
                                 if (cursor.getCount() == 0) {
                                     final AddLeapCard addLeapCard = new AddLeapCard();
                                     addLeapCard.show(ManageLeapCards.this.getFragmentManager(), "addLeapCard");
@@ -137,6 +138,7 @@ public class ManageLeapCards extends Fragment {
                                                 editor.putString(getString(R.string.pref_key_curr_synced_balance), "unsynced").apply();
                                                 editor.putString(getString(R.string.pref_key_last_synced_balance), "unsynced").apply();
                                                 editor.putString(getString(R.string.pref_key_current_balance), "unsynced").apply();
+                                                editor.putBoolean(getString(R.string.pref_key_first_sync), false).apply();
                                             }
                                         })
                                         .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -145,16 +147,31 @@ public class ManageLeapCards extends Fragment {
                                             }
                                         })
                                         .show();
+                                cursor.close();
+                                sqLiteDatabase.close();
                                 break;
                             //breakdown of costs
                             case 2:
-                                AsynchronousLeapBalance asynchronousLeapBalance = new AsynchronousLeapBalance(getContext());
-                                asynchronousLeapBalance.execute();
+                                if (cursor.getCount() > 0) {
+                                    AsynchronousLeapBalance asynchronousLeapBalance = new AsynchronousLeapBalance(getContext());
+                                    asynchronousLeapBalance.execute();
+                                } else {
+                                    Toast.makeText(getContext(), getString(R.string.no_active_leap), Toast.LENGTH_LONG).show();
+                                }
+                                cursor.close();
+                                sqLiteDatabase.close();
                                 break;
                             //force sync
                             case 3:
-                                AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
-                                asynchronousLeapChecking.execute();
+                                if (cursor.getCount() > 0) {
+                                    AsynchronousLeapChecking asynchronousLeapChecking = new AsynchronousLeapChecking();
+                                    asynchronousLeapChecking.execute();
+                                } else {
+                                    Toast.makeText(getContext(), getString(R.string.no_active_leap), Toast.LENGTH_LONG).show();
+                                }
+                                cursor.close();
+                                sqLiteDatabase.close();
+                                break;
                         }
                     }
 
