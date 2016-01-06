@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity
         StrictMode.setThreadPolicy(policy);
 
         //ayyy lmao our income
-        //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
-        //asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
+        asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         if (!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
                 !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").equals("") &&
@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... params) {
             interstitialAd = new InterstitialAd(getBaseContext());
-            interstitialAd.setAdUnitId(Globals.ADMOB_ID_DEVELOPMENT);
+            interstitialAd.setAdUnitId(Globals.ADMOB_ID);
             adRequest = new AdRequest.Builder().build();
             return null;
         }
