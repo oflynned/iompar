@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -40,6 +41,7 @@ public class Leap extends WebViewClient {
      * @note JavaScript interface on URL manipulation
      * @note does not account for >1 Leap card on the account
      */
+    @JavascriptInterface
     @SuppressLint("SetJavaScriptEnabled")
     public void scrape() {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);

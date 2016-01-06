@@ -32,10 +32,13 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -1525,7 +1528,8 @@ public class Fares extends Fragment {
     }
 
     public static String formatDecimals(String fare) {
-        double castFare = Double.parseDouble(fare.replaceAll("[€]", ""));
+        DecimalFormat decimalFormat = new DecimalFormat("#.#", new DecimalFormatSymbols(Locale.UK));
+        double castFare = Double.parseDouble(decimalFormat.format(fare.replaceAll("[€]", "").replace(",",".")));
         return String.format("%.2f", castFare);
     }
 
