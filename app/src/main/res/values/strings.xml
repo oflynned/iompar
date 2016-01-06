@@ -286,4 +286,7 @@
     <string name="what_would_you_like_to_do">What would you like to do?</string>
     <string name="edit_current_leap">You can edit the currently selected Leap card (</string>
     <string name="enter_top_up_amount">) or enter the amount of money topped up by.</string>
+    <string name="sync_on_app_start">Sync Leap Card on App Start</string>
+    <string name="sync_on_app_start_desc">Select this if you want constant Leap.ie balance updates. There may be a 24-48 hour delay in the balance reported.</string>
+    <string name="negative_bal_pls_topup">You now have a negative Leap balance, please top up in order to make more journeys.</string>
 </resources>

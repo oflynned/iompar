@@ -261,5 +261,8 @@
     <string name="enter_top_up_amount">) nó an méid creidmheasa a iontráil a bhreisíodh do chárta.</string>
     <string name="no_active_leap_add_enable">Easpa chárta Leap gníomhaigh - cuir ar chumas nó leis led\' thoil</string>
     <string name="what_would_you_like_to_do">Céard is mian leat a dhéanamh?</string>
+    <string name="negative_bal_pls_topup">Tá iarmhéid Leap diúltach agat anois, breisigh do chreidmheas led\' thoil chun tuilleadh aistir a chur ar chumas.</string>
+    <string name="sync_on_app_start">Sioncronaigh Cártaí Leap ag Tús na hAipe</string>
+    <string name="sync_on_app_start_desc">Roghnaigh é seo más uait nuashonrú do chárta Leap ó Leap.ie go síoraí. D\'fhéadfadh go mbeadh moill ann de 24-48 uair san iarmhéid tuairiscithe.</string>
 
 </resources>

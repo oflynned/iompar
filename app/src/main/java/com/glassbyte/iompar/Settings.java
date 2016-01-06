@@ -106,8 +106,8 @@ public class Settings extends PreferenceActivity {
                 });
 
                 final SwitchPreference syncOnStart = new SwitchPreference(getActivity());
-                syncOnStart.setTitle("Sync Leap Card on App Start");
-                syncOnStart.setSummary("Select this if you want constant Leap.ie balance updates. There may be a 24-48 hour delay in the balance reported.");
+                syncOnStart.setTitle(R.string.sync_on_app_start);
+                syncOnStart.setSummary(R.string.sync_on_app_start_desc);
                 syncOnStart.setKey(getString(R.string.pref_key_leap_sync));
                 syncOnStart.setDefaultValue(false);
 

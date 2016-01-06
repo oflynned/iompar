@@ -93,6 +93,7 @@ public class IntroActivity extends AppIntro2 {
         slide_two.title.setText(getString(R.string.slide_two_title));
         slide_two.desc.setText(getString(R.string.slide_two_description));
         slide_two.nameField.setHint(getString(R.string.slide_two_hint));
+        slide_two.type.setText(getString(R.string.slide_two_fare_type));
 
         slide_two.title.invalidate();
         slide_two.desc.invalidate();

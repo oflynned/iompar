@@ -12,13 +12,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 /**
  * Created by ed on 19/12/15.
  */
 public class Slide_Two extends Fragment {
 
     public EditText nameField;
-    public TextView title, desc;
+    public TextView title, desc, type;
     public Spinner fareSelection;
     private boolean notified;
     private String fareType;
@@ -29,6 +31,7 @@ public class Slide_Two extends Fragment {
 
         title = (TextView) view.findViewById(R.id.slide_two_title);
         desc = (TextView) view.findViewById(R.id.slide_two_desc);
+        type = (TextView) view.findViewById(R.id.slide_two_title_fare);
         nameField = (EditText) view.findViewById(R.id.intro_name);
         fareSelection = (Spinner) view.findViewById(R.id.fare_selection);
 

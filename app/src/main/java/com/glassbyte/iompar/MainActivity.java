@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity
                     if (Fares.formatDecimals(subtotal).contains("-") && cursor.getCount() > 0) {
                         databaseHelper.modifyActive(Database.LeapLogin.TABLE_NAME, Database.LeapLogin.IS_ACTIVE,
                                 Database.LeapLogin.ID, getCurrentActiveLeap(databaseHelper), false);
-                        Toast.makeText(context, "You now have a negative Leap balance, please top up in order to make more journeys.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.negative_bal_pls_topup, Toast.LENGTH_LONG).show();
                     }
                 }
 
