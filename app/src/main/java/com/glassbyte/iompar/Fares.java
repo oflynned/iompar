@@ -77,7 +77,6 @@ public class Fares extends Fragment {
     private GridView gridView;
     Switch leapSwitch, cashSwitch;
     TextView cost, zones;
-    FloatingActionButton addExpenditureFab;
 
     public enum TransportationCategories {LUAS, TRAIN, DART, BUS, BUS_EIREANN}
 
@@ -320,12 +319,9 @@ public class Fares extends Fragment {
                     type = "cash";
 
                 if (hasPair()) {
-                    addExpenditureFab.show();
                     cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
                             getStartPosition(), getEndPosition(), getContext(), type));
                     cost.invalidate();
-                } else {
-                    addExpenditureFab.hide();
                 }
             }
         });
@@ -347,12 +343,9 @@ public class Fares extends Fragment {
                     type = "cash";
 
                 if (hasPair()) {
-                    addExpenditureFab.show();
                     cost.setText("€" + getZoneTraversal(sync.convertStringToEnum(getChosenEndStation()),
                             getStartPosition(), getEndPosition(), getContext(), type));
                     cost.invalidate();
-                } else {
-                    addExpenditureFab.hide();
                 }
             }
         });
@@ -443,11 +436,9 @@ public class Fares extends Fragment {
             if (hasPair()) {
                 if (position != getStartPositionComp()
                         && position != getEndPositionComp()) {
-                    addExpenditureFab.hide();
                     gridView.setItemChecked(position, false);
                     System.out.println("trying to check item not already checked");
                 } else {
-                    addExpenditureFab.show();
                     System.out.println("start true, end true!");
                     System.out.println(
                             "start station: " + getStartPosition() + "\n" +
@@ -1528,12 +1519,17 @@ public class Fares extends Fragment {
     }
 
     public static String formatDecimals(String fare) {
-        double castFare = Double.parseDouble(fare.replaceAll("[€]", "").replace(",","."));
+        double castFare;
+        if(fare.contains(",")){
+            castFare = Double.parseDouble(fare.replaceAll("[€]", "").replaceAll(",","."));
+        } else {
+            castFare = Double.parseDouble(fare.replaceAll("[€]", ""));
+        }
         return String.format("%.2f", castFare);
     }
 
     public static String formatDecimals(double fare) {
-        return String.format("%.2f", fare);
+        return String.format("%.2f", fare).replaceAll(",", ".");
     }
 
     public void setFare(String fare) {

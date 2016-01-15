@@ -312,7 +312,7 @@ public class ManageLeapCards extends Fragment {
 
                         new AlertDialog.Builder(getContext())
                                 .setTitle(getString(R.string.what_would_you_like_to_do))
-                                .setMessage(getString(R.string.edit_current_leap) + MainActivity.getActiveLeapNumber(databaseHelper) + getString(R.string.enter_top_up_amount))
+                                .setMessage(getString(R.string.edit_current_leap) + MainActivity.getSelectedLeapNumber(databaseHelper, row) + getString(R.string.enter_top_up_amount))
                                 .setPositiveButton(getString(R.string.topup), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -323,9 +323,10 @@ public class ManageLeapCards extends Fragment {
                                             public void onDoneClick(android.app.DialogFragment dialog) {
                                                 SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
                                                 Cursor cursor = sqLiteDatabase.rawQuery(
-                                                        DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+                                                        DatabaseHelper.SELECT_ALL_LEAP_LOGIN, null);
                                                 if (cursor.getCount() > 0) {
                                                     cursor.moveToFirst();
+                                                    cursor.moveToPosition(row - 1);
                                                     Toast.makeText(getActivity(), getString(R.string.topped_up_by) + Fares.formatDecimals(String.valueOf(topUpDialog.getTopUp())) +
                                                                     getString(R.string.on) + cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER),
                                                             Toast.LENGTH_LONG).show();

@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity
         StrictMode.setThreadPolicy(policy);
 
         //ayyy lmao our income
-        AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
-        asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        //AsynchronousInterstitial asynchronousInterstitial = new AsynchronousInterstitial();
+        //asynchronousInterstitial.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         if (!sharedPreferences.getString(getString(R.string.pref_key_current_balance), "").equals("") &&
                 !sharedPreferences.getString(getString(R.string.pref_key_last_synced_balance), "").equals("") &&
@@ -298,6 +298,20 @@ public class MainActivity extends AppCompatActivity
         cursor.close();
         sqLiteDatabase.close();
         return "N/A";
+    }
+
+    public static String getSelectedLeapNumber(DatabaseHelper databaseHelper, int row){
+        String number;
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_LEAP_LOGIN, null);
+
+        cursor.moveToFirst();
+        cursor.moveToPosition(row - 1);
+        number = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_CARD_NUMBER);
+
+        cursor.close();
+        sqLiteDatabase.close();
+        return number;
     }
 
     @Override
