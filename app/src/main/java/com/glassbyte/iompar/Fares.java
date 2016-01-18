@@ -1519,24 +1519,13 @@ public class Fares extends Fragment {
         return false;
     }
 
-    public static double formatDecimals(String fare) {
-        System.out.println("1 being called");
-        double castFare;
-
-        DecimalFormat decimalFormat = new DecimalFormat("#.#", new DecimalFormatSymbols(Locale.UK));
-        castFare = Double.parseDouble(fare.replaceAll("[€]", ""));
-        System.out.println(decimalFormat.format(castFare));
-
-        return castFar
-
-
-
-        e;
+    public static String formatDecimals(String fare) {
+        double castFare = Double.parseDouble(fare.replaceAll("€", ""));
+        return String.format(Locale.UK, "%.2f", castFare);
     }
 
     public static String formatDecimals(double fare) {
-        System.out.println("2 being called");
-        return String.format("%.2f", fare).replaceAll(",", ".");
+        return String.format(Locale.UK, "%.2f", fare);
     }
 
     public void setFare(String fare) {
