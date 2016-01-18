@@ -13,10 +13,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 
 /**
@@ -220,13 +224,94 @@ public class Leap extends WebViewClient {
         }
     }
 
+    @JavascriptInterface
+    @SuppressLint("SetJavaScriptEnabled")
+    public void retrieveLeapcardrBalance(){
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(DatabaseHelper.SELECT_ALL_ACTIVE_LEAP_CARDS, null);
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            final String username = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_USER_NAME);
+            final String password = cursor.getString(DatabaseHelper.COL_LEAP_LOGIN_PASSWORD);
+            databaseHelper.close();
+            sqLiteDatabase.close();
+            cursor.close();
+
+            Toast.makeText(context, R.string.connecting, Toast.LENGTH_LONG).show();
+
+            final WebView webView = new WebView(context);
+            webView.loadUrl("http://www.leapcardr.com");
+
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setDomStorageEnabled(true);
+            setSynced(false);
+            Toast.makeText(context, R.string.retrieving_currently_active_leap, Toast.LENGTH_LONG).show();
+
+            //are we logged in?
+            webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    webView.loadUrl("javascript: {" +
+                            "document.getElementById('username').value = '" + username + "';" +
+                            "document.getElementById('password').value = '" + password + "';" +
+                            "document.forms[0].submit();" +
+                            "};");
+
+                    CookieSyncManager.getInstance().sync();
+                    String session = CookieManager.getInstance().getCookie(url).replaceAll("session=", "");
+                    System.out.println(session);
+
+                    Document document;
+                    try {
+                        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+                        String leapCard = MainActivity.getActiveLeapNumber(databaseHelper).substring(0, 10);
+                        databaseHelper.close();
+
+                        document = Jsoup.connect("http://www.leapcardr.com/login")
+                                .cookie("session", session)
+                                .timeout(Globals.SIXTY_SECONDS)
+                                .get();
+
+                        String balance;
+                        String returnedPost = document.text();
+                        String[] data = returnedPost.split("\\s");
+                        for (int i = 0; i < data.length; i++) {
+                            if (data[i].contains(leapCard)) {
+                                balance = data[i + 3];
+
+                                if (balance.contains("-")) {
+                                    balance = balance.replaceAll("\\-", "").replaceAll("€", "");
+                                    balance = "-€" + balance;
+                                } else {
+                                    balance = "€" + balance.replaceAll("€", "");
+                                }
+                                System.out.println("Reported balance: " + balance);
+                                setBalance(balance);
+                                setSynced(true);
+                                break;
+                            }
+                        }
+                        webView.clearCache(true);
+                        webView.clearHistory();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+            Toast.makeText(context, R.string.no_active_leap_add_enable, Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void setBalance(String balance) {
         this.balance = balance;
     }
     public String getBalance() {
         return balance;
     }
-    public boolean isSynced(){return synced;}
-    public void setSynced(boolean synced){this.synced=synced;}
-    public int getIncorrectDetails(){return incorrectDetails;}
+    public boolean isSynced(){ return synced; }
+    public void setSynced(boolean synced){ this.synced = synced; }
+    public int getIncorrectDetails(){ return incorrectDetails; }
 }

@@ -577,24 +577,19 @@ public class ManageLeapCards extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             leap = new Leap(getActivity());
-            leap.scrape();
+            leap.retrieveLeapcardrBalance();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             long timer = 0;
             while (!leap.isSynced()) {
-                System.out.println("NOT synced and has slept " + (timer / 1000) + "/120");
+                System.out.println("NOT synced and has slept " + (timer / 1000) + "/60");
                 try {
                     timer += Globals.ONE_SECOND;
                     Thread.currentThread();
                     Thread.sleep(Globals.ONE_SECOND);
-                    if(leap.getIncorrectDetails() >= 3){
-                        isIncomplete = true;
-                        leap.setSynced(true);
-                        break;
-                    }
-                    if (timer > Globals.SIXTY_SECONDS * 2) {
+                    if (timer > Globals.SIXTY_SECONDS) {
                         isIncomplete = true;
                         leap.setSynced(true);
                         break;

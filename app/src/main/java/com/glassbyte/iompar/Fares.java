@@ -34,6 +34,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1518,17 +1519,23 @@ public class Fares extends Fragment {
         return false;
     }
 
-    public static String formatDecimals(String fare) {
+    public static double formatDecimals(String fare) {
+        System.out.println("1 being called");
         double castFare;
-        if(fare.contains(",")){
-            castFare = Double.parseDouble(fare.replaceAll("[€]", "").replaceAll(",","."));
-        } else {
-            castFare = Double.parseDouble(fare.replaceAll("[€]", ""));
-        }
-        return String.format("%.2f", castFare);
+
+        DecimalFormat decimalFormat = new DecimalFormat("#.#", new DecimalFormatSymbols(Locale.UK));
+        castFare = Double.parseDouble(fare.replaceAll("[€]", ""));
+        System.out.println(decimalFormat.format(castFare));
+
+        return castFar
+
+
+
+        e;
     }
 
     public static String formatDecimals(double fare) {
+        System.out.println("2 being called");
         return String.format("%.2f", fare).replaceAll(",", ".");
     }
 
