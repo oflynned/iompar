@@ -68,7 +68,6 @@ public class AddExpenditure extends DialogFragment {
     /**
      * onCreateDialog is a generic builder for generating a dialog
      * per row id given, such that tasks can be added to the db
-     *
      * @param savedInstanceState the parsed data for the given context
      * @return the appropriate dialog
      */
@@ -572,15 +571,23 @@ public class AddExpenditure extends DialogFragment {
     public boolean isLeapActive() {
         return hasLeapActive;
     }
+
+    @Deprecated
     public void setDailyCap(double dailyCap) {
         this.dailyCap = dailyCap;
     }
+
+    @Deprecated
     public double getDailyCap() {
         return dailyCap;
     }
+
+    @Deprecated
     public void setWeeklyCap(double weeklyCap) {
         this.weeklyCap = weeklyCap;
     }
+
+    @Deprecated
     public double getWeeklyCap() {
         return weeklyCap;
     }

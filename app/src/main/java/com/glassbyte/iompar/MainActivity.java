@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity
         if (!sharedPreferences.getBoolean(context.getString(R.string.pref_key_first_sync), false)) {
             //sync first time round - poll balance from online
             Leap leap = new Leap(context);
-            leap.scrape();
+            leap.retrieveLeapcardrBalance();
             databaseHelper.close();
         } else {
             //else we have synced before - find balance online and ask user which to use
@@ -387,32 +387,7 @@ public class MainActivity extends AppCompatActivity
         return fragName;
     }
 
-    class AsynchronousInterstitial extends AsyncTask<Void, Void, Void> {
-
-        AdRequest adRequest;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            interstitialAd = new InterstitialAd(getBaseContext());
-            interstitialAd.setAdUnitId(Globals.ADMOB_ID);
-            adRequest = new AdRequest.Builder().build();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            interstitialAd.loadAd(adRequest);
-            interstitialAd.setAdListener(new AdListener() {
-                @Override
-                public void onAdLoaded() {
-                    if (interstitialAd.isLoaded()) {
-                        interstitialAd.show();
-                    }
-                }
-            });
-        }
-    }
-
+    @Deprecated
     public class AsynchronousLeapChecking extends AsyncTask<Void, Void, Void> {
 
         Leap leap;
@@ -424,7 +399,7 @@ public class MainActivity extends AppCompatActivity
             isToDo = !getActiveLeapNumber(databaseHelper).matches("no active leap");
             if (isToDo) {
                 leap = new Leap(getApplicationContext());
-                leap.scrape();
+                leap.retrieveLeapcardrBalance();
             }
         }
 

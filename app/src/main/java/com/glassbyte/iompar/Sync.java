@@ -18,6 +18,8 @@ import java.util.Arrays;
 /**
  * Created by ed on 28/10/15.
  */
+
+@Deprecated
 public class Sync {
 
     Context context;

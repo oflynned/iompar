@@ -16,6 +16,7 @@ import android.widget.TextView;
 /**
  * Created by ed on 30/12/15.
  */
+@Deprecated
 public class TopUpDialog extends DialogFragment {
 
     private SetTopUpListener listener = null;

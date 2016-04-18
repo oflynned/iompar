@@ -513,7 +513,7 @@ public class ManageLeapCards extends Fragment {
         @Override
         protected void onPreExecute() {
             Toast.makeText(context, R.string.retrieving_leap_data, Toast.LENGTH_LONG).show();
-            leap.scrape();
+            leap.retrieveLeapcardrBalance();
         }
 
         @Override
@@ -568,6 +568,7 @@ public class ManageLeapCards extends Fragment {
         }
     }
 
+    @Deprecated
     public class AsynchronousLeapChecking extends AsyncTask<Void, Void, Void> {
 
         Leap leap;

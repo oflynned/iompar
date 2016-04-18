@@ -17,13 +17,6 @@ public class Globals extends ContextWrapper {
         super(context);
     }
 
-    //ad revenue IDs
-    public static String ADMOB_ID = "ca-app-pub-7053740901071844/4386004018";
-    public static String ADMOB_ID_DEVELOPMENT = "ca-app-pub-3940256099942544/1033173712";
-
-    //RTPI.ie - motherfucking down too often, consider migrating to dedicated original sites
-    public static String RTPI = "http://www.rtpi.ie/Text/WebDisplay.aspx?stopRef=";
-
     //leap
     public static String LEAP_LOGIN = "https://www.leapcard.ie/en/Login.aspx";
     public static String LEAP_LOGIN_ACCOUNT_PAGE = "https://www.leapcard.ie/en/SelfServices/CardServices/CardOverView.aspx";
@@ -31,10 +24,6 @@ public class Globals extends ContextWrapper {
     //luas resources
     public static String RTPI_LUAS = "https://www.luas.ie/luaspid.html?get=";
     public static String LUAS_FARES = "https://www.luas.ie/single-and-return-tickets.html";
-
-    //to be implemented on next releases - scraping from DB and Irish Rail
-    public static String DUBLIN_BUS_SEARCH_BY_STOP_NUMBER = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=view&searchquery=";
-    public static String DUBLIN_BUS_SEARCH_BY_ROUTE = "http://www.dublinbus.ie/en/RTPI/Sources-of-Real-Time-Information/?searchtype=route&searchquery=";
 
     //timeouts
     public static final int ONE_SECOND = 1000;

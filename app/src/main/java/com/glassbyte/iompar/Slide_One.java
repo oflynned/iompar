@@ -34,11 +34,10 @@ public class Slide_One extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         boolean isIrish = sharedPreferences.getBoolean(getResources()
                 .getString(R.string.pref_key_irish), false);
-        if(isIrish){
+        if(isIrish)
             irishSwitch.setChecked(true);
-        } else {
+        else
             irishSwitch.setChecked(false);
-        }
 
         title = (TextView) view.findViewById(R.id.slide_one_title);
         description = (TextView) view.findViewById(R.id.slide_one_desc);

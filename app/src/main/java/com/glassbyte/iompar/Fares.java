@@ -45,6 +45,8 @@ import java.util.TimeZone;
 /**
  * Created by ed on 29/10/15.
  */
+
+@Deprecated
 public class Fares extends Fragment {
 
     int originId, destinationId;
@@ -1480,7 +1482,6 @@ public class Fares extends Fragment {
 
     /**
      * gets current time and checks whether or not it's peak time
-     *
      * @return a boolean for if it's peak or not
      */
     public boolean isPeak() {

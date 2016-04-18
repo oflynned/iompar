@@ -75,22 +75,6 @@ public class Realtime extends Fragment {
     Categories[] redLuasStationsTallaght;
     Categories[] redLuasStationsSaggart;
     Categories[] redLuasStationsConnolly;
-    //train
-    Categories[] trainCategories;
-    Categories[] trainDirection;
-    Categories[] trainStations;
-    //dart
-    Categories[] dartCategories;
-    Categories[] dartDirection;
-    Categories[] dartStations;
-    //dublin bus
-    Categories[] dbLine;
-    Categories[] dbDirection;
-    Categories[] dbStop;
-    //bus eireann
-    Categories[] beCategories;
-    Categories[] beDirection;
-    Categories[] beStations;
 
     Sync sync;
     Globals globals;
@@ -149,19 +133,6 @@ public class Realtime extends Fragment {
         //assign transportation types to adapter
         categories = new Categories[1];
         categories[0] = new Categories(getString(R.string.luas_title), "local");
-
-        /* rest will be implemented soon as fares and tracking get finished
-        categories = new Categories[5];
-        categories[0] =
-                new Categories("Bus Éireann", "regional");
-        categories[1] =
-                new Categories("DART", "local");
-        categories[2] =
-                new Categories("Dublin Bus", "local");
-        categories[3] =
-                new Categories("Luas", "local");
-        categories[4] =
-                new Categories("Train", "regional");*/
 
         //luas line types
         luasCategories = new Categories[2];
@@ -690,7 +661,7 @@ public class Realtime extends Fragment {
         rightPanel.setText(rightPanelText);
 
         //prevent crashes by trying to add an expenditure that cannot exist
-        if(rightPanelText.equals(getString(R.string.no_times_found))){
+        if(rightPanelText.equals(getContext().getString(R.string.no_times_found))){
             addExpenditureFab.hide();
         } else {
             addExpenditureFab.show();
@@ -900,6 +871,7 @@ public class Realtime extends Fragment {
         }
     }
 
+    @Deprecated
     class AsynchronousActivity extends AsyncTask<String, Void, String> {
 
         Globals.LineDirection lineDirection;

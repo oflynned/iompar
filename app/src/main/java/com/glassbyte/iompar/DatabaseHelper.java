@@ -13,36 +13,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
 
-    //COL NAMES
-    public static final int COL_DUBLIN_BUS_ID = 0;
-    public static final int COL_DUBLIN_BUS_STOP_NUMBER = 1;
-    public static final int COL_DUBLIN_BUS_ROUTE = 2;
-    public static final int COL_DUBLIN_BUS_FREQUENCY = 3;
-
-    public static final int COL_BUS_EIREANN_ID = 0;
-    public static final int COL_BUS_EIREANN_STOP_NUMBER = 1;
-    public static final int COL_BUS_EIREANN_ROUTE = 2;
-    public static final int COL_BUS_EIREANN_DESTINATION = 3;
-    public static final int COL_BUS_EIREANN_FREQUENCY = 4;
-
-    public static final int COL_LUAS_ID = 0;
-    public static final int COL_LUAS_STATION = 1;
-    public static final int COL_LUAS_LINE = 2;
-    public static final int COL_LUAS_DIRECTION = 3;
-    public static final int COL_LUAS_FREQUENCY = 4;
-
-    public static final int COL_DART_ID = 0;
-    public static final int COL_DART_STATION = 1;
-    public static final int COL_DART_LINE = 2;
-    public static final int COL_DART_DIRECTION = 3;
-    public static final int COL_DART_FREQUENCY = 4;
-
-    public static final int COL_TRAIN_ID = 0;
-    public static final int COL_TRAIN_STATION = 1;
-    public static final int COL_TRAIN_LINE = 2;
-    public static final int COL_TRAIN_DIRECTION = 3;
-    public static final int COL_TRAIN_FREQUENCY = 4;
-
     public static final int COL_EXPENDITURES_ID = 0;
     public static final int COL_EXPENDITURES_TYPE = 1;
     public static final int COL_EXPENDITURES_CARD_NUMBER = 2;
@@ -55,9 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int COL_LEAP_LOGIN_EMAIL = 3;
     public static final int COL_LEAP_LOGIN_PASSWORD = 4;
     public static final int COL_LEAP_LOGIN_IS_ACTIVE = 5;
-    public static final int COL_LEAP_LOGIN_BALANCE = 6;
 
-    public static final int COL_LUAS_SINGLE_FARES_ID = 0;
     public static final int COL_LUAS_SINGLE_FARES_ADULT = 1;
     public static final int COL_LUAS_SINGLE_FARES_CHILD = 2;
     public static final int COL_LUAS_SINGLE_FARES_ADULT_STUDENT_OFF_PEAK = 3;
@@ -65,15 +33,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int COL_LUAS_SINGLE_FARES_CHILD_OFF_PEAK = 5;
     public static final int COL_LUAS_SINGLE_FARES_CHILD_PEAK = 6;
 
-    public static final int COL_LUAS_RETURN_FARES_ID = 0;
     public static final int COL_LUAS_RETURN_FARES_ADULT = 1;
     public static final int COL_LUAS_RETURN_FARES_CHILD = 2;
 
-    public static final int COL_LUAS_LEAP_CAPS_ID = 0;
     public static final int COL_LUAS_LEAP_CAPS_LUAS_DAILY = 1;
     public static final int COL_LUAS_LEAP_CAPS_LUAS_WEEKLY = 2;
-    public static final int COL_LUAS_LEAP_CAPS_DUBLIN_BUS_LUAS_DART_COMM_RAIL_DAILY_CAP = 3;
-    public static final int COL_LUAS_LEAP_CAPS_DUBLIN_BUS_LUAS_DART_COMM_RAIL_WEEKLY_CAP = 4;
 
     final static String[] TABLES = {
             Database.BusEireannFavourites.TABLE_NAME,
@@ -370,67 +334,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         writeDb.close();
     }
 
-    public void modifyRecord(String tableName, String colId, int id,
-                             //favourites -- unused
-                             String stopNumber, String station, String line,
-                             String route, String direction, String destination,
-                             //leap balance
-                             String cardNumber, double topUp, double expenditure, double oldBalance, double newBalance, boolean negative,
-                             //leap login
-                             String userName, String userEmail, String userPassword, boolean isActive) {
-
-        SQLiteDatabase writeDb = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-
-        switch (tableName) {
-            case Database.BusEireannFavourites.TABLE_NAME:
-                contentValues.put(Database.BusEireannFavourites.STOP_NUMBER, stopNumber);
-                contentValues.put(Database.BusEireannFavourites.ROUTE, route);
-                contentValues.put(Database.BusEireannFavourites.DESTINATION, destination);
-                break;
-            case Database.DartFavourites.TABLE_NAME:
-                contentValues.put(Database.DartFavourites.LINE, line);
-                contentValues.put(Database.DartFavourites.STATION, station);
-                contentValues.put(Database.DartFavourites.DIRECTION, direction);
-                break;
-            case Database.DublinBusFavourites.TABLE_NAME:
-                contentValues.put(Database.DublinBusFavourites.STOP_NUMBER, stopNumber);
-                contentValues.put(Database.DublinBusFavourites.ROUTE, route);
-                break;
-            case Database.LuasFavourites.TABLE_NAME:
-                contentValues.put(Database.LuasFavourites.LINE, line);
-                contentValues.put(Database.LuasFavourites.STATION, station);
-                contentValues.put(Database.LuasFavourites.DIRECTION, direction);
-                break;
-            case Database.TrainFavourites.TABLE_NAME:
-                contentValues.put(Database.TrainFavourites.LINE, line);
-                contentValues.put(Database.TrainFavourites.STATION, station);
-                contentValues.put(Database.TrainFavourites.DIRECTION, direction);
-                break;
-            case Database.LeapBalance.TABLE_NAME:
-                contentValues.put(Database.LeapBalance.CARD_NUMBER, cardNumber);
-                contentValues.put(Database.LeapBalance.TIME_ADDED, System.currentTimeMillis());
-                contentValues.put(Database.LeapBalance.TOP_UPS, topUp);
-                contentValues.put(Database.LeapBalance.EXPENDITURE, expenditure);
-                contentValues.put(Database.LeapBalance.OLD_BALANCE, oldBalance);
-                contentValues.put(Database.LeapBalance.NEW_BALANCE, newBalance);
-                contentValues.put(Database.LeapBalance.IS_NEGATIVE, negative);
-                break;
-            case Database.LeapLogin.TABLE_NAME:
-                contentValues.put(Database.LeapLogin.CARD_NUMBER, cardNumber);
-                contentValues.put(Database.LeapLogin.USER_NAME, userName);
-                contentValues.put(Database.LeapLogin.USER_EMAIL, userEmail);
-                contentValues.put(Database.LeapLogin.USER_PASSWORD, userPassword);
-                contentValues.put(Database.LeapLogin.IS_ACTIVE, isActive);
-            default:
-                break;
-        }
-        String[] whereArgs = {String.valueOf(id)};
-        writeDb.update(tableName, contentValues,
-                colId + "=" + "?", whereArgs);
-        writeDb.close();
-    }
-
     public void modifyLeapCard(int id, String number, String username, String email, String password) {
         SQLiteDatabase writeDb = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -450,18 +353,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(colIsActive, active);
-
-        String[] whereArgs = {String.valueOf(id)};
-        writeDb.update(tableName, contentValues,
-                colId + "=" + "?", whereArgs);
-        writeDb.close();
-    }
-
-    public void modifyFrequency(String tableName, String colFreq, String colId, int id, int frequency) {
-        SQLiteDatabase writeDb = this.getWritableDatabase();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(colFreq, frequency);
 
         String[] whereArgs = {String.valueOf(id)};
         writeDb.update(tableName, contentValues,

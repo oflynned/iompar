@@ -7,25 +7,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 
 /**
  * Created by ed on 05/12/15.
  */
+
+@Deprecated
 public class Leap extends WebViewClient {
 
     Context context;
@@ -45,6 +41,7 @@ public class Leap extends WebViewClient {
      * @note JavaScript interface on URL manipulation
      * @note does not account for >1 Leap card on the account
      */
+    @Deprecated
     @JavascriptInterface
     @SuppressLint("SetJavaScriptEnabled")
     public void scrape() {
@@ -224,6 +221,7 @@ public class Leap extends WebViewClient {
         }
     }
 
+    @Deprecated
     @JavascriptInterface
     @SuppressLint("SetJavaScriptEnabled")
     public void retrieveLeapcardrBalance(){
@@ -305,13 +303,22 @@ public class Leap extends WebViewClient {
         }
     }
 
+    @Deprecated
     public void setBalance(String balance) {
         this.balance = balance;
     }
+
+    @Deprecated
     public String getBalance() {
         return balance;
     }
+
+    @Deprecated
     public boolean isSynced(){ return synced; }
+
+    @Deprecated
     public void setSynced(boolean synced){ this.synced = synced; }
+
+    @Deprecated
     public int getIncorrectDetails(){ return incorrectDetails; }
 }

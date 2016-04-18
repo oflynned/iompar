@@ -20,13 +20,13 @@ import android.widget.RelativeLayout;
 /**
  * Created by ed on 29/10/15.
  */
+
 public class AddLeapCard extends DialogFragment {
 
     private EditText leapNumberField, usernameField, emailField, passwordField;
     private CheckBox transformPassword;
     private setAddLeapListener addLeapDialogListener = null;
 
-    //listener that the corresponding button implements
     public interface setAddLeapListener {
         void onDoneClick(DialogFragment dialogFragment);
     }
